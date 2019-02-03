@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link rel="stylesheet" href="style.css">
+	<style>
+		.container {
+			width: 500px;
+			clear: both;
+		}
+
+		.container input {
+			width: 100%;
+			clear: both;
+			background: #dddddd;
+		}
+			
+		.container2 {
+			display: none
+		}
+			
+	</style>
+  </head>
+
+  <body>
+    <h1>Adventure game!</h1>
+    <br>
+    <p id="textArea"></p>
+	Character Name:<input type="text" name="name" id="namefield"> <br>
+	<br>
+	<br>
+	<br>
+	<br>
+	<button id="createCharacter">Create Character</button>
+	<br>
+	<br>
+	<br>
+	<div class="container">
+		<form>
+			Strength:<input type="text" name="strength" id="strengthfield" disabled> <br>
+			Intelligence: <input type="text" name="intelligence" id="intelligencefield" disabled> <br>
+			Wisdom: <input type="text" name="wisdom" id="wisdomfield" disabled > <br>
+			Dexterity: <input type="text" name="dexterity" id="dexterityfield" disabled> <br>
+			Constitution: <input type="text" name="constitution" id="constitutionfield" disabled> <br>
+			Charisma: <input type="text" name="charisma" id="charismafield" disabled> <br>
+		</form>
+	</div>
+	<br>
+	<br>
+	<button id="acceptAttributes">Accept Attibrute Values</button>
+	<br>
+	<br>
+	<div class="container2" id="radials">	
+		<form>
+			Fighter <input type="radio" id="figherRadial"><br>
+			Thief   <input type="radio" id="thiefRadial"><br>
+			Cleric  <input type="radio" id="clericRadial"><br>
+			Magic-User <input type="radio" id="magicUserRadial"><br>
+		</form>
+	</div>
+    
+	<p id="character1Text"></p>
+    <p id="character2Text"></p>
+    <p id="monsterText"></p>
+    
+    <script src="character.js"></script>
+  </body>
+
+</html>
