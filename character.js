@@ -1,0 +1,1071 @@
+
+window.onload = init;
+
+var game = {
+	
+	characters: [],
+	magicUserSpells: [],
+	clericSpells: [],
+	
+	createCharacter: function(characterType, params)
+	{	
+		var  character;
+		switch(characterType) 
+		{
+			case "fighter":
+				params.hp = generateRandomNumber(8, 1);
+				character = new Fighter(params);
+				break;
+			case "thief":
+				params.hp = generateRandomNumber(4, 1);
+				character = new Thief(params);
+				break;
+			case "cleric":
+				params.hp = generateRandomNumber(6, 1);
+				character = new Cleric(params);
+				break;
+			case "magicUser":
+				params.hp = generateRandomNumber(4, 1);
+				character = new MagicUser(params);
+				break;
+			default:
+				throw "Unknown Character";
+		}
+		character.calculateArmourClass();
+		this.testCharacter(character);
+		this.characters.push(character);
+	},
+	
+	createSpells: function()
+	{
+		var charmPersonParams = {
+			name: "charm person",
+			level: 1,
+			range: 120, 
+			duration: "",
+			target: ["human", "bugbear", "gnoll", "gnome", "hobgoblin", "lizardman", "kolbold", "orge", "pixie", "sprite"],
+			savingThrowToAvoid: "spells",
+			areaAffected: null,
+			damage: null
+		};
+		
+		magicUserSpells.push(new magicUserSpells(charmPersonParams));
+	},		
+	
+	
+		
+		
+		
+	testCharacter: function(charact)
+	{
+		function checkLevel(expectedLevel)
+		{
+			if(charact.currentLevel !== expectedLevel)
+			{
+				console.log("FAIL: characters level should be " + expectedLevel + " but was " + charact.currentLevel) 
+			}
+		}
+		
+		function checkAttribute(attribute, charactAttribute)
+		{
+			if(charactAttribute < 3 || charactAttribute > 18)
+			{
+				console.log("FAIL: character's " + attribute + " is not between 3 and 18");
+			}
+		}
+		
+		function checkHitPoints(expectedMin, expectedMax)
+		{
+			if(charact.getHitPoints < 1 || charact.getHitPoints > 4)
+			{
+				console.log("FAIL: character's hit potins should be between " + expectedMin + " and " + expectedMax);
+			}
+		}				
+		
+		function checkExperience(expectedExperience)
+		{
+			if(charact.experience !== expectedExperience)
+			{
+				console.log("FAIL: character's experience should be " + expectedExperience);
+			}
+		}
+			
+		function checkWeaponsRestriction(expected)
+		{
+			if(charact.hasWeaponRestrictions !== expected)
+			{
+				console.log("FAIL: character's weapon restriction should be " + expected);				
+			}
+		}
+		
+		function checkArmourRestriction(expected)
+		{
+			if(charact.hasArmourRestrictions !== expected)
+			{
+				console.log("FAIL: character's armour restriction should be " + expected);				
+			}
+				
+		}
+		
+		function checkCanUseShield(expected)
+		{
+			if(charact.canUseShield !== expected)
+			{
+				console.log("FAIL: character's 'can use shield' should be " + expected);	
+			}
+		}
+		
+		function checkItemEquiped(item, expected, actual)
+		{
+			if(actual !== expected)
+			{
+				console.log("FAIL: item " + item + " equiped was " + actual + " but " + expected + " was expected");				
+			}
+		}					
+		
+		function checkItemUnEquiped(item, expected, actual)
+		{
+			if(actual !== expected)
+			{
+				console.log("FAIL: item " + item + " unequiped was " + actual + " but " + expected + " was expected");				
+			}
+		}
+		
+		function checkArmourClass(expected)
+		{
+			if(expected > 9)
+			{
+				expected = 9;
+			}
+			if(charact.armourClass !== expected)
+			{
+				console.log("FAIL: character's armour class is " + charact.armourClass + " but " + expected + " was expected");				
+			}
+		}				
+		
+		function checkCanUseMagic(expected)
+		{
+			if(charact.isSpellCaster !== expected)
+			{
+				console.log("FAIL: character is expected to have magic use equal " + expected);				
+			}
+		}					
+		
+		function checkNoOfHandsFree(expected)
+		{
+			if(charact.noOfHandsFree !== expected)
+			{
+				console.log("FAIL: the number of hands the character has free is " + charact.noOfHandsFree + " but " + expected + " was expected");				
+			}
+		}
+				
+		console.log(charact.name + " is a " + charact.constructor.name);
+		checkLevel(1);
+		checkAttribute("strength", charact.getStrength());
+		checkAttribute("intelligence", charact.getIntelligence());		
+		checkAttribute("wisdom", charact.getWisdom());		
+		checkAttribute("dexterity", charact.getDexterity());
+		checkAttribute("constitution", charact.getConstitution());		
+		checkAttribute("charisma", charact.getCharisma());	
+		checkExperience(0);		
+		checkArmourClass(9 + charact.calculateArmourClassDexterityModifier());
+		checkNoOfHandsFree(2);
+		
+		//weapon
+		var swordParams = {
+			cost: 10,
+			damage: 8,
+			isMagic: false,
+			special: "",
+			is2Handed: false
+		};
+				
+		var sword = new Sword(swordParams);
+	
+		var daggerParams = {
+			cost: 3,
+			damage: 4,
+			typeOfWeapon: false,
+			isMagic: false,
+			special: ""
+		};
+
+		var dagger = new Dagger(daggerParams);		
+		
+		//armour
+		var armourParams = {	
+			cost: 20,
+			isMagic: false,
+			special: ""
+		};	
+		
+		var armour = new LeatherArmour(armourParams);
+
+		//shield
+		var shieldParams = {
+			cost: 10,
+			isMagic: false,
+			special: "",
+		};
+				
+		var shield = new Shield(shieldParams);
+		
+		//equip sword and armour
+		var swordEquipped =	charact.equip(sword);	
+		var armourEquipped = charact.equip(armour);
+		
+		if(charact instanceof MagicUser)
+		{	
+			checkHitPoints(1, 4);
+			checkCanUseMagic(true);
+			checkWeaponsRestriction(true);
+			checkItemEquiped("sword", false, swordEquipped);
+			checkNoOfHandsFree(2);
+			checkArmourRestriction(true);
+			checkItemEquiped("armour", false, armourEquipped);
+			checkArmourClass(9 + charact.calculateArmourClassDexterityModifier());	
+			checkCanUseShield(false);
+
+		}
+		else if (charact instanceof Fighter)
+		{
+			checkHitPoints(1, 8);
+			checkCanUseMagic(false);
+			checkWeaponsRestriction(false);
+			checkItemEquiped("sword", true, swordEquipped);
+			checkNoOfHandsFree(1);
+			checkArmourRestriction(false);
+			checkItemEquiped("armour", true, armourEquipped);
+			checkArmourClass(7 + charact.calculateArmourClassDexterityModifier());	
+			checkCanUseShield(true);
+		}		
+		else if (charact instanceof Thief)
+		{		
+			checkHitPoints(1, 4);
+			checkCanUseMagic(false);
+			checkWeaponsRestriction(false);
+			checkItemEquiped("sword", true, swordEquipped);
+			checkNoOfHandsFree(1);
+			checkArmourRestriction(true);
+			checkItemEquiped("armour", true, armourEquipped);
+			checkArmourClass(7 + charact.calculateArmourClassDexterityModifier());	
+			checkCanUseShield(false);
+		}	
+		else if (charact instanceof Cleric)
+		{	
+			checkHitPoints(1, 6);
+			checkCanUseMagic(true);
+			checkWeaponsRestriction(true);
+			checkItemEquiped("sword", false, swordEquipped);
+			checkNoOfHandsFree(2);
+			checkArmourRestriction(false);
+			checkItemEquiped("armour", true, armourEquipped);
+			checkArmourClass(7 + charact.calculateArmourClassDexterityModifier());	
+			checkCanUseShield(true);
+		}
+		
+		//equip shield and dagger (no hands free for dagger
+		var shieldEquipped = charact.equip(shield);	
+		var daggerEquipped = charact.equip(dagger);	
+		charact.gainExperience(1300);
+		
+		if(charact instanceof MagicUser)
+		{		
+			checkItemEquiped("shield", false, shieldEquipped);	
+			checkItemEquiped("dagger", true, daggerEquipped);	
+			checkNoOfHandsFree(1);			
+			checkArmourClass(9 + charact.calculateArmourClassDexterityModifier());
+			checkExperience(1300);	
+			checkLevel(1);
+			checkHitPoints(1, 4);			
+		}
+		else if (charact instanceof Fighter)
+		{
+			checkItemEquiped("shield", true, shieldEquipped);	
+			checkItemEquiped("dagger", false, daggerEquipped);	
+			checkNoOfHandsFree(0);			
+			checkArmourClass(6 + charact.calculateArmourClassDexterityModifier());
+			checkExperience(1300);	
+			checkLevel(1);
+			checkHitPoints(1, 8);			
+		}
+		else if (charact instanceof Thief)
+		{
+			checkItemEquiped("shield", false, shieldEquipped);	
+			checkItemEquiped("dagger", true, daggerEquipped);	
+			checkNoOfHandsFree(0);			
+			checkArmourClass(7 + charact.calculateArmourClassDexterityModifier());
+			checkExperience(1300);	
+			checkLevel(2);
+			checkHitPoints(2, 8);			
+		}	
+		else if (charact instanceof Cleric)
+		{	
+			checkItemEquiped("shield", true, shieldEquipped);	
+			checkItemEquiped("dagger", false, daggerEquipped);
+			checkNoOfHandsFree(1);			
+			checkArmourClass(6  + charact.calculateArmourClassDexterityModifier());
+			checkExperience(1300);	
+			checkLevel(1);
+			checkHitPoints(1, 6);			
+		}			
+		
+		//Unequip sword
+		var unEquipSword = charact.unEquip(sword);
+		charact.gainExperience(1000);	
+		
+		if(charact instanceof MagicUser)
+		{		
+			checkExperience(2300);	
+			checkLevel(1);
+			checkHitPoints(1, 4);	
+			checkItemUnEquiped("sword", false, unEquipSword);	
+			checkNoOfHandsFree(1);			
+		}
+		else if (charact instanceof Fighter)
+		{		
+			checkExperience(2300);	
+			checkLevel(2);
+			checkHitPoints(2, 16);	
+			checkItemUnEquiped("sword", true, unEquipSword);
+			checkNoOfHandsFree(1);			
+		}	
+		else if (charact instanceof Thief)
+		{		
+			checkExperience(2300);	
+			checkLevel(2);
+			checkHitPoints(2, 8);	
+			checkItemUnEquiped("sword", true, unEquipSword);
+			checkNoOfHandsFree(1);			
+		}		
+		else if (charact instanceof Cleric)
+		{
+			checkExperience(2300);	
+			checkLevel(2);
+			checkHitPoints(2, 12);	
+			checkItemUnEquiped("sword", false, unEquipSword);
+			checkNoOfHandsFree(1);			
+		}
+		
+		//equip dagger
+		var daggerEquipped = charact.equip(dagger);
+		
+		if(charact instanceof MagicUser)
+		{		
+			checkItemEquiped("dagger", true, daggerEquipped);
+			checkNoOfHandsFree(0);			
+		}
+		else if (charact instanceof Fighter)
+		{		
+			checkItemEquiped("dagger", true, daggerEquipped);	
+			checkNoOfHandsFree(0);			
+		}	
+		else if (charact instanceof Thief)
+		{		
+			checkItemEquiped("dagger", true, daggerEquipped);	
+			checkNoOfHandsFree(0);			
+		}		
+		else if (charact instanceof Cleric)
+		{
+			checkItemEquiped("dagger", false, daggerEquipped);	
+			checkNoOfHandsFree(1);
+		}
+	}
+};
+
+
+
+function init() 
+{
+	var uiElements = {
+		createCharacterButton: document.getElementById("createCharacter"),
+		acceptAttributes: document.getElementById("acceptAttributes"),
+		strengthField: document.getElementById("strengthfield"),
+		intelligenceField: document.getElementById("intelligencefield"),
+		wisdomField: document.getElementById("wisdomfield"),
+		dexterityField: document.getElementById("dexterityfield"),
+		constitutionField: document.getElementById("constitutionfield"),
+		charimsaField: document.getElementById("charismafield"),
+		container2: document.getElementById("radials"),
+		figherRadial: document.getElementById("figherRadial"),
+		thiefRadial: document.getElementById("thiefRadial"),
+		clericRadial: document.getElementById("clericRadial"),
+		magicUserRadial: document.getElementById("magicUserRadial"),
+		nameField: document.getElementById("namefield")
+	};	
+	
+	uiElements.nameField.value = "";
+	uiElements.strengthField.value = "";
+	uiElements.intelligenceField.value = "";
+	uiElements.wisdomField.value = "";
+	uiElements.dexterityField.value = "";	
+	uiElements.constitutionField.value = "";
+	uiElements.charimsaField.value = "";
+		
+	uiElements.createCharacterButton.onclick = function(){
+		generateAttributes(uiElements);
+	};
+
+	uiElements.acceptAttributes.style.display = 'none';
+	uiElements.acceptAttributes.onclick = function() {
+		chooseClass(uiElements);
+	};
+}
+
+function generateAttributes(uiElements)
+{
+	uiElements.createCharacterButton.innerHTML = "Reset Values";
+	uiElements.acceptAttributes.style.display = 'inline';
+	
+	uiElements.strengthField.value = generateRandomNumber(6, 3);
+	uiElements.intelligenceField.value = generateRandomNumber(6, 3);
+	uiElements.wisdomField.value = generateRandomNumber(6, 3);
+	uiElements.dexterityField.value = generateRandomNumber(6, 3);	
+	uiElements.constitutionField.value = generateRandomNumber(6, 3);
+	uiElements.charimsaField.value = generateRandomNumber(6, 3);	
+}
+
+function chooseClass(uiElements)
+{
+	uiElements.createCharacterButton.style.display = 'none';
+	uiElements.acceptAttributes.style.display = 'none';
+	uiElements.container2.style.display = 'inline-block';
+	
+	var attributes = {
+		name: uiElements.nameField.value,
+		strength: uiElements.strengthField.value,
+		intelligence: uiElements.intelligenceField.value,
+		wisdom: uiElements.wisdomField.value,
+		dexterity: uiElements.dexterityField.value,
+		constitution: uiElements.constitutionField.value,
+		charisma: uiElements.charimsaField.value 
+	};
+
+	uiElements.figherRadial.onclick = function() { game.createCharacter("fighter", attributes); }; 
+	uiElements.thiefRadial.onclick = function() { game.createCharacter("thief", attributes); }; 
+	uiElements.clericRadial.onclick = function() { game.createCharacter("cleric", attributes); }; 
+	uiElements.magicUserRadial.onclick = function() { game.createCharacter("magicUser", attributes); };
+}
+
+function generateRandomNumber(diceType, noOfDice)
+{
+	var totalVal = 0;
+	
+	for(var i=0; noOfDice > i;i++)
+	{
+		totalVal += (Math.floor(Math.random() * diceType)) + 1;
+	}
+	return totalVal;
+}
+
+
+
+//--------------------------------------------
+//             CHARACTER TYPES
+//--------------------------------------------
+
+function Character()
+{	
+	this.isSpellCaster = false;
+	this.hasWeaponRestrictions = false;
+	this.hasArmourRestrictions = false;
+	this.canUseShield = true;
+	this.isDead = false;
+	this.noOfHands = 2;
+	this.noOfHandsFree = 2;
+	this.equipedInHands = [];
+	this.useableWeapon = [];
+	this.equipedArmour = [];
+	this.armourClass = 9;
+	
+	this.getStrength = function() { return this.strength };
+	this.getIntelligence = function() { return this.intelligence };
+	this.getWisdom = function() { return this.wisdom };
+	this.getDexterity = function() { return this.dexterity };
+	this.getConstitution = function() { return this.constitution };
+	this.getCharisma = function() { return this.charisma };
+	
+	this.getHitPoints = function() { return this.hitPoints };
+	
+	this.gainExperience = function(experience){
+		this.experience = this.experience + experience;
+		this.checkIfLevelGained();
+	};
+	
+	this.checkIfLevelGained = function() 
+	{
+		//takes characters current experience and compares it to the 
+		//experience required to level up (we use their currentLevel in the array as level starts at 1 and array at 0)
+		if( this.experience >= this.levelExperience[this.currentLevel] )
+		{
+			this.levelUp();
+		}
+	};
+	
+	this.isShieldEquiped = function()
+	{
+		for(var i=0; this.equipedInHands.length > i; i++)
+		{
+			if(this.equipedInHands[i] instanceof Shield)
+			{
+				return true;
+			}
+		}
+		return false;
+	};
+	
+	this.isArmourEquiped = function()
+	{
+		if(this.equipedArmour.length > 0)
+		{
+			return true;
+		}
+		return false;
+	};		
+	
+	this.isCharacterUnableToUseThisWeapon = function(weapon)
+	{
+		return (this.hasWeaponRestrictions && ( this.useableWeapon.indexOf(weapon.typeOfWeapon) < 0));
+	};
+	
+	this.isCharacterAbleToUseAShield = function()
+	{
+		return this.canUseShield;
+	};
+	
+	this.isCharacterUnableToUseThisArmour = function(armour)
+	{
+		return (this.hasArmourRestrictions && ( this.useableArmour.indexOf(armour.type) < 0 ));
+	};
+
+	this.getNumberOfHandsRequiredForItem = function(item)
+	{
+		if(item.is2Handed)
+		{
+			return 2;
+		}
+		else
+		{
+			return 1;
+		}
+	};
+
+	this.doesCharacterHaveHandsAvailableToEquipItem = function(item, handsRequired)
+	{		
+		if(this.noOfHandsFree < handsRequired)
+		{
+			return false;
+		}
+		return true;
+	};	
+	
+	this.equip = function(item)
+	{
+		if(item.equipTo === "hand")
+		{
+			//can this character use this weapon
+			if((item instanceof Weapon) && this.isCharacterUnableToUseThisWeapon(item))
+			{
+				console.log("this character cannot use this weapon");
+			}
+			//can this character use a shield
+			else if((item instanceof Shield) && !this.isCharacterAbleToUseAShield())
+			{
+				console.log("this character cannot use a shield");				
+			}
+			else
+			{
+				var handsRequired = this.getNumberOfHandsRequiredForItem(item);
+					
+				if(this.doesCharacterHaveHandsAvailableToEquipItem(item, handsRequired))
+				{
+					this.noOfHandsFree = this.noOfHandsFree - handsRequired;
+					this.equipedInHands.push(item);
+					this.calculateArmourClass();
+					return true;
+				}
+				else 
+				{
+					console.log("you need to unequip something first");
+				}
+			}
+		}
+		else if	(item.equipTo === "body")
+		{
+			if(this.isCharacterUnableToUseThisArmour(item))
+			{
+				console.log("this character cannot use this type of armour");
+			}
+			else if(this.isArmourEquiped())
+			{
+				console.log("you need to unequip the character current armour first");	
+			}
+			else
+			{
+				this.equipedArmour.push(item);
+				this.calculateArmourClass();
+				return true;
+			}
+		}
+		return false;
+	};
+	
+	this.isEquipped = function(item, itemLocation)
+	{
+		if(itemLocation === "hand")
+		{	
+			return this.equipedInHands.indexOf(item);
+		}
+		else 
+		{
+			return this.equipedArmour.indexOf(item);
+		}
+	};
+	
+	this.unEquip = function(item)
+	{
+		//returns the index of the item in the approprate location array
+		var indexOfItem = this.isEquipped(item, item.equipTo)
+		if(indexOfItem >= 0)
+		{
+			if(item.equipTo === "hand")
+			{
+				this.equipedInHands.splice(indexOfItem, 1);
+				this.noOfHandsFree = this.noOfHandsFree + this.getNumberOfHandsRequiredForItem(item);
+				return true;
+			}
+			else
+			{
+				this.equipedArmour.splice(indexOfItem, 1);
+				return true;
+			}
+		}
+		return false;		
+	}
+	
+	this.calculateArmourClassDexterityModifier = function()
+	{
+		var dex = this.getDexterity();
+		if( dex === 3 )
+		{
+			return 3;
+		}
+		else if ( dex <= 5 )
+		{
+			return 2;
+		}
+		else if ( dex <= 8 )
+		{
+			return 1;
+		}
+		else if ( dex <= 12 )
+		{
+			return 0;
+		}
+		else if ( dex <= 15 )
+		{
+			return -1;
+		}
+		else if  ( dex <= 17 )
+		{
+			return -2;
+		}
+		else
+		{
+			return -3;
+		}
+	};
+	
+	this.calculateArmourClass = function() 
+	{
+		var armourClass = 9;
+		
+		//if the character has armour equiped set their armour class
+		if(this.isArmourEquiped())
+		{
+			armourClass = this.equipedArmour[0].armourClass;
+		}
+		
+		//recalculate their armour class if they have a shield 
+		if(this.isShieldEquiped())
+		{
+			armourClass = armourClass - 1;
+		}
+		
+		//recalculate thier armour class taking into account their dexterity
+		armourClass = armourClass + this.calculateArmourClassDexterityModifier();
+		
+		//if the characters AC is now greater than 9 set it back to 9
+		if(armourClass > 9)
+		{
+			this.armourClass = 9;
+		}
+		else
+		{
+			this.armourClass = armourClass;
+		}	
+	};
+}
+
+//--------------------------------------------
+//-------------Fighter------------------------
+//--------------------------------------------
+function Fighter(params)
+{
+	this.name = params.name;
+	this.currentLevel = 1;
+	this.experience = 0;
+	this.hitPoints = params.hp;
+	this.strength = params.strength; 
+	this.intelligence = params.intelligence; 
+	this.wisdom = params.wisdom; 
+	this.dexterity = params.dexterity; 
+	this.constitution = params.constitution; 
+	this.charisma = params.charisma; 
+}
+
+Fighter.prototype = new Character();
+Fighter.prototype.constructor = Fighter;
+
+
+Fighter.prototype.levelExperience = [0, 2000, 4000];
+Fighter.prototype.levelUp = function() {
+	this.currentLevel++;
+	this.hitPoints += generateRandomNumber(8, 1);
+};
+
+
+//--------------------------------------------
+//-------------Thief------------------------
+//--------------------------------------------
+function Thief(params)
+{
+	this.name = params.name;
+	this.currentLevel = 1;
+	this.experience = 0;
+	this.hitPoints = params.hp;
+	this.strength = params.strength; 
+	this.intelligence = params.intelligence; 
+	this.wisdom = params.wisdom; 
+	this.dexterity = params.dexterity; 
+	this.constitution = params.constitution; 
+	this.charisma = params.charisma;
+}
+
+Thief.prototype = new Character();
+Thief.prototype.constructor = Thief;
+
+Thief.prototype.hasArmourRestrictions = true;
+Thief.prototype.useableArmour = ["leather"];
+Thief.prototype.canUseShield = false;
+Thief.prototype.levelExperience = [0, 1200, 2400];
+Thief.prototype.pickLockChance = [15, 20, 25];
+
+Thief.prototype.levelUp = function() {
+	this.currentLevel++;
+	this.hitPoints += generateRandomNumber(4, 1);
+};
+Thief.prototype.pickLockSuccess = function() {
+	//takes random perc and compares it to the lock pick success chance
+	//(we use their currentLevel in the array as level starts at 1 and array at 0)
+	if(generateRandomNumber(100, 1) >= this.pickLockChance[this.currentLevel - 1])
+	{
+		return true;
+	}
+	else {
+		return false;
+	}
+};
+
+//TODO 
+// implement find/remove traps, pick pocket, move silently, climb sheer surfaces, hide in shadows, hear noise
+
+
+//--------------------------------------------
+//------------Cleric------------------------
+//--------------------------------------------
+function Cleric(params)
+{
+	this.name = params.name;
+	this.currentLevel = 1;
+	this.experience = 0;
+	this.hitPoints = params.hp;
+	this.strength = params.strength; 
+	this.intelligence = params.intelligence; 
+	this.wisdom = params.wisdom; 
+	this.dexterity = params.dexterity; 
+	this.constitution = params.constitution; 
+	this.charisma = params.charisma; 
+}
+
+Cleric.prototype = new Character();
+Cleric.prototype.constructor = Cleric;
+
+Cleric.prototype.hasWeaponRestrictions = true;
+Cleric.prototype.useableWeapon = ["club", "mace", "sling", "war hammer"];
+Cleric.prototype.levelExperience = [0, 1500, 3000];
+Cleric.prototype.isSpellCaster = true;
+
+Cleric.prototype.levelUp = function() {
+	this.currentLevel++;
+	this.hitPoints += generateRandomNumber(6, 1);
+};
+
+//TODO 
+// turn undead
+
+//--------------------------------------------
+//-------------Magic-User---------------------
+//--------------------------------------------
+function MagicUser(params)
+{
+	this.name = params.name;
+	this.currentLevel = 1;
+	this.experience = 0;
+	this.hitPoints = params.hp;
+	this.strength = params.strength; 
+	this.intelligence = params.intelligence; 
+	this.wisdom = params.wisdom; 
+	this.dexterity = params.dexterity; 
+	this.constitution = params.constitution; 
+	this.charisma = params.charisma; 
+	this.noOfCurrentFirstLevelSpells = 0;
+	this.maxNoOfFirstLevelSpells = 1;
+	this.noOfCurrentSecondLevelSpells = 0;
+	this.maxNoOfSecondLevelSpells = 0;
+	this.currentSpells = [];
+}
+
+MagicUser.prototype = new Character();
+MagicUser.prototype.constructor = MagicUser;
+
+MagicUser.prototype.hasWeaponRestrictions = true;
+MagicUser.prototype.useableWeapon = ["dagger", "silver dagger"];
+MagicUser.prototype.hasArmourRestrictions = true;
+MagicUser.prototype.useableArmour = [];
+MagicUser.prototype.canUseShield = false;
+MagicUser.prototype.levelExperience = [0, 2500, 5000];
+MagicUser.prototype.isSpellCaster = true;
+
+MagicUser.prototype.levelUp = function() {
+	this.currentLevel++;
+	
+	if(this.currentLevel === 2)
+	{
+		this.maxNoOfFirstLevelSpells++;
+	}
+	else if(this.currentLevel === 3)
+	{
+		this.maxNoOfSecondLevelSpells++;
+	}
+	
+	this.hitPoints += generateRandomNumber(4, 1);
+};
+
+MagicUser.prototype.learnSpell = function(spell)
+{
+	if(spell.level === 1)
+	{
+		if(this.maxNoOfFirstLevelSpells > this.noOfCurrentFirstLevelSpells)
+		{
+			noOfCurrentFirstLevelSpells++;
+			this.currentSpells.push(spell);
+		}
+		else
+		{
+			console.log(this.name + " isnt able to learn any more first Level spells");
+		}
+	}
+	else if (spell.level === 2)
+	{
+		if(this.maxNoOfSecondLevelSpells > this.noOfCurrentSecondLevelSpells)
+		{
+			noOfCurrentSecondLevelSpells++;
+			this.currentSpells.push(spell);
+		}
+		else
+		{
+			console.log(this.name + " isnt able to learn any more second Level spells");
+		}
+	}
+};
+
+MagicUser.prototype.resetSpells = function()
+{
+	this.noOfCurrentFirstLevelSpells = 0;
+	this.noOfCurrentSecondLevelSpells = 0;
+	this.currentSpells = [];
+};
+
+//--------------------------------------------
+//             SPELLS
+//--------------------------------------------
+function Spell()
+{
+}
+
+//-------------------------------------------
+//---------Magic-User Spells-----------------
+//-------------------------------------------
+function MagicUserSpell(params)
+{
+	this.name = params.name;
+	this.level = params.level;
+	this.range = params.range;
+	this.duration = params.duration;
+	this.target = params.target;
+	this.savingThrowToAvoid = params.savingThrowToAvoid;
+	this.areaAffected = params.areaAffected;
+	this.damage = params.damage;
+}
+
+MagicUserSpell.prototype = new Spell();
+MagicUserSpell.prototype.constructor = MagicUserSpell;
+
+
+
+//--------------------------------------------
+//             MONSTERS
+//--------------------------------------------
+function Monster()
+{
+}
+
+//-------------------------------------------
+//-------------------Orc---------------------
+//-------------------------------------------
+function Orc(params)
+{
+	this.armourClass = 6;
+	this.hitDice = 1;
+	this.movement = 120;
+	this.noAttacks = 1;
+	
+}
+
+
+//----------------------------------------
+//			ITEMS 
+//----------------------------------------
+function Item() 
+{
+}
+
+
+//------------------------------------------
+//---------------Weapon---------------------
+//------------------------------------------
+function Weapon()
+{
+	this.equipTo = "hand";
+	this.is2Handed = false;
+}
+
+Weapon.prototype = new Item();
+Weapon.prototype.constructor = Weapon;
+
+
+//-----------------------------------------
+//-------------Sword-----------------------
+//-----------------------------------------
+function Sword(params)
+ {
+	this.cost = params.cost;
+	this.damage = params.damage;
+	this.typeOfWeapon = "sword";
+	this.isMagic = params.isMagic;
+	this.special = params.special;
+	this.is2Handed = params.is2Handed;
+}
+
+Sword.prototype = new Weapon();
+Sword.prototype.constructor = Sword;
+
+//-----------------------------------------
+//-------------Dagger-----------------------
+//-----------------------------------------
+function Dagger(params)
+ {
+	this.cost = params.cost;
+	this.damage = params.damage;
+	this.typeOfWeapon = "dagger";
+	this.isMagic = params.isMagic;
+	this.special = params.special;
+}
+
+Dagger.prototype = new Weapon();
+Dagger.prototype.constructor = Dagger;
+
+
+
+//------------------------------------------
+//---------------Shield---------------------
+//------------------------------------------
+function Shield(params)
+{
+	this.cost = params.cost;
+	this.isMagic = params.isMagic;
+	this.special = params.special;
+	this.equipTo = "hand";
+}
+
+Shield.prototype = new Item();
+Shield.prototype.constructor = Item;
+
+
+
+//------------------------------------------
+//---------------Armour---------------------
+//------------------------------------------
+function Armour()
+{
+	this.equipTo = "body";
+}
+
+Armour.prototype = new Item();
+Armour.prototype.constructor = Item;
+
+//------------------------------------------
+//---------------Leather Armour-------------
+//------------------------------------------
+function LeatherArmour(params)
+{
+	this.cost = params.cost;
+	this.isMagic = params.isMagic;
+	this.special = params.special;
+	this.armourClass = 7;
+	this.type = "leather";
+}
+
+LeatherArmour.prototype = new Armour();
+LeatherArmour.prototype.constructor = Armour;
+
+//------------------------------------------
+//---------------Plate Mail-----------------
+//------------------------------------------
+function PlateMail(params)
+{
+	this.cost = params.cost;
+	this.isMagic = params.isMagic;
+	this.special = params.special;
+	this.armourClass = 3;
+	this.type = "plate";
+}
+
+PlateMail.prototype = new Armour();
+PlateMail.prototype.constructor = Armour;
+
+//------------------------------------------
+//---------------Chain Mail-----------------
+//------------------------------------------
+function ChainMail(params)
+{
+	this.cost = params.cost;
+	this.isMagic = params.isMagic;
+	this.special = params.special;
+	this.armourClass = 5;
+	this.type = "chain";
+}
+
+ChainMail.prototype = new Armour();
+ChainMail.prototype.constructor = Armour;
