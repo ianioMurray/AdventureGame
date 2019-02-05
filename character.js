@@ -9,7 +9,7 @@ var game = {
 	
 	createCharacter: function(characterType, params)
 	{	
-		var  character;
+		var  character ="";
 		switch(characterType) 
 		{
 			case "fighter":
@@ -32,7 +32,7 @@ var game = {
 				throw "Unknown Character";
 		}
 		character.calculateArmourClass();
-		this.testCharacter(character);
+		unitTest.testCharacter(character);
 		this.characters.push(character);
 	},
 	
@@ -50,326 +50,6 @@ var game = {
 		};
 		
 		magicUserSpells.push(new magicUserSpells(charmPersonParams));
-	},		
-	
-	
-		
-		
-		
-	testCharacter: function(charact)
-	{
-		function checkLevel(expectedLevel)
-		{
-			if(charact.currentLevel !== expectedLevel)
-			{
-				console.log("FAIL: characters level should be " + expectedLevel + " but was " + charact.currentLevel) 
-			}
-		}
-		
-		function checkAttribute(attribute, charactAttribute)
-		{
-			if(charactAttribute < 3 || charactAttribute > 18)
-			{
-				console.log("FAIL: character's " + attribute + " is not between 3 and 18");
-			}
-		}
-		
-		function checkHitPoints(expectedMin, expectedMax)
-		{
-			if(charact.getHitPoints < 1 || charact.getHitPoints > 4)
-			{
-				console.log("FAIL: character's hit potins should be between " + expectedMin + " and " + expectedMax);
-			}
-		}				
-		
-		function checkExperience(expectedExperience)
-		{
-			if(charact.experience !== expectedExperience)
-			{
-				console.log("FAIL: character's experience should be " + expectedExperience);
-			}
-		}
-			
-		function checkWeaponsRestriction(expected)
-		{
-			if(charact.hasWeaponRestrictions !== expected)
-			{
-				console.log("FAIL: character's weapon restriction should be " + expected);				
-			}
-		}
-		
-		function checkArmourRestriction(expected)
-		{
-			if(charact.hasArmourRestrictions !== expected)
-			{
-				console.log("FAIL: character's armour restriction should be " + expected);				
-			}
-				
-		}
-		
-		function checkCanUseShield(expected)
-		{
-			if(charact.canUseShield !== expected)
-			{
-				console.log("FAIL: character's 'can use shield' should be " + expected);	
-			}
-		}
-		
-		function checkItemEquiped(item, expected, actual)
-		{
-			if(actual !== expected)
-			{
-				console.log("FAIL: item " + item + " equiped was " + actual + " but " + expected + " was expected");				
-			}
-		}					
-		
-		function checkItemUnEquiped(item, expected, actual)
-		{
-			if(actual !== expected)
-			{
-				console.log("FAIL: item " + item + " unequiped was " + actual + " but " + expected + " was expected");				
-			}
-		}
-		
-		function checkArmourClass(expected)
-		{
-			if(expected > 9)
-			{
-				expected = 9;
-			}
-			if(charact.armourClass !== expected)
-			{
-				console.log("FAIL: character's armour class is " + charact.armourClass + " but " + expected + " was expected");				
-			}
-		}				
-		
-		function checkCanUseMagic(expected)
-		{
-			if(charact.isSpellCaster !== expected)
-			{
-				console.log("FAIL: character is expected to have magic use equal " + expected);				
-			}
-		}					
-		
-		function checkNoOfHandsFree(expected)
-		{
-			if(charact.noOfHandsFree !== expected)
-			{
-				console.log("FAIL: the number of hands the character has free is " + charact.noOfHandsFree + " but " + expected + " was expected");				
-			}
-		}
-				
-		console.log(charact.name + " is a " + charact.constructor.name);
-		checkLevel(1);
-		checkAttribute("strength", charact.getStrength());
-		checkAttribute("intelligence", charact.getIntelligence());		
-		checkAttribute("wisdom", charact.getWisdom());		
-		checkAttribute("dexterity", charact.getDexterity());
-		checkAttribute("constitution", charact.getConstitution());		
-		checkAttribute("charisma", charact.getCharisma());	
-		checkExperience(0);		
-		checkArmourClass(9 + charact.calculateArmourClassDexterityModifier());
-		checkNoOfHandsFree(2);
-		
-		//weapon
-		var swordParams = {
-			cost: 10,
-			damage: 8,
-			isMagic: false,
-			special: "",
-			is2Handed: false
-		};
-				
-		var sword = new Sword(swordParams);
-	
-		var daggerParams = {
-			cost: 3,
-			damage: 4,
-			typeOfWeapon: false,
-			isMagic: false,
-			special: ""
-		};
-
-		var dagger = new Dagger(daggerParams);		
-		
-		//armour
-		var armourParams = {	
-			cost: 20,
-			isMagic: false,
-			special: ""
-		};	
-		
-		var armour = new LeatherArmour(armourParams);
-
-		//shield
-		var shieldParams = {
-			cost: 10,
-			isMagic: false,
-			special: "",
-		};
-				
-		var shield = new Shield(shieldParams);
-		
-		//equip sword and armour
-		var swordEquipped =	charact.equip(sword);	
-		var armourEquipped = charact.equip(armour);
-		
-		if(charact instanceof MagicUser)
-		{	
-			checkHitPoints(1, 4);
-			checkCanUseMagic(true);
-			checkWeaponsRestriction(true);
-			checkItemEquiped("sword", false, swordEquipped);
-			checkNoOfHandsFree(2);
-			checkArmourRestriction(true);
-			checkItemEquiped("armour", false, armourEquipped);
-			checkArmourClass(9 + charact.calculateArmourClassDexterityModifier());	
-			checkCanUseShield(false);
-
-		}
-		else if (charact instanceof Fighter)
-		{
-			checkHitPoints(1, 8);
-			checkCanUseMagic(false);
-			checkWeaponsRestriction(false);
-			checkItemEquiped("sword", true, swordEquipped);
-			checkNoOfHandsFree(1);
-			checkArmourRestriction(false);
-			checkItemEquiped("armour", true, armourEquipped);
-			checkArmourClass(7 + charact.calculateArmourClassDexterityModifier());	
-			checkCanUseShield(true);
-		}		
-		else if (charact instanceof Thief)
-		{		
-			checkHitPoints(1, 4);
-			checkCanUseMagic(false);
-			checkWeaponsRestriction(false);
-			checkItemEquiped("sword", true, swordEquipped);
-			checkNoOfHandsFree(1);
-			checkArmourRestriction(true);
-			checkItemEquiped("armour", true, armourEquipped);
-			checkArmourClass(7 + charact.calculateArmourClassDexterityModifier());	
-			checkCanUseShield(false);
-		}	
-		else if (charact instanceof Cleric)
-		{	
-			checkHitPoints(1, 6);
-			checkCanUseMagic(true);
-			checkWeaponsRestriction(true);
-			checkItemEquiped("sword", false, swordEquipped);
-			checkNoOfHandsFree(2);
-			checkArmourRestriction(false);
-			checkItemEquiped("armour", true, armourEquipped);
-			checkArmourClass(7 + charact.calculateArmourClassDexterityModifier());	
-			checkCanUseShield(true);
-		}
-		
-		//equip shield and dagger (no hands free for dagger
-		var shieldEquipped = charact.equip(shield);	
-		var daggerEquipped = charact.equip(dagger);	
-		charact.gainExperience(1300);
-		
-		if(charact instanceof MagicUser)
-		{		
-			checkItemEquiped("shield", false, shieldEquipped);	
-			checkItemEquiped("dagger", true, daggerEquipped);	
-			checkNoOfHandsFree(1);			
-			checkArmourClass(9 + charact.calculateArmourClassDexterityModifier());
-			checkExperience(1300);	
-			checkLevel(1);
-			checkHitPoints(1, 4);			
-		}
-		else if (charact instanceof Fighter)
-		{
-			checkItemEquiped("shield", true, shieldEquipped);	
-			checkItemEquiped("dagger", false, daggerEquipped);	
-			checkNoOfHandsFree(0);			
-			checkArmourClass(6 + charact.calculateArmourClassDexterityModifier());
-			checkExperience(1300);	
-			checkLevel(1);
-			checkHitPoints(1, 8);			
-		}
-		else if (charact instanceof Thief)
-		{
-			checkItemEquiped("shield", false, shieldEquipped);	
-			checkItemEquiped("dagger", true, daggerEquipped);	
-			checkNoOfHandsFree(0);			
-			checkArmourClass(7 + charact.calculateArmourClassDexterityModifier());
-			checkExperience(1300);	
-			checkLevel(2);
-			checkHitPoints(2, 8);			
-		}	
-		else if (charact instanceof Cleric)
-		{	
-			checkItemEquiped("shield", true, shieldEquipped);	
-			checkItemEquiped("dagger", false, daggerEquipped);
-			checkNoOfHandsFree(1);			
-			checkArmourClass(6  + charact.calculateArmourClassDexterityModifier());
-			checkExperience(1300);	
-			checkLevel(1);
-			checkHitPoints(1, 6);			
-		}			
-		
-		//Unequip sword
-		var unEquipSword = charact.unEquip(sword);
-		charact.gainExperience(1000);	
-		
-		if(charact instanceof MagicUser)
-		{		
-			checkExperience(2300);	
-			checkLevel(1);
-			checkHitPoints(1, 4);	
-			checkItemUnEquiped("sword", false, unEquipSword);	
-			checkNoOfHandsFree(1);			
-		}
-		else if (charact instanceof Fighter)
-		{		
-			checkExperience(2300);	
-			checkLevel(2);
-			checkHitPoints(2, 16);	
-			checkItemUnEquiped("sword", true, unEquipSword);
-			checkNoOfHandsFree(1);			
-		}	
-		else if (charact instanceof Thief)
-		{		
-			checkExperience(2300);	
-			checkLevel(2);
-			checkHitPoints(2, 8);	
-			checkItemUnEquiped("sword", true, unEquipSword);
-			checkNoOfHandsFree(1);			
-		}		
-		else if (charact instanceof Cleric)
-		{
-			checkExperience(2300);	
-			checkLevel(2);
-			checkHitPoints(2, 12);	
-			checkItemUnEquiped("sword", false, unEquipSword);
-			checkNoOfHandsFree(1);			
-		}
-		
-		//equip dagger
-		var daggerEquipped = charact.equip(dagger);
-		
-		if(charact instanceof MagicUser)
-		{		
-			checkItemEquiped("dagger", true, daggerEquipped);
-			checkNoOfHandsFree(0);			
-		}
-		else if (charact instanceof Fighter)
-		{		
-			checkItemEquiped("dagger", true, daggerEquipped);	
-			checkNoOfHandsFree(0);			
-		}	
-		else if (charact instanceof Thief)
-		{		
-			checkItemEquiped("dagger", true, daggerEquipped);	
-			checkNoOfHandsFree(0);			
-		}		
-		else if (charact instanceof Cleric)
-		{
-			checkItemEquiped("dagger", false, daggerEquipped);	
-			checkNoOfHandsFree(1);
-		}
 	}
 };
 
@@ -472,12 +152,9 @@ function Character()
 	this.canUseShield = true;
 	this.isDead = false;
 	this.noOfHands = 2;
-	this.noOfHandsFree = 2;
-	this.equipedInHands = [];
 	this.useableWeapon = [];
-	this.equipedArmour = [];
-	this.armourClass = 9;
-	
+
+
 	this.getStrength = function() { return this.strength };
 	this.getIntelligence = function() { return this.intelligence };
 	this.getWisdom = function() { return this.wisdom };
@@ -722,6 +399,10 @@ function Fighter(params)
 	this.dexterity = params.dexterity; 
 	this.constitution = params.constitution; 
 	this.charisma = params.charisma; 
+	this.noOfHandsFree = 2;
+	this.equipedInHands = [];
+	this.equipedArmour = [];
+	this.armourClass = 9;
 }
 
 Fighter.prototype = new Character();
@@ -750,6 +431,10 @@ function Thief(params)
 	this.dexterity = params.dexterity; 
 	this.constitution = params.constitution; 
 	this.charisma = params.charisma;
+	this.noOfHandsFree = 2;
+	this.equipedInHands = [];
+	this.equipedArmour = [];
+	this.armourClass = 9;
 }
 
 Thief.prototype = new Character();
@@ -796,6 +481,10 @@ function Cleric(params)
 	this.dexterity = params.dexterity; 
 	this.constitution = params.constitution; 
 	this.charisma = params.charisma; 
+	this.noOfHandsFree = 2;
+	this.equipedInHands = [];
+	this.equipedArmour = [];
+	this.armourClass = 9;
 }
 
 Cleric.prototype = new Character();
@@ -834,6 +523,10 @@ function MagicUser(params)
 	this.noOfCurrentSecondLevelSpells = 0;
 	this.maxNoOfSecondLevelSpells = 0;
 	this.currentSpells = [];
+	this.noOfHandsFree = 2;
+	this.equipedInHands = [];
+	this.equipedArmour = [];
+	this.armourClass = 9;
 }
 
 MagicUser.prototype = new Character();
