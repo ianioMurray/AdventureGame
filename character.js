@@ -32,7 +32,7 @@ var game = {
 				throw "Unknown Character";
 		}
 		character.calculateArmourClass();
-		unitTest.testCharacter(character);
+		runCharacterGenerationTest(character);
 		this.characters.push(character);
 	},
 	
@@ -302,7 +302,8 @@ function Character()
 	this.unEquip = function(item)
 	{
 		//returns the index of the item in the approprate location array
-		var indexOfItem = this.isEquipped(item, item.equipTo)
+		var indexOfItem = this.isEquipped(item, item.equipTo);
+
 		if(indexOfItem >= 0)
 		{
 			if(item.equipTo === "hand")
@@ -314,6 +315,7 @@ function Character()
 			else
 			{
 				this.equipedArmour.splice(indexOfItem, 1);
+				this.calculateArmourClass();
 				return true;
 			}
 		}
