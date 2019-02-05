@@ -87,6 +87,16 @@ function runUnitTests()
 		}
 	}
 	
+	function checkRequiredToHitRoles(adventurer, expected, actual)
+	{
+		if(actual !== expected)
+		{
+			allTestsPass = false;
+			noOfFailingTests++;			
+			console.log("FAIL: " + adventurer.name + " requires a roll of " + actual + " to hit but " + expected + " was expected");				
+		}
+	}
+	
 	//character 	
 	var magaicUserTestParams = { 
 		name: "kazam",
@@ -333,6 +343,14 @@ function runUnitTests()
 	
 	//check it is not possible to hold 3 items (testing on fighter has he has no hands free currently)
 	checkItemEquiped(fighter, "dagger", false, fighter.equip(dagger));	
+	
+	//check 'required to hit' values 
+	checkRequiredToHitRoles(magicUser, 10, magicUser.roleRequiredToHit(magicUser)); //magic user has an AC of 9
+	checkRequiredToHitRoles(magicUser, 18, magicUser.roleRequiredToHit(fighter));   //fighter has an AC of 1
+	checkRequiredToHitRoles(magicUser, 13, magicUser.roleRequiredToHit(thief));     //thief has an AC of 6
+	checkRequiredToHitRoles(magicUser, 15, magicUser.roleRequiredToHit(cleric));    //cleric has an AC of 4
+
+	
 
 	if(allTestsPass == true)
 	{

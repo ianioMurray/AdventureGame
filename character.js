@@ -161,10 +161,11 @@ function Character()
 	this.getDexterity = function() { return this.dexterity };
 	this.getConstitution = function() { return this.constitution };
 	this.getCharisma = function() { return this.charisma };
-	
 	this.getHitPoints = function() { return this.hitPoints };
 	
-	this.gainExperience = function(experience){
+	
+	this.gainExperience = function(experience)
+	{
 		this.experience = this.experience + experience;
 		this.checkIfLevelGained();
 	};
@@ -384,6 +385,45 @@ function Character()
 			this.armourClass = armourClass;
 		}	
 	};
+	
+	this.roleRequiredToHit = function(opponent)
+	{
+		var scoresToHit = [ 	{armourClass: 9, toHit: 10},
+								{armourClass: 8, toHit: 11},
+								{armourClass: 7, toHit: 12},
+								{armourClass: 6, toHit: 13},
+								{armourClass: 5, toHit: 14},
+								{armourClass: 4, toHit: 15},
+								{armourClass: 3, toHit: 16},
+								{armourClass: 2, toHit: 17},
+								{armourClass: 1, toHit: 18},
+								{armourClass: 0, toHit: 19},
+								{armourClass: -1, toHit: 20},
+								{armourClass: -2, toHit: 20},
+								{armourClass: -3, toHit: 20} ];
+		
+		for(var i = 0; scoresToHit.length > i; i++)
+		{
+			if(scoresToHit[i].armourClass === opponent.armourClass)
+			{
+				return scoresToHit[i].toHit;
+			}	
+		}
+		return 20;
+	};
+	
+	this.attack = function(opponent)
+	{
+		var requiredToHit = this.roleRequiredToHit(opponent);
+		
+		var role = generateRandomNumber(20, 1);
+		
+		if(role >= requiredToHit)
+		{
+			return "hit";
+		}
+		return "miss";
+	}
 }
 
 //--------------------------------------------
