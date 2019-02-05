@@ -97,6 +97,33 @@ function runUnitTests()
 		}
 	}
 	
+	function checkIfAttackHit(adventurer, expected, actual)
+	{
+		if(actual !== expected)
+		{
+			allTestsPass = false;
+			noOfFailingTests++;			
+			console.log("FAIL: " + adventurer.name + "'s attack hit was " + actual + " but " + expected + " was expected");				
+		}	
+	};
+	
+	function checkHitPointsAndIsDeadAfterTakingDamage(adventurer, expectedHp, isDeadExpected)
+	{
+		if(adventurer.currentHitPoints !== expectedHp)
+		{
+			allTestsPass = false;
+			noOfFailingTests++;			
+			console.log("FAIL: " + adventurer.name + "'s hit points are " + adventurer.currentHitPoints + " but " + expectedHp + " was expected");				
+		}
+		
+		if(adventurer.isDead !== isDeadExpected)
+		{
+			allTestsPass = false;
+			noOfFailingTests++;			
+			console.log("FAIL: " + adventurer.name + "'s was dead " + adventurer.isDead + " but " + isDeadExpected + " was expected");				
+		}			
+	};
+	
 	//character 	
 	var magaicUserTestParams = { 
 		name: "kazam",
@@ -345,11 +372,21 @@ function runUnitTests()
 	checkItemEquiped(fighter, "dagger", false, fighter.equip(dagger));	
 	
 	//check 'required to hit' values 
-	checkRequiredToHitRoles(magicUser, 10, magicUser.roleRequiredToHit(magicUser)); //magic user has an AC of 9
-	checkRequiredToHitRoles(magicUser, 18, magicUser.roleRequiredToHit(fighter));   //fighter has an AC of 1
-	checkRequiredToHitRoles(magicUser, 13, magicUser.roleRequiredToHit(thief));     //thief has an AC of 6
-	checkRequiredToHitRoles(magicUser, 15, magicUser.roleRequiredToHit(cleric));    //cleric has an AC of 4
+	checkRequiredToHitRoles(magicUser, 10, magicUser.roleRequiredToHit(magicUser, dagger)); //magic user has an AC of 9
+	checkRequiredToHitRoles(magicUser, 18, magicUser.roleRequiredToHit(fighter, dagger));   //fighter has an AC of 1
+	checkRequiredToHitRoles(magicUser, 13, magicUser.roleRequiredToHit(thief, dagger));     //thief has an AC of 6
+	checkRequiredToHitRoles(magicUser, 15, magicUser.roleRequiredToHit(cleric, dagger));    //cleric has an AC of 4
 
+	//check for a hit 
+	checkIfAttackHit(magicUser, false, magicUser.isAttackAHit(9, magicUser.roleRequiredToHit(magicUser)));
+	checkIfAttackHit(magicUser, true, magicUser.isAttackAHit(10, magicUser.roleRequiredToHit(magicUser)));	
+	checkIfAttackHit(magicUser, true, magicUser.isAttackAHit(11, magicUser.roleRequiredToHit(magicUser)));	
+	
+	//check take damage and is character dead
+	magicUser.takeDamage(1);
+	checkHitPointsAndIsDeadAfterTakingDamage(magicUser, 1, false);
+	fighter.takeDamage(10);
+	checkHitPointsAndIsDeadAfterTakingDamage(fighter, -2, true);	
 	
 
 	if(allTestsPass == true)
