@@ -734,7 +734,9 @@ Weapon.prototype.constructor = Weapon;
 //-------------Sword-----------------------
 //-----------------------------------------
 function Sword(params)
- {
+{
+	this.name = params.name;
+	this.description = params.description;
 	this.cost = params.cost;
 	this.damage = params.damage;
 	this.typeOfWeapon = "sword";
@@ -751,6 +753,8 @@ Sword.prototype.constructor = Sword;
 //-----------------------------------------
 function Dagger(params)
  {
+	this.name = params.name;
+	this.description = params.description;
 	this.cost = params.cost;
 	this.damage = params.damage;
 	this.typeOfWeapon = "dagger";
@@ -768,6 +772,8 @@ Dagger.prototype.constructor = Dagger;
 //------------------------------------------
 function Shield(params)
 {
+	this.name = params.name;
+	this.description = params.description;
 	this.cost = params.cost;
 	this.isMagic = params.isMagic;
 	this.special = params.special;
@@ -795,6 +801,8 @@ Armour.prototype.constructor = Item;
 //------------------------------------------
 function LeatherArmour(params)
 {
+	this.name = params.name;
+	this.description = params.description;
 	this.cost = params.cost;
 	this.isMagic = params.isMagic;
 	this.special = params.special;
@@ -810,6 +818,8 @@ LeatherArmour.prototype.constructor = Armour;
 //------------------------------------------
 function PlateMail(params)
 {
+	this.name = params.name;
+	this.description = params.description;
 	this.cost = params.cost;
 	this.isMagic = params.isMagic;
 	this.special = params.special;
@@ -825,6 +835,8 @@ PlateMail.prototype.constructor = Armour;
 //------------------------------------------
 function ChainMail(params)
 {
+	this.name = params.name;
+	this.description = params.description;
 	this.cost = params.cost;
 	this.isMagic = params.isMagic;
 	this.special = params.special;

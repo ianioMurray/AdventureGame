@@ -177,6 +177,8 @@ function runUnitTests()
 	
 	//weapons
 	var swordParams = {
+		name: "sword",
+		description: "standard sword",
 		cost: 10,
 		damage: 8,
 		isMagic: false,
@@ -186,6 +188,8 @@ function runUnitTests()
 	var sword = new Sword(swordParams);
 
 	var daggerParams = {
+		name: "dagger",
+		description: "standard dagger",
 		cost: 3,
 		damage: 4,
 		typeOfWeapon: false,
@@ -196,6 +200,8 @@ function runUnitTests()
 	
 	//armour
 	var leatherArmourParams = {	
+		name: "Leather Armour",
+		description: "Leather Armour",
 		cost: 20,
 		isMagic: false,
 		special: ""
@@ -203,6 +209,8 @@ function runUnitTests()
 	var leatherArmour = new LeatherArmour(leatherArmourParams);
 	
 	var chainArmourParams = {	
+		name: "Chain Mail Armour",
+		description: "Chain Mail Armour",
 		cost: 40,  //TODO : check cost
 		isMagic: false,
 		special: ""
@@ -210,6 +218,8 @@ function runUnitTests()
 	var chainMail = new ChainMail(chainArmourParams);
 	
 	var plateArmourParams = {	
+		name: "Plate Mail Armour",
+		description: "Plate Mail Armour",
 		cost: 40,  //TODO : check cost
 		isMagic: false,
 		special: ""
@@ -218,6 +228,8 @@ function runUnitTests()
 	
 	//shield
 	var shieldParams = {
+		name: "Shield",
+		description: "Standard Shield",
 		cost: 10,
 		isMagic: false,
 		special: "",
