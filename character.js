@@ -1,3 +1,4 @@
+"use strict"
 
 window.onload = init;
 
@@ -13,25 +14,20 @@ var game = {
 		switch(characterType) 
 		{
 			case "fighter":
-				params.hp = generateRandomNumber(8, 1);
 				character = new Fighter(params);
 				break;
 			case "thief":
-				params.hp = generateRandomNumber(4, 1);
 				character = new Thief(params);
 				break;
 			case "cleric":
-				params.hp = generateRandomNumber(6, 1);
 				character = new Cleric(params);
 				break;
 			case "magicUser":
-				params.hp = generateRandomNumber(4, 1);
 				character = new MagicUser(params);
 				break;
 			default:
 				throw "Unknown Character";
 		}
-		character.calculateArmourClass();
 		runCharacterGenerationTest(character);
 		this.characters.push(character);
 	},
@@ -131,10 +127,10 @@ function generateRandomNumber(diceType, noOfDice)
 {
 	var totalVal = 0;
 	
-	for(var i=0; noOfDice > i;i++)
+	for(var i= 0; noOfDice > i; i++)
 	{
 		totalVal += (Math.floor(Math.random() * diceType)) + 1;
-	}
+	} 
 	return totalVal;
 }
 
@@ -257,7 +253,7 @@ function Character()
 				{
 					this.noOfHandsFree = this.noOfHandsFree - handsRequired;
 					this.equipedInHands.push(item);
-					this.calculateArmourClass();
+					this.armourClass = this.calculateArmourClass();
 					return true;
 				}
 				else 
@@ -279,7 +275,7 @@ function Character()
 			else
 			{
 				this.equipedArmour.push(item);
-				this.calculateArmourClass();
+				this.armourClass = this.calculateArmourClass();
 				return true;
 			}
 		}
@@ -314,7 +310,7 @@ function Character()
 			else
 			{
 				this.equipedArmour.splice(indexOfItem, 1);
-				this.calculateArmourClass();
+				this.armourClass = this.calculateArmourClass();
 				return true;
 			}
 		}
@@ -367,24 +363,24 @@ function Character()
 			armourClass = this.equipedArmour[0].armourClass;
 		}
 		
-		//recalculate their armour class if they have a shield 
-		if(this.isShieldEquiped())
-		{
-			armourClass = armourClass - 1;
-		}
-		
 		//recalculate thier armour class taking into account their dexterity
 		armourClass = armourClass + ( this.calculateAttributeModifier(this.dexterity) * -1)
 		
 		//if the characters AC is now greater than 9 set it back to 9
 		if(armourClass > 9)
 		{
-			this.armourClass = 9;
+			armourClass =  9;
 		}
-		else
+
+		//recalculate their armour class if they have a shield 
+		//this is done here to avoid a situation where a character's AC is greater than 10  
+		//would make the shield pointless
+		if(this.isShieldEquiped())
 		{
-			this.armourClass = armourClass;
-		}	
+			armourClass = armourClass - 1;
+		}
+
+		return armourClass;
 	};
 	
 	this.roleRequiredToHit = function(opponent)
@@ -477,6 +473,31 @@ function Character()
 	{
 		return generateRandomNumber(6, 1) + this.calculateInitativeModifier();
 	};
+	
+	this.setHitPoints = function(randomHps)
+	{
+		var maxHps;
+		
+		var hitPointsUplift =  randomHps + this.calculateAttributeModifier(this.constitution);
+		//its possible that hit points for a new character would be 0 or less after you take into account the constitution modifier
+		// so the min HPs is 1 
+		//this applies when you go up levels - HPs should increase by a min of 1 and not decrease or remain the same
+		if(hitPointsUplift <= 0)
+		{
+			hitPointsUplift = 1;
+		}
+		
+		if(this.maxHitPoints == undefined)
+		{
+			maxHps = 0;
+		}
+		else
+		{
+			maxHps = this.maxHitPoints;
+		}
+		
+		return hitPointsUplift + maxHps;
+	};
 }
 
 //--------------------------------------------
@@ -485,31 +506,32 @@ function Fighter(params)
 	this.name = params.name;
 	this.currentLevel = 1;
 	this.experience = 0;
-	this.maxHitPoints = params.hp;
-	this.currentHitPoints = this.maxHitPoints;
 	this.strength = params.strength; 
 	this.intelligence = params.intelligence; 
 	this.wisdom = params.wisdom; 
 	this.dexterity = params.dexterity; 
 	this.constitution = params.constitution; 
 	this.charisma = params.charisma; 
+	this.maxHitPoints = this.setHitPoints(generateRandomNumber(8, 1));
+	this.currentHitPoints = this.maxHitPoints;
 	this.noOfHandsFree = 2;
 	this.equipedInHands = [];
 	this.equipedArmour = [];
-	this.armourClass = 9;
+	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
 }
 
 Fighter.prototype = new Character();
 Fighter.prototype.constructor = Fighter;
 
-
 Fighter.prototype.levelExperience = [0, 2000, 4000];
-Fighter.prototype.levelUp = function() {
-	this.currentLevel++;
-	this.maxHitPoints += generateRandomNumber(8, 1);
-	//TODO - what happens to currentHitPoints
-};
+Fighter.prototype.levelUp = function() 
+	{
+		this.currentLevel++;
+		this.maxHitPoints = this.setHitPoints(generateRandomNumber(8, 1));
+		//when a character goes up a level this heal to max
+		this.currentHitPoints = this.maxHitPoints;
+	};
 
 
 //--------------------------------------------
@@ -520,18 +542,18 @@ function Thief(params)
 	this.name = params.name;
 	this.currentLevel = 1;
 	this.experience = 0;
-	this.maxHitPoints = params.hp;
-	this.currentHitPoints = this.maxHitPoints;
 	this.strength = params.strength; 
 	this.intelligence = params.intelligence; 
 	this.wisdom = params.wisdom; 
 	this.dexterity = params.dexterity; 
 	this.constitution = params.constitution; 
 	this.charisma = params.charisma;
+	this.maxHitPoints = this.setHitPoints(generateRandomNumber(4, 1));
+	this.currentHitPoints = this.maxHitPoints;
 	this.noOfHandsFree = 2;
 	this.equipedInHands = [];
 	this.equipedArmour = [];
-	this.armourClass = 9;
+	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
 }
 
@@ -545,23 +567,25 @@ Thief.prototype.levelExperience = [0, 1200, 2400];
 Thief.prototype.pickLockChance = [15, 20, 25];
 
 Thief.prototype.levelUp = function() 
-{
-	this.currentLevel++;
-	this.maxHitPoints += generateRandomNumber(4, 1);
-	//TODO - what happens to currentHitPoints
-};
-
-Thief.prototype.pickLockSuccess = function() {
-	//takes random perc and compares it to the lock pick success chance
-	//(we use their currentLevel in the array as level starts at 1 and array at 0)
-	if(generateRandomNumber(100, 1) >= this.pickLockChance[this.currentLevel - 1])
 	{
-		return true;
-	}
-	else {
-		return false;
-	}
-};
+		this.currentLevel++;
+		this.maxHitPoints = this.setHitPoints(generateRandomNumber(4, 1));
+		//when a character goes up a level this heal to max
+		this.currentHitPoints = this.maxHitPoints;
+	};
+
+Thief.prototype.pickLockSuccess = function() 
+	{
+		//takes random perc and compares it to the lock pick success chance
+		//(we use their currentLevel in the array as level starts at 1 and array at 0)
+		if(generateRandomNumber(100, 1) >= this.pickLockChance[this.currentLevel - 1])
+		{
+			return true;
+		}
+		else {
+			return false;
+		}
+	};
 
 //TODO 
 // implement find/remove traps, pick pocket, move silently, climb sheer surfaces, hide in shadows, hear noise
@@ -575,18 +599,18 @@ function Cleric(params)
 	this.name = params.name;
 	this.currentLevel = 1;
 	this.experience = 0;
-	this.maxHitPoints = params.hp;
-	this.currentHitPoints = this.maxHitPoints;
 	this.strength = params.strength; 
 	this.intelligence = params.intelligence; 
 	this.wisdom = params.wisdom; 
 	this.dexterity = params.dexterity; 
 	this.constitution = params.constitution; 
 	this.charisma = params.charisma; 
+	this.maxHitPoints = this.setHitPoints(generateRandomNumber(6, 1));
+	this.currentHitPoints = this.maxHitPoints;
 	this.noOfHandsFree = 2;
 	this.equipedInHands = [];
 	this.equipedArmour = [];
-	this.armourClass = 9;
+	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
 }
 
@@ -599,11 +623,12 @@ Cleric.prototype.levelExperience = [0, 1500, 3000];
 Cleric.prototype.isSpellCaster = true;
 
 Cleric.prototype.levelUp = function() 
-{
-	this.currentLevel++;
-	this.maxHitPoints += generateRandomNumber(6, 1);
-	//TODO - what happens to currentHitPoints
-};
+	{
+		this.currentLevel++;
+		this.maxHitPoints = this.setHitPoints(generateRandomNumber(6, 1));
+		//when a character goes up a level this heal to max
+		this.currentHitPoints = this.maxHitPoints;
+	};
 
 //TODO 
 // turn undead
@@ -616,14 +641,14 @@ function MagicUser(params)
 	this.name = params.name;
 	this.currentLevel = 1;
 	this.experience = 0;
-	this.maxHitPoints = params.hp;
-	this.currentHitPoints = this.maxHitPoints;
 	this.strength = params.strength; 
 	this.intelligence = params.intelligence; 
 	this.wisdom = params.wisdom; 
 	this.dexterity = params.dexterity; 
 	this.constitution = params.constitution; 
 	this.charisma = params.charisma; 
+	this.maxHitPoints = this.setHitPoints(generateRandomNumber(4, 1));
+	this.currentHitPoints = this.maxHitPoints;
 	this.noOfCurrentFirstLevelSpells = 0;
 	this.maxNoOfFirstLevelSpells = 1;
 	this.noOfCurrentSecondLevelSpells = 0;
@@ -632,7 +657,7 @@ function MagicUser(params)
 	this.noOfHandsFree = 2;
 	this.equipedInHands = [];
 	this.equipedArmour = [];
-	this.armourClass = 9;
+	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
 }
 
@@ -647,56 +672,58 @@ MagicUser.prototype.canUseShield = false;
 MagicUser.prototype.levelExperience = [0, 2500, 5000];
 MagicUser.prototype.isSpellCaster = true;
 
-MagicUser.prototype.levelUp = function() {
-	this.currentLevel++;
-	
-	if(this.currentLevel === 2)
+MagicUser.prototype.levelUp = function() 
 	{
-		this.maxNoOfFirstLevelSpells++;
-	}
-	else if(this.currentLevel === 3)
-	{
-		this.maxNoOfSecondLevelSpells++;
-	}
-	
-	this.maxHitPoints += generateRandomNumber(4, 1);
-	//TODO - what happens to currentHitPoints
-};
+		this.currentLevel++;
+		
+		if(this.currentLevel === 2)
+		{
+			this.maxNoOfFirstLevelSpells++;
+		}
+		else if(this.currentLevel === 3)
+		{
+			this.maxNoOfSecondLevelSpells++;
+		}
+		
+		this.maxHitPoints = this.setHitPoints(generateRandomNumber(4, 1));
+		//when a character goes up a level this heal to max
+		this.currentHitPoints = this.maxHitPoints;
+	};
 
 MagicUser.prototype.learnSpell = function(spell)
-{
-	if(spell.level === 1)
 	{
-		if(this.maxNoOfFirstLevelSpells > this.noOfCurrentFirstLevelSpells)
+		if(spell.level === 1)
 		{
-			noOfCurrentFirstLevelSpells++;
-			this.currentSpells.push(spell);
+			if(this.maxNoOfFirstLevelSpells > this.noOfCurrentFirstLevelSpells)
+			{
+				noOfCurrentFirstLevelSpells++;
+				this.currentSpells.push(spell);
+			}
+			else
+			{
+				console.log(this.name + " isnt able to learn any more first Level spells");
+			}
 		}
-		else
+		else if (spell.level === 2)
 		{
-			console.log(this.name + " isnt able to learn any more first Level spells");
+			if(this.maxNoOfSecondLevelSpells > this.noOfCurrentSecondLevelSpells)
+			{
+				noOfCurrentSecondLevelSpells++;
+				this.currentSpells.push(spell);
+			}
+			else
+			{
+				console.log(this.name + " isnt able to learn any more second Level spells");
+			}
 		}
-	}
-	else if (spell.level === 2)
-	{
-		if(this.maxNoOfSecondLevelSpells > this.noOfCurrentSecondLevelSpells)
-		{
-			noOfCurrentSecondLevelSpells++;
-			this.currentSpells.push(spell);
-		}
-		else
-		{
-			console.log(this.name + " isnt able to learn any more second Level spells");
-		}
-	}
-};
+	};
 
 MagicUser.prototype.resetSpells = function()
-{
-	this.noOfCurrentFirstLevelSpells = 0;
-	this.noOfCurrentSecondLevelSpells = 0;
-	this.currentSpells = [];
-};
+	{
+		this.noOfCurrentFirstLevelSpells = 0;
+		this.noOfCurrentSecondLevelSpells = 0;
+		this.currentSpells = [];
+	};
 
 //--------------------------------------------
 //             SPELLS
