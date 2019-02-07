@@ -1,5 +1,107 @@
 
+//character 	
+var magaicUserTestParams = { 
+	name: "kazam",
+	strength: 8,
+	intelligence: 15,
+	wisdom: 13,
+	dexterity: 12,
+	constitution: 7,
+	chrisma: 15,
+	hp: 2
+};
+	
+var fighterTestParams = { 
+	name: "Conan",
+	strength: 18,
+	intelligence: 5,
+	wisdom: 8,
+	dexterity: 14,
+	constitution: 11,
+	chrisma: 6,
+	hp: 8
+};
+
+var clericTestParams = { 
+	name: "Radagast",
+	strength: 13,
+	intelligence: 8,
+	wisdom: 17,
+	dexterity: 5,
+	constitution: 8,
+	chrisma: 16,
+	hp: 4
+};
+
+var thiefTestParams = { 
+	name: "Sticky",
+	strength: 6,
+	intelligence: 17,
+	wisdom: 3,
+	dexterity: 18,
+	constitution: 17,
+	chrisma: 11,
+	hp: 4
+};
+
+//weapons
+var swordParams = {
+	name: "sword",
+	description: "standard sword",
+	cost: 10,
+	damage: 8,
+	isMagic: false,
+	special: "",
+	is2Handed: false
+};
+
+var daggerParams = {
+	name: "dagger",
+	description: "standard dagger",
+	cost: 3,
+	damage: 4,
+	typeOfWeapon: false,
+	isMagic: false,
+	special: ""
+};
+
+//armour
+var leatherArmourParams = {	
+	name: "Leather Armour",
+	description: "Leather Armour",
+	cost: 20,
+	isMagic: false,
+	special: ""
+};	
+
+var chainArmourParams = {	
+	name: "Chain Mail Armour",
+	description: "Chain Mail Armour",
+	cost: 40,  
+	isMagic: false,
+	special: ""
+};
+
+var plateArmourParams = {	
+	name: "Plate Mail Armour",
+	description: "Plate Mail Armour",
+	cost: 60,  
+	isMagic: false,
+	special: ""
+};	
+
+//shield	
+var shieldParams = {
+	name: "Shield",
+	description: "Standard Shield",
+	cost: 10,
+	isMagic: false,
+	special: "",
+};
+
+//run tests
 runUnitTests();
+runTestCombat();
 
 function runUnitTests()
 {
@@ -124,116 +226,28 @@ function runUnitTests()
 		}			
 	};
 	
-	//character 	
-	var magaicUserTestParams = { 
-		name: "kazam",
-		strength: 8,
-		intelligence: 15,
-		wisdom: 13,
-		dexterity: 12,
-		constitution: 7,
-		chrisma: 15,
-		hp: 2
+	function checkIndividualInitiativeModifier(adventurer, expected, actual)
+	{
+		if(actual !== expected)
+		{
+			allTestsPass = false;
+			noOfFailingTests++;			
+			console.log("FAIL: " + adventurer.name + "'s individual initiative is " + actual + " but " + expected + " was expected");				
+		}		
 	};
+	
+	//instanciate test characters
 	var magicUser = new MagicUser(magaicUserTestParams);
-
-	
-	var fighterTestParams = { 
-		name: "Conan",
-		strength: 18,
-		intelligence: 5,
-		wisdom: 8,
-		dexterity: 14,
-		constitution: 11,
-		chrisma: 6,
-		hp: 8
-	};
 	var fighter = new Fighter(fighterTestParams);
-
-	
-	var clericTestParams = { 
-		name: "Radagast",
-		strength: 13,
-		intelligence: 8,
-		wisdom: 17,
-		dexterity: 5,
-		constitution: 8,
-		chrisma: 16,
-		hp: 4
-	};
 	var cleric = new Cleric(clericTestParams);
-
-	var thiefTestParams = { 
-		name: "Sticky",
-		strength: 6,
-		intelligence: 17,
-		wisdom: 3,
-		dexterity: 18,
-		constitution: 17,
-		chrisma: 11,
-		hp: 4
-	};
 	var thief = new Thief(thiefTestParams);	
 	
-	//weapons
-	var swordParams = {
-		name: "sword",
-		description: "standard sword",
-		cost: 10,
-		damage: 8,
-		isMagic: false,
-		special: "",
-		is2Handed: false
-	};
+	//instanciate test items
 	var sword = new Sword(swordParams);
-
-	var daggerParams = {
-		name: "dagger",
-		description: "standard dagger",
-		cost: 3,
-		damage: 4,
-		typeOfWeapon: false,
-		isMagic: false,
-		special: ""
-	};
 	var dagger = new Dagger(daggerParams);		
-	
-	//armour
-	var leatherArmourParams = {	
-		name: "Leather Armour",
-		description: "Leather Armour",
-		cost: 20,
-		isMagic: false,
-		special: ""
-	};	
 	var leatherArmour = new LeatherArmour(leatherArmourParams);
-	
-	var chainArmourParams = {	
-		name: "Chain Mail Armour",
-		description: "Chain Mail Armour",
-		cost: 40,  //TODO : check cost
-		isMagic: false,
-		special: ""
-	};		
 	var chainMail = new ChainMail(chainArmourParams);
-	
-	var plateArmourParams = {	
-		name: "Plate Mail Armour",
-		description: "Plate Mail Armour",
-		cost: 40,  //TODO : check cost
-		isMagic: false,
-		special: ""
-	};		
 	var plateMail = new PlateMail(plateArmourParams);
-	
-	//shield
-	var shieldParams = {
-		name: "Shield",
-		description: "Standard Shield",
-		cost: 10,
-		isMagic: false,
-		special: "",
-	};	
 	var shield = new Shield(shieldParams);
 	
 
@@ -272,10 +286,10 @@ function runUnitTests()
 	testLevelCorrect(thief, 1200, 2400);		
 	testLevelCorrect(cleric, 1500, 3000);
 			
-	checkDexterityBonus(magicUser, 0, magicUser.calculateArmourClassDexterityModifier());
-	checkDexterityBonus(fighter, -1, fighter.calculateArmourClassDexterityModifier());
-	checkDexterityBonus(thief, -3, thief.calculateArmourClassDexterityModifier());		
-	checkDexterityBonus(cleric, 2, cleric.calculateArmourClassDexterityModifier());
+	checkDexterityBonus(magicUser, 0, magicUser.calculateAttributeModifier(magicUser.dexterity));
+	checkDexterityBonus(fighter, 1, fighter.calculateAttributeModifier(fighter.dexterity));
+	checkDexterityBonus(thief, 3, thief.calculateAttributeModifier(thief.dexterity));		
+	checkDexterityBonus(cleric, -2, cleric.calculateAttributeModifier(cleric.dexterity));
 
 	//check character can use a sword and that based on the result the number of hands they have free is correct
 	checkItemEquiped(magicUser, "sword", false, magicUser.equip(sword));
@@ -384,22 +398,28 @@ function runUnitTests()
 	checkItemEquiped(fighter, "dagger", false, fighter.equip(dagger));	
 	
 	//check 'required to hit' values 
-	checkRequiredToHitRoles(magicUser, 10, magicUser.roleRequiredToHit(magicUser, dagger)); //magic user has an AC of 9
-	checkRequiredToHitRoles(magicUser, 18, magicUser.roleRequiredToHit(fighter, dagger));   //fighter has an AC of 1
-	checkRequiredToHitRoles(magicUser, 13, magicUser.roleRequiredToHit(thief, dagger));     //thief has an AC of 6
-	checkRequiredToHitRoles(magicUser, 15, magicUser.roleRequiredToHit(cleric, dagger));    //cleric has an AC of 4
+	checkRequiredToHitRoles(magicUser, 11, magicUser.roleRequiredToHit(magicUser, dagger)); //magic user has an AC of 9
+	checkRequiredToHitRoles(magicUser, 19, magicUser.roleRequiredToHit(fighter, dagger));   //fighter has an AC of 1
+	checkRequiredToHitRoles(magicUser, 14, magicUser.roleRequiredToHit(thief, dagger));     //thief has an AC of 6
+	checkRequiredToHitRoles(magicUser, 16, magicUser.roleRequiredToHit(cleric, dagger));    //cleric has an AC of 4
+	checkRequiredToHitRoles(fighter, 12, fighter.roleRequiredToHit(cleric, dagger));    //cleric has an AC of 4	
 
 	//check for a hit 
-	checkIfAttackHit(magicUser, false, magicUser.isAttackAHit(9, magicUser.roleRequiredToHit(magicUser)));
-	checkIfAttackHit(magicUser, true, magicUser.isAttackAHit(10, magicUser.roleRequiredToHit(magicUser)));	
+	checkIfAttackHit(magicUser, false, magicUser.isAttackAHit(10, magicUser.roleRequiredToHit(magicUser)));
 	checkIfAttackHit(magicUser, true, magicUser.isAttackAHit(11, magicUser.roleRequiredToHit(magicUser)));	
+	checkIfAttackHit(magicUser, true, magicUser.isAttackAHit(12, magicUser.roleRequiredToHit(magicUser)));	
 	
 	//check take damage and is character dead
 	magicUser.takeDamage(1);
 	checkHitPointsAndIsDeadAfterTakingDamage(magicUser, 1, false);
 	fighter.takeDamage(10);
-	checkHitPointsAndIsDeadAfterTakingDamage(fighter, -2, true);	
+	checkHitPointsAndIsDeadAfterTakingDamage(fighter, -2, true);
 	
+	//check Individual Initiative modifier
+	checkIndividualInitiativeModifier(magicUser, 0, magicUser.calculateInitativeModifier());
+	checkIndividualInitiativeModifier(fighter, 1, fighter.calculateInitativeModifier());	
+	checkIndividualInitiativeModifier(thief, 2, thief.calculateInitativeModifier());	
+	checkIndividualInitiativeModifier(cleric, -1, cleric.calculateInitativeModifier());
 
 	if(allTestsPass == true)
 	{
@@ -412,6 +432,63 @@ function runUnitTests()
 		console.log("----------------------------------------------------------------");
 		console.log("FAIL: " + noOfFailingTests + " failed");
 		console.log("----------------------------------------------------------------");			
+	}
+}
+
+function runTestCombat()
+{
+	var fighter1 = new Fighter(fighterTestParams);
+	var fighter2 = new Fighter(fighterTestParams);
+	var sword = new Sword(swordParams);
+	fighter1.equip(sword);
+	fighter2.equip(sword);
+	
+	console.log("fighter1's hit points are " + fighter1.currentHitPoints);
+	console.log("fighter2's hit points are " + fighter2.currentHitPoints);	
+	
+	while(!fighter1.isDead && !fighter2.isDead)
+	{
+		var fighter1Initiative = fighter1.getIndividualInitative();
+		var fighter2Initiative = fighter2.getIndividualInitative();
+		
+		if(fighter1Initiative >= fighter2Initiative)
+		{
+			console.log("fighter1 attacks");
+			fighter1.attack(fighter2, sword);
+			console.log("fighter2's hit points are " + fighter2.currentHitPoints);
+			if(fighter2.isDead)
+			{
+				console.log("fighter2 is Dead");
+				break;
+			}
+			console.log("fighter2 attacks");
+			fighter2.attack(fighter1, sword);
+			console.log("fighter1's hit points are " + fighter1.currentHitPoints);
+			if(fighter1.isDead)
+			{
+				console.log("fighter1 is Dead");
+				break;
+			}
+		}
+		else
+		{
+			console.log("fighter2 attacks");
+			fighter2.attack(fighter1, sword);
+			console.log("fighter1's hit points are " + fighter1.currentHitPoints);
+			if(fighter1.isDead)
+			{
+				console.log("fighter1 is Dead");
+				break;
+			}
+			console.log("fighter1 attacks");
+			fighter1.attack(fighter2, sword);		
+			console.log("fighter2's hit points are " + fighter2.currentHitPoints);
+			if(fighter2.isDead)
+			{
+				console.log("fighter2 is Dead");
+				break;
+			}
+		}
 	}
 }
 

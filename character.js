@@ -321,38 +321,41 @@ function Character()
 		return false;		
 	}
 	
-	this.calculateArmourClassDexterityModifier = function()
+	this.calculateAttributeModifier = function(attribute)
 	{
-		var dex = this.getDexterity();
-		if( dex === 3 )
-		{
-			return 3;
-		}
-		else if ( dex <= 5 )
-		{
-			return 2;
-		}
-		else if ( dex <= 8 )
-		{
-			return 1;
-		}
-		else if ( dex <= 12 )
-		{
-			return 0;
-		}
-		else if ( dex <= 15 )
-		{
-			return -1;
-		}
-		else if  ( dex <= 17 )
-		{
-			return -2;
-		}
-		else
+		if( attribute === 3 )
 		{
 			return -3;
 		}
-	};
+		else if ( attribute <= 5 )
+		{
+			return -2;
+		}
+		else if ( attribute <= 8 )
+		{
+			return -1;
+		}
+		else if ( attribute <= 12 )
+		{
+			return 0;
+		}
+		else if ( attribute <= 15 )
+		{
+			return 1;
+		}
+		else if  ( attribute <= 17 )
+		{
+			return 2;
+		}
+		else if (attribute = 18 )
+		{
+			return 3;
+		}
+		else
+		{
+			throw("attribute should be between 3 and 18");
+		}
+	}
 	
 	this.calculateArmourClass = function() 
 	{
@@ -371,7 +374,7 @@ function Character()
 		}
 		
 		//recalculate thier armour class taking into account their dexterity
-		armourClass = armourClass + this.calculateArmourClassDexterityModifier();
+		armourClass = armourClass + ( this.calculateAttributeModifier(this.dexterity) * -1)
 		
 		//if the characters AC is now greater than 9 set it back to 9
 		if(armourClass > 9)
@@ -404,7 +407,8 @@ function Character()
 		{
 			if(scoresToHit[i].armourClass === opponent.armourClass)
 			{
-				return scoresToHit[i].toHit;
+				var toHit = scoresToHit[i].toHit - this.calculateAttributeModifier(this.strength);
+				return toHit;
 			}	
 		}
 		return 20;
@@ -423,7 +427,7 @@ function Character()
 	{
 		var requiredToHit = this.roleRequiredToHit(opponent);
 		
-		var attackIsAHit = isAttackAHit(generateRandomNumber(20, 1), requiredToHit);
+		var attackIsAHit = this.isAttackAHit(generateRandomNumber(20, 1), requiredToHit);
 		
 		if(attackIsAHit)
 		{
@@ -438,11 +442,43 @@ function Character()
 		{
 			this.isDead = true;
 		}
-	}
+	};
+	
+	this.calculateInitativeModifier = function()
+	{
+		var attribute = this.dexterity;
+		if( attribute === 3 )
+		{
+			return -2;
+		}
+		else if ( attribute <= 8 )
+		{
+			return -1;
+		}
+		else if ( attribute <= 12 )
+		{
+			return 0;
+		}
+		else if  ( attribute <= 17 )
+		{
+			return 1;
+		}
+		else if (attribute = 18 )
+		{
+			return 2;
+		}
+		else
+		{
+			throw("attribute should be between 3 and 18");
+		}
+	};	
+	
+	this.getIndividualInitative = function()
+	{
+		return generateRandomNumber(6, 1) + this.calculateInitativeModifier();
+	};
 }
 
-//--------------------------------------------
-//-------------Fighter------------------------
 //--------------------------------------------
 function Fighter(params)
 {
