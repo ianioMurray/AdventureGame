@@ -305,6 +305,7 @@ function Character()
 			{
 				this.equipedInHands.splice(indexOfItem, 1);
 				this.noOfHandsFree = this.noOfHandsFree + this.getNumberOfHandsRequiredForItem(item);
+				this.armourClass = this.calculateArmourClass(); //in case it was a shield that is unequipped
 				return true;
 			}
 			else

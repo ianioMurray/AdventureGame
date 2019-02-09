@@ -41,6 +41,37 @@ var thiefTestParams = {
 	chrisma: 11
 };
 
+var fighterWithAwfulStatsParams = {
+	name: "Sickly",
+	strength: 3,
+	intelligence: 3,
+	wisdom: 3,
+	dexterity: 3,
+	constitution: 3,
+	chrisma: 3
+};
+
+var fighterWithAwesomeStatsParams = {
+	name: "Super Butler",
+	strength: 18,
+	intelligence: 18,
+	wisdom: 18,
+	dexterity: 18,
+	constitution: 18,
+	chrisma: 18
+};
+
+var fighterWithAverageStatsParams = {
+	name: "Jo Average",
+	strength: 11,
+	intelligence: 11,
+	wisdom: 11,
+	dexterity: 11,
+	constitution: 11,
+	chrisma: 11
+};
+
+
 //weapons
 var swordParams = {
 	name: "sword",
@@ -235,6 +266,7 @@ function Tests()
 function runUnitTests()
 {	
 	testGainExperience();
+	testLevelUp();
 	
 	testDexterityBonus();
 	testStrengthBonus();
@@ -242,23 +274,30 @@ function runUnitTests()
 	
 	testIndividualInitiativeBonus();
 	
+	testEquipDagger();
 	testEquipSword();
 	testUnequipSword();
-	testEquipDagger();
 	
-	testEquipThreeHandItems();
+	testNoOfHandsFree();
+	testEquipThirdHandItemFails();
 	
+	testIsArmourEquiped();
 	testEquipLeatherArmour();
-	testUnequipLeatherArmour();
 	testEquipChainMailArmour();
 	testEquipPlateMailArmour();
-	
-	//test for calcualateArmourClassClass
+	testEquipShield();
+	testUnequipLeatherArmour();
+	testEquipTwoSetsOfArmour();
+
+	testCalculateArmourClass();
+
+
+
 	//test for setHitPoints
 	
-	testEquipTwoSetsOfArmour();
+
 	
-	testEquipShield();
+
 	
 	testRoleRequiredToHit();
 	testIfAttackHits();
@@ -273,6 +312,43 @@ function testGainExperience()
 	var fighter = new Fighter(fighterTestParams);
 	var cleric = new Cleric(clericTestParams);
 	var thief = new Thief(thiefTestParams);	
+
+	//newly created character with no experience
+	tests.checkExperience(magicUser, 0, magicUser.experience, testGainExperience.name);
+	//add 100 experience
+	magicUser.gainExperience(100);
+	tests.checkExperience(magicUser, 100, magicUser.experience, testGainExperience.name);	
+		
+	//newly created character with no experience
+	tests.checkExperience(fighter, 0, fighter.experience, testGainExperience.name);
+	//add 1500 experience
+	fighter.gainExperience(1500);
+	tests.checkExperience(fighter, 1500, fighter.experience, testGainExperience.name);	
+
+	//newly created character with no experience
+	tests.checkExperience(cleric, 0, cleric.experience, testGainExperience.name);
+	//add 3400 experience
+	cleric.gainExperience(3400);
+	tests.checkExperience(cleric, 3400, cleric.experience, testGainExperience.name);	
+		
+	//newly created character with no experience
+	tests.checkExperience(thief, 0, thief.experience, testGainExperience.name);
+	//add 34 experience
+	thief.gainExperience(34);
+	tests.checkExperience(thief, 34, thief.experience, testGainExperience.name);
+
+	//lose experience (I am thinking of drain level for the future)
+	//subtract 10 experience
+	thief.gainExperience(-10);
+	tests.checkExperience(thief, 24, thief.experience, testGainExperience.name);	
+}	
+
+function testLevelUp()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
 	
 	var characters = [	{ classType: magicUser, secondLevel: 2500, thirdLevel: 5000 },
 						{ classType: fighter, secondLevel: 2000, thirdLevel: 4000 },
@@ -281,34 +357,29 @@ function testGainExperience()
 	
 	for(var i = 0; characters.length > i; i++)
 	{
-		//newly created character tested for experience and level
-		tests.checkExperience(characters[i].classType, 0, characters[i].classType.experience, testGainExperience.name);
-		tests.checkLevel(characters[i].classType, 1, characters[i].classType.currentLevel, testGainExperience.name);
-		
+		//newly created character 
+		tests.checkLevel(characters[i].classType, 1, characters[i].classType.currentLevel, testLevelUp.name);
+
 		//add experience so 1 pt less than 2nd level
 		var secondLevelMinusOne = characters[i].secondLevel - 1;
 		characters[i].classType.gainExperience(secondLevelMinusOne);
-		tests.checkExperience(characters[i].classType, secondLevelMinusOne, characters[i].classType.experience, testGainExperience.name);	
-		tests.checkLevel(characters[i].classType, 1, characters[i].classType.currentLevel, testGainExperience.name);
-		
+		tests.checkLevel(characters[i].classType, 1, characters[i].classType.currentLevel, testLevelUp.name);
+
 		//add 1 more experience so total equals amount for 2nd level
 		characters[i].classType.gainExperience(1);			
-		tests.checkExperience(characters[i].classType, characters[i].secondLevel, characters[i].classType.experience, testGainExperience.name);	
-		tests.checkLevel(characters[i].classType, 2, characters[i].classType.currentLevel, testGainExperience.name);
-		
+		tests.checkLevel(characters[i].classType, 2, characters[i].classType.currentLevel, testLevelUp.name);
+
 		//add experience so 1 pt less than 3rd level
 		var experienceRequiredToGetToThirdLevelMinusOne = (characters[i].thirdLevel - characters[i].secondLevel) - 1;
 		var thirdLevelMinusOne = characters[i].thirdLevel - 1;
-		characters[i].classType.gainExperience(experienceRequiredToGetToThirdLevelMinusOne);
-		tests.checkExperience(characters[i].classType, thirdLevelMinusOne, characters[i].classType.experience, testGainExperience.name);	
-		tests.checkLevel(characters[i].classType, 2, characters[i].classType.currentLevel, testGainExperience.name);
+		characters[i].classType.gainExperience(experienceRequiredToGetToThirdLevelMinusOne);		
+		tests.checkLevel(characters[i].classType, 2, characters[i].classType.currentLevel, testLevelUp.name);
 		
 		//add 1 more experience so total equals amount for 3rd level
 		characters[i].classType.gainExperience(1);
-		tests.checkExperience(characters[i].classType, characters[i].thirdLevel, characters[i].classType.experience, testGainExperience.name);	
-		tests.checkLevel(characters[i].classType, 3, characters[i].classType.currentLevel, testGainExperience.name); 
+		tests.checkLevel(characters[i].classType, 3, characters[i].classType.currentLevel, testLevelUp.name); 
 	}
-}	
+}
 
 function testDexterityBonus()
 {
@@ -316,11 +387,17 @@ function testDexterityBonus()
 	var fighter = new Fighter(fighterTestParams);
 	var cleric = new Cleric(clericTestParams);
 	var thief = new Thief(thiefTestParams);	
+	var fighterBad = new Fighter(fighterWithAwfulStatsParams);
+	var fighterSuper = new Fighter(fighterWithAwesomeStatsParams);
+	var fighterAverage = new Fighter(fighterWithAverageStatsParams);
 	
 	tests.checkDexterityBonus(magicUser, 0, magicUser.calculateAttributeModifier(magicUser.dexterity), testDexterityBonus.name);
 	tests.checkDexterityBonus(fighter, 1, fighter.calculateAttributeModifier(fighter.dexterity), testDexterityBonus.name);
 	tests.checkDexterityBonus(thief, 3, thief.calculateAttributeModifier(thief.dexterity), testDexterityBonus.name);		
 	tests.checkDexterityBonus(cleric, -2, cleric.calculateAttributeModifier(cleric.dexterity), testDexterityBonus.name);
+	tests.checkDexterityBonus(fighterBad, -3, fighterBad.calculateAttributeModifier(fighterBad.dexterity), testDexterityBonus.name);		
+	tests.checkDexterityBonus(fighterSuper, 3, fighterSuper.calculateAttributeModifier(fighterSuper.dexterity), testDexterityBonus.name);
+	tests.checkDexterityBonus(fighterAverage, 0, fighterAverage.calculateAttributeModifier(fighterAverage.dexterity), testDexterityBonus.name);	
 }
 
 function testStrengthBonus()
@@ -329,11 +406,17 @@ function testStrengthBonus()
 	var fighter = new Fighter(fighterTestParams);
 	var cleric = new Cleric(clericTestParams);
 	var thief = new Thief(thiefTestParams);	
+	var fighterBad = new Fighter(fighterWithAwfulStatsParams);
+	var fighterSuper = new Fighter(fighterWithAwesomeStatsParams);
+	var fighterAverage = new Fighter(fighterWithAverageStatsParams);
 	
 	tests.checkStrengthBonus(magicUser, -1, magicUser.calculateAttributeModifier(magicUser.strength), testStrengthBonus.name);
 	tests.checkStrengthBonus(fighter, 3, fighter.calculateAttributeModifier(fighter.strength), testStrengthBonus.name);
 	tests.checkStrengthBonus(thief, -2, thief.calculateAttributeModifier(thief.strength), testStrengthBonus.name);		
 	tests.checkStrengthBonus(cleric, 1, cleric.calculateAttributeModifier(cleric.strength), testStrengthBonus.name);
+	tests.checkStrengthBonus(fighterBad, -3, fighterBad.calculateAttributeModifier(fighterBad.strength), testStrengthBonus.name);		
+	tests.checkStrengthBonus(fighterSuper, 3, fighterSuper.calculateAttributeModifier(fighterSuper.strength), testStrengthBonus.name);
+	tests.checkStrengthBonus(fighterAverage, 0, fighterAverage.calculateAttributeModifier(fighterAverage.strength), testStrengthBonus.name);
 }
 
 function testConstitutionBonus()
@@ -342,11 +425,17 @@ function testConstitutionBonus()
 	var fighter = new Fighter(fighterTestParams);
 	var cleric = new Cleric(clericTestParams);
 	var thief = new Thief(thiefTestParams);	
+	var fighterBad = new Fighter(fighterWithAwfulStatsParams);
+	var fighterSuper = new Fighter(fighterWithAwesomeStatsParams);
+	var fighterAverage = new Fighter(fighterWithAverageStatsParams);
 	
 	tests.checkConstitutionBonus(magicUser, -1, magicUser.calculateAttributeModifier(magicUser.constitution), testConstitutionBonus.name);
 	tests.checkConstitutionBonus(fighter, 0, fighter.calculateAttributeModifier(fighter.constitution), testConstitutionBonus.name);
 	tests.checkConstitutionBonus(thief, 2, thief.calculateAttributeModifier(thief.constitution), testConstitutionBonus.name);		
 	tests.checkConstitutionBonus(cleric, -1, cleric.calculateAttributeModifier(cleric.constitution), testConstitutionBonus.name);
+	tests.checkConstitutionBonus(fighterBad, -3, fighterBad.calculateAttributeModifier(fighterBad.constitution), testConstitutionBonus.name);		
+	tests.checkConstitutionBonus(fighterSuper, 3, fighterSuper.calculateAttributeModifier(fighterSuper.constitution), testConstitutionBonus.name);
+	tests.checkConstitutionBonus(fighterAverage, 0, fighterAverage.calculateAttributeModifier(fighterAverage.constitution), testConstitutionBonus.name);
 }
 
 function testIndividualInitiativeBonus()
@@ -355,50 +444,17 @@ function testIndividualInitiativeBonus()
 	var fighter = new Fighter(fighterTestParams);
 	var cleric = new Cleric(clericTestParams);
 	var thief = new Thief(thiefTestParams);	
+	var fighterBad = new Fighter(fighterWithAwfulStatsParams);
+	var fighterSuper = new Fighter(fighterWithAwesomeStatsParams);
+	var fighterAverage = new Fighter(fighterWithAverageStatsParams);
 	
 	tests.checkIndividualInitiativeModifier(magicUser, 0, magicUser.calculateInitativeModifier(), testIndividualInitiativeBonus.name);
 	tests.checkIndividualInitiativeModifier(fighter, 1, fighter.calculateInitativeModifier(), testIndividualInitiativeBonus.name);	
 	tests.checkIndividualInitiativeModifier(thief, 2, thief.calculateInitativeModifier(), testIndividualInitiativeBonus.name);	
 	tests.checkIndividualInitiativeModifier(cleric, -1, cleric.calculateInitativeModifier(), testIndividualInitiativeBonus.name);
-}
-
-function testEquipSword()
-{
-	var magicUser = new MagicUser(magaicUserTestParams);
-	var fighter = new Fighter(fighterTestParams);
-	var cleric = new Cleric(clericTestParams);
-	var thief = new Thief(thiefTestParams);	
-	
-	var sword = new Sword(swordParams);
-	
-	tests.checkItemEquiped(magicUser, sword.name, false, magicUser.equip(sword), testEquipSword.name);
-	tests.checkNoOfHandsFree(magicUser, 2, magicUser.noOfHandsFree, testEquipSword.name);
-
-	tests.checkItemEquiped(fighter, sword.name, true, fighter.equip(sword), testEquipSword.name);
-	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree, testEquipSword.name);		
-
-	tests.checkItemEquiped(thief, sword.name, true, thief.equip(sword), testEquipSword.name);
-	tests.checkNoOfHandsFree(thief, 1, thief.noOfHandsFree, testEquipSword.name);			
-
-	tests.checkItemEquiped(cleric, sword.name, false, cleric.equip(sword), testEquipSword.name);
-	tests.checkNoOfHandsFree(cleric, 2, cleric.noOfHandsFree, testEquipSword.name);
-}
-
-function testUnequipSword()
-{
-	var fighter = new Fighter(fighterTestParams);
-	var thief = new Thief(thiefTestParams);	
-	
-	var sword = new Sword(swordParams);
-	
-	fighter.equip(sword);
-	thief.equip(sword);
-
-	tests.checkItemUnEquiped(fighter, sword.name, true, fighter.unEquip(sword), testUnequipSword.name);  
-	tests.checkNoOfHandsFree(fighter, 2, fighter.noOfHandsFree, testUnequipSword.name);
-
-	tests.checkItemUnEquiped(thief, sword.name, true, thief.unEquip(sword), testUnequipSword.name);  
-	tests.checkNoOfHandsFree(thief, 2, thief.noOfHandsFree, testUnequipSword.name);		
+	tests.checkIndividualInitiativeModifier(fighterBad, -2, fighterBad.calculateInitativeModifier(), testIndividualInitiativeBonus.name);		
+	tests.checkIndividualInitiativeModifier(fighterSuper, 2, fighterSuper.calculateInitativeModifier(), testIndividualInitiativeBonus.name);
+	tests.checkIndividualInitiativeModifier(fighterAverage, 0, fighterAverage.calculateInitativeModifier(), testIndividualInitiativeBonus.name);
 }
 
 function testEquipDagger()
@@ -411,19 +467,80 @@ function testEquipDagger()
 	var dagger = new Dagger(daggerParams);
 		
 	tests.checkItemEquiped(magicUser, dagger.name, true, magicUser.equip(dagger), testEquipDagger.name);		
-	tests.checkNoOfHandsFree(magicUser, 1, magicUser.noOfHandsFree, testEquipDagger.name);
-	
 	tests.checkItemEquiped(fighter, dagger.name, true, fighter.equip(dagger), testEquipDagger.name);		
-	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree, testEquipDagger.name);
-	
 	tests.checkItemEquiped(thief, dagger.name, true, thief.equip(dagger), testEquipDagger.name);
-	tests.checkNoOfHandsFree(thief, 1, thief.noOfHandsFree, testEquipDagger.name);	
-	
 	tests.checkItemEquiped(cleric, dagger.name, false, cleric.equip(dagger), testEquipDagger.name);		
-	tests.checkNoOfHandsFree(cleric, 2, cleric.noOfHandsFree, testEquipDagger.name);
 }
 
-function testEquipThreeHandItems()
+function testEquipSword()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	
+	var sword = new Sword(swordParams);
+	
+	tests.checkItemEquiped(magicUser, sword.name, false, magicUser.equip(sword), testEquipSword.name);
+	tests.checkItemEquiped(fighter, sword.name, true, fighter.equip(sword), testEquipSword.name);		
+	tests.checkItemEquiped(thief, sword.name, true, thief.equip(sword), testEquipSword.name);		
+	tests.checkItemEquiped(cleric, sword.name, false, cleric.equip(sword), testEquipSword.name);
+}
+
+function testUnequipSword()
+{
+	var fighter = new Fighter(fighterTestParams);
+	var thief = new Thief(thiefTestParams);	
+	
+	var sword = new Sword(swordParams);
+
+	//it should not be possible to unequip something you dont have 
+	tests.checkItemUnEquiped(fighter, sword.name, false, fighter.unEquip(sword), testUnequipSword.name);  	
+	
+	fighter.equip(sword);
+	tests.checkItemUnEquiped(fighter, sword.name, true, fighter.unEquip(sword), testUnequipSword.name);  
+
+	thief.equip(sword);
+	tests.checkItemUnEquiped(thief, sword.name, true, thief.unEquip(sword), testUnequipSword.name);  	
+}
+
+function testNoOfHandsFree()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var thief = new Thief(thiefTestParams);	
+
+	var sword = new Sword(swordParams);
+	var dagger = new Dagger(daggerParams);
+	var shield = new Shield(shieldParams);
+	var leatherArmour = new LeatherArmour(leatherArmourParams);
+	
+	//test still both hands free if character cannot equip selected item 
+	magicUser.equip(sword);
+	tests.checkNoOfHandsFree(magicUser, 2, magicUser.noOfHandsFree, testNoOfHandsFree.name);
+
+	//test only 1 hand free if character can use selected item 
+	fighter.equip(sword);
+	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree, testNoOfHandsFree.name);
+	//test no hands free if character has 2 equiped hand items 
+	fighter.equip(shield);
+	tests.checkNoOfHandsFree(fighter, 0, fighter.noOfHandsFree, testNoOfHandsFree.name);	
+	//test 1 hand free if unequip 1 of the two items 
+	fighter.unEquip(shield);
+	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree, testNoOfHandsFree.name);
+	//check equipping non hand item does not change no of hands free
+	fighter.equip(leatherArmour);
+	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree, testNoOfHandsFree.name)
+
+	//test to make sure no of hands free does not go below 0
+	thief.equip(sword);
+	thief.equip(dagger);	
+	tests.checkNoOfHandsFree(thief, 0, thief.noOfHandsFree, testNoOfHandsFree.name);
+	thief.equip(dagger);
+	tests.checkNoOfHandsFree(thief, 0, thief.noOfHandsFree, testNoOfHandsFree.name);
+}
+
+function testEquipThirdHandItemFails()
 {
 	var fighter = new Fighter(fighterTestParams);
 		
@@ -431,14 +548,53 @@ function testEquipThreeHandItems()
 	var sword = new Sword(swordParams);
 	var shield = new Shield(shieldParams);
 
-	tests.checkItemEquiped(fighter, sword.name, true, fighter.equip(sword), testEquipThreeHandItems.name);	
-	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree, testEquipThreeHandItems.name);
-	
-	tests.checkItemEquiped(fighter, shield.name, true, fighter.equip(shield), testEquipThreeHandItems.name);	
-	tests.checkNoOfHandsFree(fighter, 0, fighter.noOfHandsFree, testEquipThreeHandItems.name);	
-	
-	tests.checkItemEquiped(fighter, dagger.name, false, fighter.equip(dagger), testEquipThreeHandItems.name);
-	tests.checkNoOfHandsFree(fighter, 0, fighter.noOfHandsFree, testEquipThreeHandItems.name);
+	tests.checkItemEquiped(fighter, sword.name, true, fighter.equip(sword), testEquipThirdHandItemFails.name);	
+	tests.checkItemEquiped(fighter, shield.name, true, fighter.equip(shield), testEquipThirdHandItemFails.name);		
+	tests.checkItemEquiped(fighter, dagger.name, false, fighter.equip(dagger), testEquipThirdHandItemFails.name);
+}
+
+function testIsArmourEquiped()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	var fighterBad = new Fighter(fighterWithAwfulStatsParams);
+	var fighterSuper = new Fighter(fighterWithAwesomeStatsParams);
+
+	var leatherArmour = new LeatherArmour(leatherArmourParams);
+	var chainMail = new ChainMail(chainArmourParams);
+	var plateMail = new PlateMail(plateArmourParams);
+	var shield = new Shield(shieldParams);
+
+	//ensure this is false for a new character
+	tests.checkIsArmourEquiped(cleric, false, cleric.isArmourEquiped(), testIsArmourEquiped.name);
+
+	//ensure this is false when character cannot use armour type
+	magicUser.equip(leatherArmour);
+	tests.checkIsArmourEquiped(magicUser, false, magicUser.isArmourEquiped(), testIsArmourEquiped.name);
+	magicUser.unEquip(leatherArmour);
+
+	//ensure this is true when character can use armour type
+	fighter.equip(leatherArmour);
+	tests.checkIsArmourEquiped(fighter, true, fighter.isArmourEquiped(), testIsArmourEquiped.name);
+	fighter.unEquip(leatherArmour);
+	fighterBad.equip(chainMail);
+	tests.checkIsArmourEquiped(fighterBad, true, fighterBad.isArmourEquiped(), testIsArmourEquiped.name);	
+	fighterBad.unEquip(leatherArmour);
+	fighterSuper.equip(plateMail);
+	tests.checkIsArmourEquiped(fighterSuper, true, fighterSuper.isArmourEquiped(), testIsArmourEquiped.name);	
+	fighterSuper.unEquip(leatherArmour);
+
+	//ensure that this is false after unequiping the armour 
+	cleric.equip(chainMail);
+	tests.checkIsArmourEquiped(cleric, true, cleric.isArmourEquiped(), testIsArmourEquiped.name);
+	cleric.unEquip(chainMail);
+	tests.checkIsArmourEquiped(cleric, false, cleric.isArmourEquiped(), testIsArmourEquiped.name);
+
+	//ensure shield does not effect this 
+	cleric.equip(shield);
+	tests.checkIsArmourEquiped(cleric, false, cleric.isArmourEquiped(), testIsArmourEquiped.name);	
 }
 
 function testEquipLeatherArmour()
@@ -451,48 +607,9 @@ function testEquipLeatherArmour()
 	var leatherArmour = new LeatherArmour(leatherArmourParams);
 	
 	tests.checkItemEquiped(magicUser,leatherArmour.name, false, magicUser.equip(leatherArmour), testEquipLeatherArmour.name);
-	tests.checkIsArmourEquiped(magicUser, false, magicUser.isArmourEquiped(), testEquipLeatherArmour.name);
-	tests.checkArmourClass(magicUser, 9, magicUser.armourClass, testEquipLeatherArmour.name);
-	
 	tests.checkItemEquiped(fighter, leatherArmour.name, true, fighter.equip(leatherArmour), testEquipLeatherArmour.name);
-	tests.checkIsArmourEquiped(fighter, true, fighter.isArmourEquiped(), testEquipLeatherArmour.name);		
-	tests.checkArmourClass(fighter, 6, fighter.armourClass, testEquipLeatherArmour.name);	
-	
 	tests.checkItemEquiped(thief, leatherArmour.name, true, thief.equip(leatherArmour), testEquipLeatherArmour.name);
-	tests.checkIsArmourEquiped(thief, true, thief.isArmourEquiped(), testEquipLeatherArmour.name);	
-	tests.checkArmourClass(thief, 4, thief.armourClass, testEquipLeatherArmour.name);
-	
 	tests.checkItemEquiped(cleric, leatherArmour.name, true, cleric.equip(leatherArmour), testEquipLeatherArmour.name);
-	tests.checkIsArmourEquiped(cleric, true, cleric.isArmourEquiped(), testEquipLeatherArmour.name);	
-	tests.checkArmourClass(cleric, 9, cleric.armourClass, testEquipLeatherArmour.name);
-}
-
-function testUnequipLeatherArmour()
-{
-	var fighter = new Fighter(fighterTestParams);
-	var cleric = new Cleric(clericTestParams);
-	var thief = new Thief(thiefTestParams);		
-
-	var leatherArmour = new LeatherArmour(leatherArmourParams);
-	
-	fighter.equip(leatherArmour);
-	cleric.equip(leatherArmour);
-	thief.equip(leatherArmour);
-	
-	tests.checkIsArmourEquiped(fighter, true, fighter.isArmourEquiped(), testUnequipLeatherArmour.name);		
-	tests.checkItemUnEquiped(fighter, leatherArmour.name, true, fighter.unEquip(leatherArmour), testUnequipLeatherArmour.name);  
-	tests.checkIsArmourEquiped(fighter, false, fighter.isArmourEquiped(), testUnequipLeatherArmour.name);			
-	tests.checkArmourClass(fighter, 8, fighter.armourClass, testUnequipLeatherArmour.name);	
-	
-	tests.checkIsArmourEquiped(thief, true, thief.isArmourEquiped(), testUnequipLeatherArmour.name);	
-	tests.checkItemUnEquiped(thief, leatherArmour.name, true, thief.unEquip(leatherArmour), testUnequipLeatherArmour.name);
-	tests.checkIsArmourEquiped(thief, false, thief.isArmourEquiped(), testUnequipLeatherArmour.name);	
-	tests.checkArmourClass(thief, 6, thief.armourClass, testUnequipLeatherArmour.name);
-
-	tests.checkIsArmourEquiped(cleric, true, cleric.isArmourEquiped(), testUnequipLeatherArmour.name);
-	tests.checkItemUnEquiped(cleric, leatherArmour.name, true, cleric.unEquip(leatherArmour), testUnequipLeatherArmour.name);  
-	tests.checkIsArmourEquiped(cleric, false, cleric.isArmourEquiped());
-	tests.checkArmourClass(cleric, 9, cleric.armourClass, testUnequipLeatherArmour.name);
 }
 
 function testEquipChainMailArmour()
@@ -504,21 +621,10 @@ function testEquipChainMailArmour()
 	
 	var chainMail = new ChainMail(chainArmourParams);
 	
-	tests.checkItemEquiped(magicUser, chainMail.name, false, magicUser.equip(chainMail), testEquipChainMailArmour.name);
-	tests.checkArmourClass(magicUser, 9, magicUser.armourClass, testEquipChainMailArmour.name);		
-	tests.checkIsArmourEquiped(magicUser, false, magicUser.isArmourEquiped(), testEquipChainMailArmour.name);
-	
+	tests.checkItemEquiped(magicUser, chainMail.name, false, magicUser.equip(chainMail), testEquipChainMailArmour.name);	
 	tests.checkItemEquiped(fighter, chainMail.name, true, fighter.equip(chainMail), testEquipChainMailArmour.name);
-	tests.checkArmourClass(fighter, 4, fighter.armourClass, testEquipChainMailArmour.name);		
-	tests.checkIsArmourEquiped(fighter, true, fighter.isArmourEquiped(), testEquipChainMailArmour.name);
-	
 	tests.checkItemEquiped(thief, chainMail.name, false, thief.equip(chainMail), testEquipChainMailArmour.name);
-	tests.checkArmourClass(thief, 6, thief.armourClass, testEquipChainMailArmour.name);
-	tests.checkIsArmourEquiped(thief, false, thief.isArmourEquiped(), testEquipChainMailArmour.name);
-	
-	tests.checkItemEquiped(cleric, chainMail.name, true, cleric.equip(chainMail), testEquipChainMailArmour.name);
-	tests.checkArmourClass(cleric, 7, cleric.armourClass, testEquipChainMailArmour.name);
-	tests.checkIsArmourEquiped(cleric, true, cleric.isArmourEquiped(), testEquipChainMailArmour.name);	
+	tests.checkItemEquiped(cleric, chainMail.name, true, cleric.equip(chainMail), testEquipChainMailArmour.name);	
 }
 
 function testEquipPlateMailArmour()
@@ -531,34 +637,9 @@ function testEquipPlateMailArmour()
 	var plateMail = new PlateMail(plateArmourParams);
 	
 	tests.checkItemEquiped(magicUser, plateMail.name, false, magicUser.equip(plateMail), testEquipPlateMailArmour.name);
-	tests.checkArmourClass(magicUser, 9, magicUser.armourClass, testEquipPlateMailArmour.name);
-	tests.checkIsArmourEquiped(magicUser, false, magicUser.isArmourEquiped(), testEquipPlateMailArmour.name);	
-	
 	tests.checkItemEquiped(fighter, plateMail.name, true, fighter.equip(plateMail), testEquipPlateMailArmour.name);
-	tests.checkArmourClass(fighter, 2, fighter.armourClass, testEquipPlateMailArmour.name);		
-	tests.checkIsArmourEquiped(fighter, true, fighter.isArmourEquiped(), testEquipPlateMailArmour.name);
-	
 	tests.checkItemEquiped(thief, plateMail.name, false, thief.equip(plateMail), testEquipPlateMailArmour.name);
-	tests.checkArmourClass(thief, 6, thief.armourClass, testEquipPlateMailArmour.name);
-	tests.checkIsArmourEquiped(thief, false, thief.isArmourEquiped(), testEquipPlateMailArmour.name);
-	
 	tests.checkItemEquiped(cleric, plateMail.name, true, cleric.equip(plateMail), testEquipPlateMailArmour.name);
-	tests.checkArmourClass(cleric, 5, cleric.armourClass, testEquipPlateMailArmour.name);
-	tests.checkIsArmourEquiped(cleric, true, cleric.isArmourEquiped(), testEquipPlateMailArmour.name);
-}
-
-function testEquipTwoSetsOfArmour()
-{
-	var fighter = new Fighter(fighterTestParams);
-	
-	var leatherArmour = new LeatherArmour(leatherArmourParams);
-	var chainMail = new ChainMail(chainArmourParams);
-	
-	fighter.equip(leatherArmour);
-	
-	tests.checkIsArmourEquiped(fighter, true, fighter.isArmourEquiped(), testEquipTwoSetsOfArmour.name);	
-	tests.checkItemEquiped(fighter, chainMail.name, false, fighter.equip(chainMail), testEquipTwoSetsOfArmour.name);
-	tests.checkArmourClass(fighter, 6, fighter.armourClass, testEquipTwoSetsOfArmour.name);	
 }
 
 function testEquipShield()
@@ -570,21 +651,160 @@ function testEquipShield()
 	
 	var shield = new Shield(shieldParams);
 	
-	tests.checkItemEquiped(magicUser, shield.name, false, magicUser.equip(shield), testEquipShield.name);
-	tests.checkArmourClass(magicUser, 9, magicUser.armourClass, testEquipShield.name);		
-	tests.checkNoOfHandsFree(magicUser, 2, magicUser.noOfHandsFree, testEquipShield.name);
-	
-	tests.checkItemEquiped(fighter, shield.name, true, fighter.equip(shield), testEquipShield.name);
-	tests.checkArmourClass(fighter, 7, fighter.armourClass, testEquipShield.name);			
-	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree, testEquipShield.name);
-	
+	tests.checkItemEquiped(magicUser, shield.name, false, magicUser.equip(shield), testEquipShield.name);		
+	tests.checkItemEquiped(fighter, shield.name, true, fighter.equip(shield), testEquipShield.name);		
 	tests.checkItemEquiped(thief, shield.name, false, thief.equip(shield), testEquipShield.name);
-	tests.checkArmourClass(thief, 6, thief.armourClass, testEquipShield.name);
-	tests.checkNoOfHandsFree(thief, 2, thief.noOfHandsFree), testEquipShield.name;		
+	tests.checkItemEquiped(cleric, shield.name, true, cleric.equip(shield), testEquipShield.name);				
+}
+
+function testCalculateArmourClass()
+{
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	var fighterAverage = new Fighter(fighterWithAverageStatsParams);
+	var fighterBad = new Fighter(fighterWithAwfulStatsParams);
+	var fighterSuper = new Fighter(fighterWithAwesomeStatsParams);
+
+	var leatherArmour = new LeatherArmour(leatherArmourParams);
+	var chainMail = new ChainMail(chainArmourParams);
+	var plateMail = new PlateMail(plateArmourParams);
+	var shield = new Shield(shieldParams);
+
+	//character with no armour 
+	//character no constitution bonus
+	tests.checkArmourClass(fighterAverage, 9, fighterAverage.armourClass, testCalculateArmourClass.name);	
+	//character with constitution bonus of -3 -- AC cannot be worse than 9
+	tests.checkArmourClass(fighterBad, 9, fighterBad.armourClass, testCalculateArmourClass.name);	
+	//character with constitution bonus of +3 	
+	tests.checkArmourClass(fighterSuper, 6, fighterSuper.armourClass, testCalculateArmourClass.name);	
+
+	//character with no armour and aweful dexterity still gets a bonus for having a shield 
+	fighterBad.equip(shield);
+	tests.checkArmourClass(fighterBad, 8, fighterBad.armourClass, testCalculateArmourClass.name);	
+	fighterBad.unEquip(shield);
+
+	//character with leather armour 
+	//character no constitution bonus
+	fighterAverage.equip(leatherArmour);
+	tests.checkArmourClass(fighterAverage, 7, fighterAverage.armourClass, testCalculateArmourClass.name);	
+	fighterAverage.unEquip(leatherArmour);
+	//character with constitution bonus of -3 -- AC cannot be worse than 9
+	fighterBad.equip(leatherArmour);
+	tests.checkArmourClass(fighterBad, 9, fighterBad.armourClass, testCalculateArmourClass.name);	
+	fighterBad.unEquip(leatherArmour);
+	//character with constitution bonus of +3 	
+	fighterSuper.equip(leatherArmour);
+	tests.checkArmourClass(fighterSuper, 4, fighterSuper.armourClass, testCalculateArmourClass.name);	
+	fighterSuper.unEquip(leatherArmour);
+
+	//armour class is unchanged when attempting to equip armour that the character cannot use
+	//thief cannot use plate mail (thief has -3 AC bonus) 
+	thief.equip(plateMail);
+	tests.checkArmourClass(thief, 6, thief.armourClass, testCalculateArmourClass.name);		
+	thief.unEquip(LeatherArmour);
+
+	//armour class is unaffected when attempting to equip a second set of armour 
+	//first armour is equipped (cleric has -2 Ac bonus)
+	cleric.equip(chainMail);
+	tests.checkArmourClass(cleric, 7, cleric.armourClass, testCalculateArmourClass.name);	
+	//second armour is not equipped as character is already wearing an armour
+	cleric.equip(plateMail);
+	tests.checkArmourClass(cleric, 7, cleric.armourClass, testCalculateArmourClass.name);
+	cleric.unEquip(chainMail);
+
+	//character with Plate mail equpied first and then shield 
+	//character no constitution bonus
+	fighterAverage.equip(plateMail);
+	fighterAverage.equip(shield);
+	tests.checkArmourClass(fighterAverage, 2, fighterAverage.armourClass, testCalculateArmourClass.name);	
+	fighterAverage.unEquip(plateMail);
+	fighterAverage.unEquip(shield);
+	//character with constitution bonus of -3
+	fighterBad.equip(plateMail);
+	fighterBad.equip(shield);
+	tests.checkArmourClass(fighterBad, 5, fighterBad.armourClass, testCalculateArmourClass.name);	
+	fighterBad.unEquip(plateMail);
+	fighterBad.unEquip(shield);
+	//character with constitution bonus of +3 	
+	fighterSuper.equip(plateMail);
+	fighterSuper.equip(shield);
+	tests.checkArmourClass(fighterSuper, -1, fighterSuper.armourClass, testCalculateArmourClass.name);	
+	fighterSuper.unEquip(plateMail);
+	fighterSuper.unEquip(shield);
+
+	//character with shield equpied first and then chain mail  
+	//character no constitution bonus
+	fighterAverage.equip(shield);
+	fighterAverage.equip(chainMail);
+	tests.checkArmourClass(fighterAverage, 4, fighterAverage.armourClass, testCalculateArmourClass.name);	
+	fighterAverage.unEquip(shield);
+	fighterAverage.unEquip(chainMail);
+	//character with constitution bonus of -3
+	fighterBad.equip(shield);
+	fighterBad.equip(chainMail);
+	tests.checkArmourClass(fighterBad, 7, fighterBad.armourClass, testCalculateArmourClass.name);	
+	fighterBad.unEquip(shield);
+	fighterBad.unEquip(chainMail);
+	//character with constitution bonus of +3 	
+	fighterSuper.equip(shield);
+	fighterSuper.equip(chainMail);
+	tests.checkArmourClass(fighterSuper, 1, fighterSuper.armourClass, testCalculateArmourClass.name);	
+	fighterSuper.unEquip(shield);
+	fighterSuper.unEquip(chainMail);
+
+	//check armour class is recalculated when armour is unequiped 
+	//character no constitution bonus
+	fighterAverage.equip(leatherArmour);
+	fighterAverage.unEquip(leatherArmour);
+	tests.checkArmourClass(fighterAverage, 9, fighterAverage.armourClass, testCalculateArmourClass.name);	
+	//character with constitution bonus of -3 -- AC cannot be worse than 9
+	fighterBad.equip(leatherArmour);
+	fighterBad.unEquip(leatherArmour);
+	tests.checkArmourClass(fighterBad, 9, fighterBad.armourClass, testCalculateArmourClass.name);	
+	//character with constitution bonus of +3 	
+	fighterSuper.equip(leatherArmour);
+	fighterSuper.unEquip(leatherArmour);
+	tests.checkArmourClass(fighterSuper, 6, fighterSuper.armourClass, testCalculateArmourClass.name);	
+
+	//check armour class is recalculated when shield is unequipped 
+	cleric.equip(shield); 
+	tests.checkArmourClass(cleric, 8, cleric.armourClass, testCalculateArmourClass.name);		
+	cleric.unEquip(shield); 
+	tests.checkArmourClass(cleric, 9, cleric.armourClass, testCalculateArmourClass.name);	
+}
+
+function testUnequipLeatherArmour()
+{
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);		
+
+	var leatherArmour = new LeatherArmour(leatherArmourParams);
+
+	//no leather armour equiped
+	tests.checkItemUnEquiped(fighter, leatherArmour.name, false, fighter.unEquip(leatherArmour), testUnequipLeatherArmour.name); 	
 	
-	tests.checkItemEquiped(cleric, shield.name, true, cleric.equip(shield), testEquipShield.name);
-	tests.checkArmourClass(cleric, 8, cleric.armourClass, testEquipShield.name);				
-	tests.checkNoOfHandsFree(cleric, 1, cleric.noOfHandsFree, testEquipShield.name);
+	fighter.equip(leatherArmour);	
+	tests.checkItemUnEquiped(fighter, leatherArmour.name, true, fighter.unEquip(leatherArmour), testUnequipLeatherArmour.name);  
+	
+	thief.equip(leatherArmour);		
+	tests.checkItemUnEquiped(thief, leatherArmour.name, true, thief.unEquip(leatherArmour), testUnequipLeatherArmour.name);
+
+	cleric.equip(leatherArmour);
+	tests.checkItemUnEquiped(cleric, leatherArmour.name, true, cleric.unEquip(leatherArmour), testUnequipLeatherArmour.name);  
+}
+
+function testEquipTwoSetsOfArmour()
+{
+	var fighter = new Fighter(fighterTestParams);
+	
+	var leatherArmour = new LeatherArmour(leatherArmourParams);
+	var chainMail = new ChainMail(chainArmourParams);
+	
+	fighter.equip(leatherArmour);
+	tests.checkIsArmourEquiped(fighter, true, fighter.isArmourEquiped(), testEquipTwoSetsOfArmour.name);
+	//equip chain mail should fail	
+	tests.checkItemEquiped(fighter, chainMail.name, false, fighter.equip(chainMail), testEquipTwoSetsOfArmour.name);
 }
 
 function testRoleRequiredToHit()
@@ -749,7 +969,6 @@ function runCharacterGenerationTest(charact)
 			console.log("FAIL: character is expected to have magic use equal " + expected);				
 		}
 	}
-	
 	
 	//check current character being generated
 	console.log(charact.name + " is a " + charact.constructor.name);
