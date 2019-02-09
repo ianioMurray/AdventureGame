@@ -153,11 +153,49 @@ function Tests()
 		}
 	};
 	
+	this.checkIsSpellCaster = function(adventurer, expected, actual, testName)
+	{
+		var message = " FAIL " + testName +": character " + adventurer.name + " should be a spell caster: " + expected + " but was " + actual;
+		this.validate(expected, actual, message);
+	};
+
+	this.checkHasWeaponRestrictions = function(adventurer, expected, actual, testName)
+	{
+		var message = " FAIL " + testName +": character " + adventurer.name + " should have weapon restrictions: " + expected + " but was " + actual;
+		this.validate(expected, actual, message);
+	};
+	
+	this.checkHasArmourRestrictions = function(adventurer, expected, actual, testName)
+	{
+		var message = " FAIL " + testName +": character " + adventurer.name + " should have armour restrictions: " + expected + " but was " + actual;
+		this.validate(expected, actual, message);
+	};
+
+	this.checkCanUseShield = function(adventurer, expected, actual, testName)
+	{
+		var message = " FAIL " + testName +": character " + adventurer.name + " should be able to use a shield: " + expected + " but was " + actual;
+		this.validate(expected, actual, message);
+	};
+
+	this.checkUseableWeapon = function(adventurer, expected, actual, testName)
+	{
+		var message = " FAIL " + testName +": character " + adventurer.name + " should be restricted to using " + expected + " different types of weapons but the value was " + actual;
+		this.validate(expected, actual, message);
+	};
+
 	this.checkLevel = function(adventurer, expected, actual, testName)
 	{
 		var message = " FAIL " + testName +": character " + adventurer.name + "'s level should be " + expected + " but was " + actual;
 		this.validate(expected, actual, message);
 	};
+
+	this.checkMaxHitPointsEqualCurrentHitPoints = function(adventurer, maxHitPoints, currentHitPoints, expected, testName)
+	{	
+		var currentEqualsMaxHitPoints = (maxHitPoints === currentHitPoints);
+
+		var message = " FAIL " + testName + ": character " + adventurer.name + "'s current and max Hit Points are equal: " + currentEqualsMaxHitPoints + " but " + expected + " was expected";
+		this.validate(expected, currentEqualsMaxHitPoints, message);	
+	}
 	
 	this.checkExperience = function(adventurer, expected, actual, testName)
 	{
@@ -213,6 +251,12 @@ function Tests()
 		this.validate(expected, actual, message);	
 	};
 	
+	this.checkSetHitPoints = function(adventurer, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + adventurer.name + "'s hit points are " + actual + " but should be " + expected;
+		this.validate(expected, actual, message);
+	};
+
 	this.checkRequiredToHitRoles = function(adventurer, expected, actual, testName)
 	{
 		var message = " FAIL " + testName + ": " + adventurer.name + " requires a roll of " + actual + " to hit but " + expected + " was expected";
@@ -265,8 +309,15 @@ function Tests()
 
 function runUnitTests()
 {	
+	testIsSpellCaster();
+	testHasWeaponRestrictions();
+	testHasArmourRestrictions();
+	testCanUseShield();
+	testUseableWeapon();
+
 	testGainExperience();
 	testLevelUp();
+	testMaxHitPointsEqualCurrentHitPointsAfterLevelingUp();
 	
 	testDexterityBonus();
 	testStrengthBonus();
@@ -291,19 +342,78 @@ function runUnitTests()
 
 	testCalculateArmourClass();
 
-
-
-	//test for setHitPoints
-	
-
-	
-
-	
+	testSetHitPoints();
+		
 	testRoleRequiredToHit();
 	testIfAttackHits();
 	testTakeDamage();
 	
 	tests.testResults();
+}
+
+function testIsSpellCaster()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+
+	tests.checkIsSpellCaster(magicUser, true, magicUser.isSpellCaster, testIsSpellCaster.name);
+	tests.checkIsSpellCaster(fighter, false, fighter.isSpellCaster, testIsSpellCaster.name);
+	tests.checkIsSpellCaster(cleric, true, cleric.isSpellCaster, testIsSpellCaster.name);
+	tests.checkIsSpellCaster(thief, false, thief.isSpellCaster, testIsSpellCaster.name);
+}
+
+function testHasWeaponRestrictions()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+
+	tests.checkHasWeaponRestrictions(magicUser, true, magicUser.hasWeaponRestrictions, testHasWeaponRestrictions.name);
+	tests.checkHasWeaponRestrictions(fighter, false, fighter.hasWeaponRestrictions, testHasWeaponRestrictions.name);
+	tests.checkHasWeaponRestrictions(cleric, true, cleric.hasWeaponRestrictions, testHasWeaponRestrictions.name);
+	tests.checkHasWeaponRestrictions(thief, false, thief.hasWeaponRestrictions, testHasWeaponRestrictions.name);
+}
+
+function testHasArmourRestrictions()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+
+	tests.checkHasArmourRestrictions(magicUser, true, magicUser.hasArmourRestrictions, testHasArmourRestrictions.name);
+	tests.checkHasArmourRestrictions(fighter, false, fighter.hasArmourRestrictions, testHasArmourRestrictions.name);
+	tests.checkHasArmourRestrictions(cleric, false, cleric.hasArmourRestrictions, testHasArmourRestrictions.name);
+	tests.checkHasArmourRestrictions(thief, true, thief.hasArmourRestrictions, testHasArmourRestrictions.name);
+}
+
+function testCanUseShield()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+
+	tests.checkCanUseShield(magicUser, false, magicUser.canUseShield, testCanUseShield.name);
+	tests.checkCanUseShield(fighter, true, fighter.canUseShield, testCanUseShield.name);
+	tests.checkCanUseShield(cleric, true, cleric.canUseShield, testCanUseShield.name);
+	tests.checkCanUseShield(thief, false, thief.canUseShield, testCanUseShield.name);
+}
+
+function testUseableWeapon()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	
+	tests.checkUseableWeapon(magicUser, 2, magicUser.useableWeapon.length, testUseableWeapon.name);
+	tests.checkUseableWeapon(fighter, 0, fighter.useableWeapon.length, testUseableWeapon.name);
+	tests.checkUseableWeapon(cleric, 4, cleric.useableWeapon.length, testUseableWeapon.name);
+	tests.checkUseableWeapon(thief, 0, thief.useableWeapon.length, testUseableWeapon.name);
 }
 
 function testGainExperience() 
@@ -354,7 +464,7 @@ function testLevelUp()
 						{ classType: fighter, secondLevel: 2000, thirdLevel: 4000 },
 						{ classType: cleric, secondLevel: 1500, thirdLevel: 3000 },
 						{ classType: thief, secondLevel: 1200, thirdLevel: 2400 } ];
-	
+
 	for(var i = 0; characters.length > i; i++)
 	{
 		//newly created character 
@@ -379,6 +489,22 @@ function testLevelUp()
 		characters[i].classType.gainExperience(1);
 		tests.checkLevel(characters[i].classType, 3, characters[i].classType.currentLevel, testLevelUp.name); 
 	}
+}
+
+function testMaxHitPointsEqualCurrentHitPointsAfterLevelingUp()
+{
+	var fighter = new Fighter(fighterTestParams);
+	
+	//ensure new character's current hps equal their max hps
+	tests.checkMaxHitPointsEqualCurrentHitPoints(fighter, fighter.maxHitPoints, fighter.currentHitPoints, true, testMaxHitPointsEqualCurrentHitPointsAfterLevelingUp.name);
+
+	//take damage so max and current hitpoints should no longer be equal
+	fighter.takeDamage(1);
+	tests.checkMaxHitPointsEqualCurrentHitPoints(fighter, fighter.maxHitPoints, fighter.currentHitPoints, false, testMaxHitPointsEqualCurrentHitPointsAfterLevelingUp.name);
+	
+	//as character levels up their current hitpoints should be reset to the max hitpoints
+	fighter.gainExperience(2500);
+	tests.checkMaxHitPointsEqualCurrentHitPoints(fighter, fighter.maxHitPoints, fighter.currentHitPoints, true, testMaxHitPointsEqualCurrentHitPointsAfterLevelingUp.name);
 }
 
 function testDexterityBonus()
@@ -807,6 +933,38 @@ function testEquipTwoSetsOfArmour()
 	tests.checkItemEquiped(fighter, chainMail.name, false, fighter.equip(chainMail), testEquipTwoSetsOfArmour.name);
 }
 
+function testSetHitPoints()
+{
+	var fighterAverage = new Fighter(fighterWithAverageStatsParams);
+	var fighterBad = new Fighter(fighterWithAwfulStatsParams);
+	var fighterSuper = new Fighter(fighterWithAwesomeStatsParams);
+
+	//setting the character's hitpoints to undefined to simulate a new character generation
+	fighterAverage.maxHitPoints = undefined;
+	fighterBad.maxHitPoints = undefined;
+	fighterSuper.maxHitPoints = undefined;
+
+	//check new character's Hitpoint generation where Constitution modifier is 0
+	tests.checkSetHitPoints(fighterAverage, 5, fighterAverage.setHitPoints(5), testSetHitPoints.name);
+	//check new character's Hitpoint generation where Constitution modifier is -3 (this would give the character less than 0 hit points)
+	tests.checkSetHitPoints(fighterBad, 1, fighterBad.setHitPoints(2), fighterBad.name);
+	//check new character's Hitpoint generation where Constitution modifier is 3
+	tests.checkSetHitPoints(fighterSuper, 5, fighterSuper.setHitPoints(2), testSetHitPoints.name);
+
+	//setting the character's hitpoints to what was previously generated 
+	fighterAverage.maxHitPoints = 5;
+	fighterBad.maxHitPoints = 1;
+	fighterSuper.maxHitPoints = 5;
+
+	//simulate character's hit points increasing due to a level up 
+	// this character had 5 hp previously and has a constitution modifier of 0
+	tests.checkSetHitPoints(fighterAverage, 10, fighterAverage.setHitPoints(5), testSetHitPoints.name);
+	// this character had 1 hp previously and has a constitution modifier of -3
+	tests.checkSetHitPoints(fighterBad, 2, fighterBad.setHitPoints(2), fighterBad.name);
+	// this character had 1 hp previously and has a constitution modifier of 3
+	tests.checkSetHitPoints(fighterSuper, 9, fighterSuper.setHitPoints(1), testSetHitPoints.name);
+}
+
 function testRoleRequiredToHit()
 {
  	var magicUser = new MagicUser(magaicUserTestParams);
@@ -844,16 +1002,25 @@ function testTakeDamage()
 {
  	var magicUser = new MagicUser(magaicUserTestParams);
 	var fighter = new Fighter(fighterTestParams);
+	var thief = new Thief(thiefTestParams);	
 
+	//take damage less than current number of HPs should still be alive
 	magicUser.currentHitPoints = 2;
 	magicUser.takeDamage(1);
 	tests.checkHitPoints(magicUser, 1, magicUser.currentHitPoints, testTakeDamage.name);
 	tests.checkIsDead(magicUser, false, magicUser.isDead, testTakeDamage.name);
-	
+
+	//take damage more than current number of HPs should still be dead
 	fighter.currentHitPoints = 8;
 	fighter.takeDamage(10);	
 	tests.checkHitPoints(fighter, -2, fighter.currentHitPoints, testTakeDamage.name);
 	tests.checkIsDead(fighter, true, fighter.isDead, testTakeDamage.name);	
+
+	//take damage equal than current number of HPs should still be dead
+	thief.currentHitPoints = 4;
+	thief.takeDamage(4);	
+	tests.checkHitPoints(thief, 0, thief.currentHitPoints, testTakeDamage.name);
+	tests.checkIsDead(thief, true, thief.isDead, testTakeDamage.name);	
 }
 
 //----------------------------------------------------------
@@ -938,38 +1105,6 @@ function runCharacterGenerationTest(charact)
 		}
 	};
 
-	function checkWeaponsRestriction(expected)
-	{
-		if(charact.hasWeaponRestrictions !== expected)
-		{
-			console.log("FAIL: character's weapon restriction should be " + expected);				
-		}
-	}
-	
-	function checkArmourRestriction(expected)
-	{
-		if(charact.hasArmourRestrictions !== expected)
-		{
-			console.log("FAIL: character's armour restriction should be " + expected);				
-		}	
-	}
-	
-	function checkCanUseShield(expected)
-	{
-		if(charact.canUseShield !== expected)
-		{
-			console.log("FAIL: character's 'can use shield' should be " + expected);	
-		}
-	}
-		
-	function checkCanUseMagic(expected)
-	{
-		if(charact.isSpellCaster !== expected)
-		{
-			console.log("FAIL: character is expected to have magic use equal " + expected);				
-		}
-	}
-	
 	//check current character being generated
 	console.log(charact.name + " is a " + charact.constructor.name);
 	checkAttribute("strength", charact.getStrength());
@@ -982,33 +1117,17 @@ function runCharacterGenerationTest(charact)
 	if(charact instanceof MagicUser)
 	{	
 		checkHitPoints(1 + charact.calculateAttributeModifier(charact.constitution), 4 + charact.calculateAttributeModifier(charact.constitution));
-		checkCanUseMagic(true);
-		checkWeaponsRestriction(true);
-		checkArmourRestriction(true);
-		checkCanUseShield(false);
 	}
 	else if (charact instanceof Fighter)
 	{
 		checkHitPoints(1 + charact.calculateAttributeModifier(charact.constitution), 8 + charact.calculateAttributeModifier(charact.constitution));
-		checkCanUseMagic(false);
-		checkWeaponsRestriction(false);
-		checkArmourRestriction(false);
-		checkCanUseShield(true);
 	}		
 	else if (charact instanceof Thief)
 	{		
 		checkHitPoints(1 + charact.calculateAttributeModifier(charact.constitution), 4 + charact.calculateAttributeModifier(charact.constitution));
-		checkCanUseMagic(false);
-		checkWeaponsRestriction(false);
-		checkArmourRestriction(true);
-		checkCanUseShield(false);
 	}	
 	else if (charact instanceof Cleric)
 	{	
 		checkHitPoints(1 + charact.calculateAttributeModifier(charact.constitution), 6 + charact.calculateAttributeModifier(charact.constitution));
-		checkCanUseMagic(true);
-		checkWeaponsRestriction(true);
-		checkArmourRestriction(false);
-		checkCanUseShield(true);
 	}
 }
