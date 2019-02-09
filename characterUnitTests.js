@@ -122,93 +122,93 @@ function Tests()
 		}
 	};
 	
-	this.checkLevel = function(adventurer, expected, actual)
+	this.checkLevel = function(adventurer, expected, actual, testName)
 	{
-		var message = "FAIL: character " + adventurer.name + "'s level should be " + expected + " but was " + actual;
+		var message = " FAIL " + testName +": character " + adventurer.name + "'s level should be " + expected + " but was " + actual;
 		this.validate(expected, actual, message);
 	};
 	
-	this.checkExperience = function(adventurer, expected, actual)
+	this.checkExperience = function(adventurer, expected, actual, testName)
 	{
-		var message = "FAIL: character " + adventurer.name + "'s experience should be " + expected + " but appears to be " + actual;
+		var message = " FAIL " + testName + ": character " + adventurer.name + "'s experience should be " + expected + " but appears to be " + actual;
 		this.validate(expected, actual, message);
 	};
 	
-	this.checkDexterityBonus = function(adventurer, expected, actual) 
+	this.checkDexterityBonus = function(adventurer, expected, actual, testName) 
 	{
-		var message = "FAIL: character " + adventurer.name + "'s dexterity bonus should be " + expected + " but appears to be " + actual;
+		var message = " FAIL " + testName + ": character " + adventurer.name + "'s dexterity bonus should be " + expected + " but appears to be " + actual;
 		this.validate(expected, actual, message);	
 	};
 	
-	this.checkStrengthBonus = function(adventurer, expected, actual) 
+	this.checkStrengthBonus = function(adventurer, expected, actual, testName) 
 	{
-		var message = "FAIL: character " + adventurer.name + "'s strength bonus should be " + expected + " but appears to be " + actual;
+		var message = " FAIL " + testName + ": character " + adventurer.name + "'s strength bonus should be " + expected + " but appears to be " + actual;
 		this.validate(expected, actual, message);		
 	};
 	
-	this.checkConstitutionBonus = function(adventurer, expected, actual) 
+	this.checkConstitutionBonus = function(adventurer, expected, actual, testName) 
 	{
-		var message = "FAIL: character " + adventurer.name + "'s constitution bonus should be " + expected + " but appears to be " + actual;
+		var message = " FAIL " + testName + ": character " + adventurer.name + "'s constitution bonus should be " + expected + " but appears to be " + actual;
 		this.validate(expected, actual, message);	
 	};
 	
-	this.checkItemEquiped = function(adventurer, item, expected, actual)
+	this.checkItemEquiped = function(adventurer, item, expected, actual, testName)
 	{
-		var message = "FAIL: item " + item + " equiped to " + adventurer.name + " was " + actual + " but " + expected + " was expected";
+		var message = " FAIL " + testName + ": item " + item + " equiped to " + adventurer.name + " was " + actual + " but " + expected + " was expected";
 		this.validate(expected, actual, message);
 	};
 	
-	this.checkItemUnEquiped  = function(adventurer, item, expected, actual)
+	this.checkItemUnEquiped  = function(adventurer, item, expected, actual, testName)
 	{
-		var message = "FAIL: item " + item + " unequiped from " + adventurer.name + " was " + actual + " but " + expected + " was expected";
+		var message = " FAIL " + testName + ": item " + item + " unequiped from " + adventurer.name + " was " + actual + " but " + expected + " was expected";
 		this.validate(expected, actual, message);	
 	};
 	
-	this.checkArmourClass = function(adventurer, expected, actual)
+	this.checkArmourClass = function(adventurer, expected, actual, testName)
 	{	
-		var message = "FAIL: character " + adventurer.name + "'s armour class is " + actual + " but " + expected + " was expected";
+		var message = " FAIL " + testName + ": character " + adventurer.name + "'s armour class is " + actual + " but " + expected + " was expected";
 		this.validate(expected, actual, message);	
 	};
 	
-	this.checkNoOfHandsFree = function(adventurer, expected, actual)
+	this.checkNoOfHandsFree = function(adventurer, expected, actual, testName)
 	{
-		var message = "FAIL: the number of hands " + adventurer.name + " has free is " + actual + " but " + expected + " was expected";
+		var message = " FAIL " + testName + ": the number of hands " + adventurer.name + " has free is " + actual + " but " + expected + " was expected";
 		this.validate(expected, actual, message);	
 	};
 	
-	this.checkIsArmourEquiped = function(adventurer, expected, actual)
+	this.checkIsArmourEquiped = function(adventurer, expected, actual, testName)
 	{
-		var message = "FAIL: " + adventurer.name + " has armour equiped " + actual + " but " + expected + " was expected";
+		var message = " FAIL " + testName + ": " + adventurer.name + " has armour equiped " + actual + " but " + expected + " was expected";
 		this.validate(expected, actual, message);	
 	};
 	
-	this.checkRequiredToHitRoles = function(adventurer, expected, actual)
+	this.checkRequiredToHitRoles = function(adventurer, expected, actual, testName)
 	{
-		var message = "FAIL: " + adventurer.name + " requires a roll of " + actual + " to hit but " + expected + " was expected";
+		var message = " FAIL " + testName + ": " + adventurer.name + " requires a roll of " + actual + " to hit but " + expected + " was expected";
 		this.validate(expected, actual, message);	
 	};		
 		
-	this.checkIfAttackHit = function(adventurer, expected, actual)
+	this.checkIfAttackHit = function(adventurer, expected, actual, testName)
 	{
-		var message = "FAIL: " + adventurer.name + "'s attack hit was " + actual + " but " + expected + " was expected";
+		var message = " FAIL " + testName + ": " + adventurer.name + "'s attack hit was " + actual + " but " + expected + " was expected";
 		this.validate(expected, actual, message);
 	};
 	
-	this.checkIndividualInitiativeModifier = function(adventurer, expected, actual)
+	this.checkIndividualInitiativeModifier = function(adventurer, expected, actual, testName)
 	{
-		var message = "FAIL: " + adventurer.name + "'s individual initiative is " + actual + " but " + expected + " was expected";
+		var message = " FAIL " + testName + ": " + adventurer.name + "'s individual initiative is " + actual + " but " + expected + " was expected";
 		this.validate(expected, actual, message);	
 	};
 	
-	this.checkHitPoints = function(adventurer, expected, actual)	
+	this.checkHitPoints = function(adventurer, expected, actual, testName)	
 	{
-		var message = "FAIL: " + adventurer.name + "'s hit points are " + actual + " but " + expected + " was expected";
+		var message = " FAIL " + testName + ": " + adventurer.name + "'s hit points are " + actual + " but " + expected + " was expected";
 		this.validate(expected, actual, message);	
 	};		
 		
-	this.checkIsDead = function(adventurer, expected, actual)	
+	this.checkIsDead = function(adventurer, expected, actual, testName)	
 	{
-		var message = "FAIL: " + adventurer.name + "'s was dead " + actual + " but " + expected + " was expected";
+		var message = " FAIL " + testName + ": " + adventurer.name + "'s was dead " + actual + " but " + expected + " was expected";
 		this.validate(expected, actual, message);	
 	};	
 	
@@ -282,31 +282,31 @@ function testGainExperience()
 	for(var i = 0; characters.length > i; i++)
 	{
 		//newly created character tested for experience and level
-		tests.checkExperience(characters[i].classType, 0, characters[i].classType.experience);
-		tests.checkLevel(characters[i].classType, 1, characters[i].classType.currentLevel);
+		tests.checkExperience(characters[i].classType, 0, characters[i].classType.experience, testGainExperience.name);
+		tests.checkLevel(characters[i].classType, 1, characters[i].classType.currentLevel, testGainExperience.name);
 		
 		//add experience so 1 pt less than 2nd level
 		var secondLevelMinusOne = characters[i].secondLevel - 1;
 		characters[i].classType.gainExperience(secondLevelMinusOne);
-		tests.checkExperience(characters[i].classType, secondLevelMinusOne, characters[i].classType.experience);	
-		tests.checkLevel(characters[i].classType, 1, characters[i].classType.currentLevel);
+		tests.checkExperience(characters[i].classType, secondLevelMinusOne, characters[i].classType.experience, testGainExperience.name);	
+		tests.checkLevel(characters[i].classType, 1, characters[i].classType.currentLevel, testGainExperience.name);
 		
 		//add 1 more experience so total equals amount for 2nd level
 		characters[i].classType.gainExperience(1);			
-		tests.checkExperience(characters[i].classType, characters[i].secondLevel, characters[i].classType.experience);	
-		tests.checkLevel(characters[i].classType, 2, characters[i].classType.currentLevel);
+		tests.checkExperience(characters[i].classType, characters[i].secondLevel, characters[i].classType.experience, testGainExperience.name);	
+		tests.checkLevel(characters[i].classType, 2, characters[i].classType.currentLevel, testGainExperience.name);
 		
 		//add experience so 1 pt less than 3rd level
 		var experienceRequiredToGetToThirdLevelMinusOne = (characters[i].thirdLevel - characters[i].secondLevel) - 1;
 		var thirdLevelMinusOne = characters[i].thirdLevel - 1;
 		characters[i].classType.gainExperience(experienceRequiredToGetToThirdLevelMinusOne);
-		tests.checkExperience(characters[i].classType, thirdLevelMinusOne, characters[i].classType.experience);	
-		tests.checkLevel(characters[i].classType, 2, characters[i].classType.currentLevel);
+		tests.checkExperience(characters[i].classType, thirdLevelMinusOne, characters[i].classType.experience, testGainExperience.name);	
+		tests.checkLevel(characters[i].classType, 2, characters[i].classType.currentLevel, testGainExperience.name);
 		
 		//add 1 more experience so total equals amount for 3rd level
 		characters[i].classType.gainExperience(1);
-		tests.checkExperience(characters[i].classType, characters[i].thirdLevel, characters[i].classType.experience);	
-		tests.checkLevel(characters[i].classType, 3, characters[i].classType.currentLevel); 
+		tests.checkExperience(characters[i].classType, characters[i].thirdLevel, characters[i].classType.experience, testGainExperience.name);	
+		tests.checkLevel(characters[i].classType, 3, characters[i].classType.currentLevel, testGainExperience.name); 
 	}
 }	
 
@@ -317,10 +317,10 @@ function testDexterityBonus()
 	var cleric = new Cleric(clericTestParams);
 	var thief = new Thief(thiefTestParams);	
 	
-	tests.checkDexterityBonus(magicUser, 0, magicUser.calculateAttributeModifier(magicUser.dexterity));
-	tests.checkDexterityBonus(fighter, 1, fighter.calculateAttributeModifier(fighter.dexterity));
-	tests.checkDexterityBonus(thief, 3, thief.calculateAttributeModifier(thief.dexterity));		
-	tests.checkDexterityBonus(cleric, -2, cleric.calculateAttributeModifier(cleric.dexterity));
+	tests.checkDexterityBonus(magicUser, 0, magicUser.calculateAttributeModifier(magicUser.dexterity), testDexterityBonus.name);
+	tests.checkDexterityBonus(fighter, 1, fighter.calculateAttributeModifier(fighter.dexterity), testDexterityBonus.name);
+	tests.checkDexterityBonus(thief, 3, thief.calculateAttributeModifier(thief.dexterity), testDexterityBonus.name);		
+	tests.checkDexterityBonus(cleric, -2, cleric.calculateAttributeModifier(cleric.dexterity), testDexterityBonus.name);
 }
 
 function testStrengthBonus()
@@ -330,10 +330,10 @@ function testStrengthBonus()
 	var cleric = new Cleric(clericTestParams);
 	var thief = new Thief(thiefTestParams);	
 	
-	tests.checkStrengthBonus(magicUser, -1, magicUser.calculateAttributeModifier(magicUser.strength));
-	tests.checkStrengthBonus(fighter, 3, fighter.calculateAttributeModifier(fighter.strength));
-	tests.checkStrengthBonus(thief, -2, thief.calculateAttributeModifier(thief.strength));		
-	tests.checkStrengthBonus(cleric, 1, cleric.calculateAttributeModifier(cleric.strength));
+	tests.checkStrengthBonus(magicUser, -1, magicUser.calculateAttributeModifier(magicUser.strength), testStrengthBonus.name);
+	tests.checkStrengthBonus(fighter, 3, fighter.calculateAttributeModifier(fighter.strength), testStrengthBonus.name);
+	tests.checkStrengthBonus(thief, -2, thief.calculateAttributeModifier(thief.strength), testStrengthBonus.name);		
+	tests.checkStrengthBonus(cleric, 1, cleric.calculateAttributeModifier(cleric.strength), testStrengthBonus.name);
 }
 
 function testConstitutionBonus()
@@ -343,10 +343,10 @@ function testConstitutionBonus()
 	var cleric = new Cleric(clericTestParams);
 	var thief = new Thief(thiefTestParams);	
 	
-	tests.checkConstitutionBonus(magicUser, -1, magicUser.calculateAttributeModifier(magicUser.constitution));
-	tests.checkConstitutionBonus(fighter, 0, fighter.calculateAttributeModifier(fighter.constitution));
-	tests.checkConstitutionBonus(thief, 2, thief.calculateAttributeModifier(thief.constitution));		
-	tests.checkConstitutionBonus(cleric, -1, cleric.calculateAttributeModifier(cleric.constitution));
+	tests.checkConstitutionBonus(magicUser, -1, magicUser.calculateAttributeModifier(magicUser.constitution), testConstitutionBonus.name);
+	tests.checkConstitutionBonus(fighter, 0, fighter.calculateAttributeModifier(fighter.constitution), testConstitutionBonus.name);
+	tests.checkConstitutionBonus(thief, 2, thief.calculateAttributeModifier(thief.constitution), testConstitutionBonus.name);		
+	tests.checkConstitutionBonus(cleric, -1, cleric.calculateAttributeModifier(cleric.constitution), testConstitutionBonus.name);
 }
 
 function testIndividualInitiativeBonus()
@@ -356,12 +356,11 @@ function testIndividualInitiativeBonus()
 	var cleric = new Cleric(clericTestParams);
 	var thief = new Thief(thiefTestParams);	
 	
-	tests.checkIndividualInitiativeModifier(magicUser, 0, magicUser.calculateInitativeModifier());
-	tests.checkIndividualInitiativeModifier(fighter, 1, fighter.calculateInitativeModifier());	
-	tests.checkIndividualInitiativeModifier(thief, 2, thief.calculateInitativeModifier());	
-	tests.checkIndividualInitiativeModifier(cleric, -1, cleric.calculateInitativeModifier());
+	tests.checkIndividualInitiativeModifier(magicUser, 0, magicUser.calculateInitativeModifier(), testIndividualInitiativeBonus.name);
+	tests.checkIndividualInitiativeModifier(fighter, 1, fighter.calculateInitativeModifier(), testIndividualInitiativeBonus.name);	
+	tests.checkIndividualInitiativeModifier(thief, 2, thief.calculateInitativeModifier(), testIndividualInitiativeBonus.name);	
+	tests.checkIndividualInitiativeModifier(cleric, -1, cleric.calculateInitativeModifier(), testIndividualInitiativeBonus.name);
 }
-
 
 function testEquipSword()
 {
@@ -372,14 +371,17 @@ function testEquipSword()
 	
 	var sword = new Sword(swordParams);
 	
-	tests.checkItemEquiped(magicUser, sword.name, false, magicUser.equip(sword));
-	tests.checkNoOfHandsFree(magicUser, 2, magicUser.noOfHandsFree);
-	tests.checkItemEquiped(fighter, sword.name, true, fighter.equip(sword));
-	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree);		
-	tests.checkItemEquiped(thief, sword.name, true, thief.equip(sword));
-	tests.checkNoOfHandsFree(thief, 1, thief.noOfHandsFree);			
-	tests.checkItemEquiped(cleric, sword.name, false, cleric.equip(sword));
-	tests.checkNoOfHandsFree(cleric, 2, cleric.noOfHandsFree);
+	tests.checkItemEquiped(magicUser, sword.name, false, magicUser.equip(sword), testEquipSword.name);
+	tests.checkNoOfHandsFree(magicUser, 2, magicUser.noOfHandsFree, testEquipSword.name);
+
+	tests.checkItemEquiped(fighter, sword.name, true, fighter.equip(sword), testEquipSword.name);
+	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree, testEquipSword.name);		
+
+	tests.checkItemEquiped(thief, sword.name, true, thief.equip(sword), testEquipSword.name);
+	tests.checkNoOfHandsFree(thief, 1, thief.noOfHandsFree, testEquipSword.name);			
+
+	tests.checkItemEquiped(cleric, sword.name, false, cleric.equip(sword), testEquipSword.name);
+	tests.checkNoOfHandsFree(cleric, 2, cleric.noOfHandsFree, testEquipSword.name);
 }
 
 function testUnequipSword()
@@ -392,10 +394,11 @@ function testUnequipSword()
 	fighter.equip(sword);
 	thief.equip(sword);
 
-	tests.checkItemUnEquiped(fighter, sword.name, true, fighter.unEquip(sword));  
-	tests.checkNoOfHandsFree(fighter, 2, fighter.noOfHandsFree);
-	tests.checkItemUnEquiped(thief, sword.name, true, thief.unEquip(sword));  
-	tests.checkNoOfHandsFree(thief, 2, thief.noOfHandsFree);		
+	tests.checkItemUnEquiped(fighter, sword.name, true, fighter.unEquip(sword), testUnequipSword.name);  
+	tests.checkNoOfHandsFree(fighter, 2, fighter.noOfHandsFree, testUnequipSword.name);
+
+	tests.checkItemUnEquiped(thief, sword.name, true, thief.unEquip(sword), testUnequipSword.name);  
+	tests.checkNoOfHandsFree(thief, 2, thief.noOfHandsFree, testUnequipSword.name);		
 }
 
 function testEquipDagger()
@@ -407,17 +410,17 @@ function testEquipDagger()
 	
 	var dagger = new Dagger(daggerParams);
 		
-	tests.checkItemEquiped(magicUser, dagger.name, true, magicUser.equip(dagger));		
-	tests.checkNoOfHandsFree(magicUser, 1, magicUser.noOfHandsFree);
+	tests.checkItemEquiped(magicUser, dagger.name, true, magicUser.equip(dagger), testEquipDagger.name);		
+	tests.checkNoOfHandsFree(magicUser, 1, magicUser.noOfHandsFree, testEquipDagger.name);
 	
-	tests.checkItemEquiped(fighter, dagger.name, true, fighter.equip(dagger));		
-	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree);
+	tests.checkItemEquiped(fighter, dagger.name, true, fighter.equip(dagger), testEquipDagger.name);		
+	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree, testEquipDagger.name);
 	
-	tests.checkItemEquiped(thief, dagger.name, true, thief.equip(dagger));
-	tests.checkNoOfHandsFree(thief, 1, thief.noOfHandsFree);	
+	tests.checkItemEquiped(thief, dagger.name, true, thief.equip(dagger), testEquipDagger.name);
+	tests.checkNoOfHandsFree(thief, 1, thief.noOfHandsFree, testEquipDagger.name);	
 	
-	tests.checkItemEquiped(cleric, dagger.name, false, cleric.equip(dagger));		
-	tests.checkNoOfHandsFree(cleric, 2, cleric.noOfHandsFree);
+	tests.checkItemEquiped(cleric, dagger.name, false, cleric.equip(dagger), testEquipDagger.name);		
+	tests.checkNoOfHandsFree(cleric, 2, cleric.noOfHandsFree, testEquipDagger.name);
 }
 
 function testEquipThreeHandItems()
@@ -428,14 +431,14 @@ function testEquipThreeHandItems()
 	var sword = new Sword(swordParams);
 	var shield = new Shield(shieldParams);
 
-	tests.checkItemEquiped(fighter, sword.name, true, fighter.equip(sword));	
-	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree);
+	tests.checkItemEquiped(fighter, sword.name, true, fighter.equip(sword), testEquipThreeHandItems.name);	
+	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree, testEquipThreeHandItems.name);
 	
-	tests.checkItemEquiped(fighter, shield.name, true, fighter.equip(shield));	
-	tests.checkNoOfHandsFree(fighter, 0, fighter.noOfHandsFree);	
+	tests.checkItemEquiped(fighter, shield.name, true, fighter.equip(shield), testEquipThreeHandItems.name);	
+	tests.checkNoOfHandsFree(fighter, 0, fighter.noOfHandsFree, testEquipThreeHandItems.name);	
 	
-	tests.checkItemEquiped(fighter, dagger.name, false, fighter.equip(dagger));
-	tests.checkNoOfHandsFree(fighter, 0, fighter.noOfHandsFree);
+	tests.checkItemEquiped(fighter, dagger.name, false, fighter.equip(dagger), testEquipThreeHandItems.name);
+	tests.checkNoOfHandsFree(fighter, 0, fighter.noOfHandsFree, testEquipThreeHandItems.name);
 }
 
 function testEquipLeatherArmour()
@@ -447,21 +450,21 @@ function testEquipLeatherArmour()
 	
 	var leatherArmour = new LeatherArmour(leatherArmourParams);
 	
-	tests.checkItemEquiped(magicUser,leatherArmour.name, false, magicUser.equip(leatherArmour));
-	tests.checkIsArmourEquiped(magicUser, false, magicUser.isArmourEquiped());
-	tests.checkArmourClass(magicUser, 9, magicUser.armourClass);
+	tests.checkItemEquiped(magicUser,leatherArmour.name, false, magicUser.equip(leatherArmour), testEquipLeatherArmour.name);
+	tests.checkIsArmourEquiped(magicUser, false, magicUser.isArmourEquiped(), testEquipLeatherArmour.name);
+	tests.checkArmourClass(magicUser, 9, magicUser.armourClass, testEquipLeatherArmour.name);
 	
-	tests.checkItemEquiped(fighter, leatherArmour.name, true, fighter.equip(leatherArmour));
-	tests.checkIsArmourEquiped(fighter, true, fighter.isArmourEquiped());		
-	tests.checkArmourClass(fighter, 6, fighter.armourClass);	
+	tests.checkItemEquiped(fighter, leatherArmour.name, true, fighter.equip(leatherArmour), testEquipLeatherArmour.name);
+	tests.checkIsArmourEquiped(fighter, true, fighter.isArmourEquiped(), testEquipLeatherArmour.name);		
+	tests.checkArmourClass(fighter, 6, fighter.armourClass, testEquipLeatherArmour.name);	
 	
-	tests.checkItemEquiped(thief, leatherArmour.name, true, thief.equip(leatherArmour));
-	tests.checkIsArmourEquiped(thief, true, thief.isArmourEquiped());	
-	tests.checkArmourClass(thief, 4, thief.armourClass);
+	tests.checkItemEquiped(thief, leatherArmour.name, true, thief.equip(leatherArmour), testEquipLeatherArmour.name);
+	tests.checkIsArmourEquiped(thief, true, thief.isArmourEquiped(), testEquipLeatherArmour.name);	
+	tests.checkArmourClass(thief, 4, thief.armourClass, testEquipLeatherArmour.name);
 	
-	tests.checkItemEquiped(cleric, leatherArmour.name, true, cleric.equip(leatherArmour));
-	tests.checkIsArmourEquiped(cleric, true, cleric.isArmourEquiped());	
-	tests.checkArmourClass(cleric, 9, cleric.armourClass);
+	tests.checkItemEquiped(cleric, leatherArmour.name, true, cleric.equip(leatherArmour), testEquipLeatherArmour.name);
+	tests.checkIsArmourEquiped(cleric, true, cleric.isArmourEquiped(), testEquipLeatherArmour.name);	
+	tests.checkArmourClass(cleric, 9, cleric.armourClass, testEquipLeatherArmour.name);
 }
 
 function testUnequipLeatherArmour()
@@ -476,20 +479,20 @@ function testUnequipLeatherArmour()
 	cleric.equip(leatherArmour);
 	thief.equip(leatherArmour);
 	
-	tests.checkIsArmourEquiped(fighter, true, fighter.isArmourEquiped());		
-	tests.checkItemUnEquiped(fighter, leatherArmour.name, true, fighter.unEquip(leatherArmour));  
-	tests.checkIsArmourEquiped(fighter, false, fighter.isArmourEquiped());			
-	tests.checkArmourClass(fighter, 8, fighter.armourClass);	
+	tests.checkIsArmourEquiped(fighter, true, fighter.isArmourEquiped(), testUnequipLeatherArmour.name);		
+	tests.checkItemUnEquiped(fighter, leatherArmour.name, true, fighter.unEquip(leatherArmour), testUnequipLeatherArmour.name);  
+	tests.checkIsArmourEquiped(fighter, false, fighter.isArmourEquiped(), testUnequipLeatherArmour.name);			
+	tests.checkArmourClass(fighter, 8, fighter.armourClass, testUnequipLeatherArmour.name);	
 	
-	tests.checkIsArmourEquiped(thief, true, thief.isArmourEquiped());	
-	tests.checkItemUnEquiped(thief, leatherArmour.name, true, thief.unEquip(leatherArmour));
-	tests.checkIsArmourEquiped(thief, false, thief.isArmourEquiped());	
-	tests.checkArmourClass(thief, 6, thief.armourClass);
+	tests.checkIsArmourEquiped(thief, true, thief.isArmourEquiped(), testUnequipLeatherArmour.name);	
+	tests.checkItemUnEquiped(thief, leatherArmour.name, true, thief.unEquip(leatherArmour), testUnequipLeatherArmour.name);
+	tests.checkIsArmourEquiped(thief, false, thief.isArmourEquiped(), testUnequipLeatherArmour.name);	
+	tests.checkArmourClass(thief, 6, thief.armourClass, testUnequipLeatherArmour.name);
 
-	tests.checkIsArmourEquiped(cleric, true, cleric.isArmourEquiped());
-	tests.checkItemUnEquiped(cleric, leatherArmour.name, true, cleric.unEquip(leatherArmour));  
+	tests.checkIsArmourEquiped(cleric, true, cleric.isArmourEquiped(), testUnequipLeatherArmour.name);
+	tests.checkItemUnEquiped(cleric, leatherArmour.name, true, cleric.unEquip(leatherArmour), testUnequipLeatherArmour.name);  
 	tests.checkIsArmourEquiped(cleric, false, cleric.isArmourEquiped());
-	tests.checkArmourClass(cleric, 9, cleric.armourClass);
+	tests.checkArmourClass(cleric, 9, cleric.armourClass, testUnequipLeatherArmour.name);
 }
 
 function testEquipChainMailArmour()
@@ -501,21 +504,21 @@ function testEquipChainMailArmour()
 	
 	var chainMail = new ChainMail(chainArmourParams);
 	
-	tests.checkItemEquiped(magicUser, chainMail.name, false, magicUser.equip(chainMail));
-	tests.checkArmourClass(magicUser, 9, magicUser.armourClass);		
-	tests.checkIsArmourEquiped(magicUser, false, magicUser.isArmourEquiped());
+	tests.checkItemEquiped(magicUser, chainMail.name, false, magicUser.equip(chainMail), testEquipChainMailArmour.name);
+	tests.checkArmourClass(magicUser, 9, magicUser.armourClass, testEquipChainMailArmour.name);		
+	tests.checkIsArmourEquiped(magicUser, false, magicUser.isArmourEquiped(), testEquipChainMailArmour.name);
 	
-	tests.checkItemEquiped(fighter, chainMail.name, true, fighter.equip(chainMail));
-	tests.checkArmourClass(fighter, 4, fighter.armourClass);		
-	tests.checkIsArmourEquiped(fighter, true, fighter.isArmourEquiped());
+	tests.checkItemEquiped(fighter, chainMail.name, true, fighter.equip(chainMail), testEquipChainMailArmour.name);
+	tests.checkArmourClass(fighter, 4, fighter.armourClass, testEquipChainMailArmour.name);		
+	tests.checkIsArmourEquiped(fighter, true, fighter.isArmourEquiped(), testEquipChainMailArmour.name);
 	
-	tests.checkItemEquiped(thief, chainMail.name, false, thief.equip(chainMail));
-	tests.checkArmourClass(thief, 6, thief.armourClass);
-	tests.checkIsArmourEquiped(thief, false, thief.isArmourEquiped());
+	tests.checkItemEquiped(thief, chainMail.name, false, thief.equip(chainMail), testEquipChainMailArmour.name);
+	tests.checkArmourClass(thief, 6, thief.armourClass, testEquipChainMailArmour.name);
+	tests.checkIsArmourEquiped(thief, false, thief.isArmourEquiped(), testEquipChainMailArmour.name);
 	
-	tests.checkItemEquiped(cleric, chainMail.name, true, cleric.equip(chainMail));
-	tests.checkArmourClass(cleric, 7, cleric.armourClass);
-	tests.checkIsArmourEquiped(cleric, true, cleric.isArmourEquiped());	
+	tests.checkItemEquiped(cleric, chainMail.name, true, cleric.equip(chainMail), testEquipChainMailArmour.name);
+	tests.checkArmourClass(cleric, 7, cleric.armourClass, testEquipChainMailArmour.name);
+	tests.checkIsArmourEquiped(cleric, true, cleric.isArmourEquiped(), testEquipChainMailArmour.name);	
 }
 
 function testEquipPlateMailArmour()
@@ -527,21 +530,21 @@ function testEquipPlateMailArmour()
 	
 	var plateMail = new PlateMail(plateArmourParams);
 	
-	tests.checkItemEquiped(magicUser, plateMail.name, false, magicUser.equip(plateMail));
-	tests.checkArmourClass(magicUser, 9, magicUser.armourClass);
-	tests.checkIsArmourEquiped(magicUser, false, magicUser.isArmourEquiped());	
+	tests.checkItemEquiped(magicUser, plateMail.name, false, magicUser.equip(plateMail), testEquipPlateMailArmour.name);
+	tests.checkArmourClass(magicUser, 9, magicUser.armourClass, testEquipPlateMailArmour.name);
+	tests.checkIsArmourEquiped(magicUser, false, magicUser.isArmourEquiped(), testEquipPlateMailArmour.name);	
 	
-	tests.checkItemEquiped(fighter, plateMail.name, true, fighter.equip(plateMail));
-	tests.checkArmourClass(fighter, 2, fighter.armourClass);		
-	tests.checkIsArmourEquiped(fighter, true, fighter.isArmourEquiped());
+	tests.checkItemEquiped(fighter, plateMail.name, true, fighter.equip(plateMail), testEquipPlateMailArmour.name);
+	tests.checkArmourClass(fighter, 2, fighter.armourClass, testEquipPlateMailArmour.name);		
+	tests.checkIsArmourEquiped(fighter, true, fighter.isArmourEquiped(), testEquipPlateMailArmour.name);
 	
-	tests.checkItemEquiped(thief, plateMail.name, false, thief.equip(plateMail));
-	tests.checkArmourClass(thief, 6, thief.armourClass);
-	tests.checkIsArmourEquiped(thief, false, thief.isArmourEquiped());
+	tests.checkItemEquiped(thief, plateMail.name, false, thief.equip(plateMail), testEquipPlateMailArmour.name);
+	tests.checkArmourClass(thief, 6, thief.armourClass, testEquipPlateMailArmour.name);
+	tests.checkIsArmourEquiped(thief, false, thief.isArmourEquiped(), testEquipPlateMailArmour.name);
 	
-	tests.checkItemEquiped(cleric, plateMail.name, true, cleric.equip(plateMail));
-	tests.checkArmourClass(cleric, 5, cleric.armourClass);
-	tests.checkIsArmourEquiped(cleric, true, cleric.isArmourEquiped());
+	tests.checkItemEquiped(cleric, plateMail.name, true, cleric.equip(plateMail), testEquipPlateMailArmour.name);
+	tests.checkArmourClass(cleric, 5, cleric.armourClass, testEquipPlateMailArmour.name);
+	tests.checkIsArmourEquiped(cleric, true, cleric.isArmourEquiped(), testEquipPlateMailArmour.name);
 }
 
 function testEquipTwoSetsOfArmour()
@@ -553,9 +556,9 @@ function testEquipTwoSetsOfArmour()
 	
 	fighter.equip(leatherArmour);
 	
-	tests.checkIsArmourEquiped(fighter, true, fighter.isArmourEquiped());	
-	tests.checkItemEquiped(fighter, chainMail.name, false, fighter.equip(chainMail));
-	tests.checkArmourClass(fighter, 6, fighter.armourClass);	
+	tests.checkIsArmourEquiped(fighter, true, fighter.isArmourEquiped(), testEquipTwoSetsOfArmour.name);	
+	tests.checkItemEquiped(fighter, chainMail.name, false, fighter.equip(chainMail), testEquipTwoSetsOfArmour.name);
+	tests.checkArmourClass(fighter, 6, fighter.armourClass, testEquipTwoSetsOfArmour.name);	
 }
 
 function testEquipShield()
@@ -567,21 +570,21 @@ function testEquipShield()
 	
 	var shield = new Shield(shieldParams);
 	
-	tests.checkItemEquiped(magicUser, shield.name, false, magicUser.equip(shield));
-	tests.checkArmourClass(magicUser, 9, magicUser.armourClass);		
-	tests.checkNoOfHandsFree(magicUser, 2, magicUser.noOfHandsFree);
+	tests.checkItemEquiped(magicUser, shield.name, false, magicUser.equip(shield), testEquipShield.name);
+	tests.checkArmourClass(magicUser, 9, magicUser.armourClass, testEquipShield.name);		
+	tests.checkNoOfHandsFree(magicUser, 2, magicUser.noOfHandsFree, testEquipShield.name);
 	
-	tests.checkItemEquiped(fighter, shield.name, true, fighter.equip(shield));
-	tests.checkArmourClass(fighter, 7, fighter.armourClass);			
-	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree);
+	tests.checkItemEquiped(fighter, shield.name, true, fighter.equip(shield), testEquipShield.name);
+	tests.checkArmourClass(fighter, 7, fighter.armourClass, testEquipShield.name);			
+	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree, testEquipShield.name);
 	
-	tests.checkItemEquiped(thief, shield.name, false, thief.equip(shield));
-	tests.checkArmourClass(thief, 6, thief.armourClass);
-	tests.checkNoOfHandsFree(thief, 2, thief.noOfHandsFree);		
+	tests.checkItemEquiped(thief, shield.name, false, thief.equip(shield), testEquipShield.name);
+	tests.checkArmourClass(thief, 6, thief.armourClass, testEquipShield.name);
+	tests.checkNoOfHandsFree(thief, 2, thief.noOfHandsFree), testEquipShield.name;		
 	
-	tests.checkItemEquiped(cleric, shield.name, true, cleric.equip(shield));
-	tests.checkArmourClass(cleric, 8, cleric.armourClass);				
-	tests.checkNoOfHandsFree(cleric, 1, cleric.noOfHandsFree);
+	tests.checkItemEquiped(cleric, shield.name, true, cleric.equip(shield), testEquipShield.name);
+	tests.checkArmourClass(cleric, 8, cleric.armourClass, testEquipShield.name);				
+	tests.checkNoOfHandsFree(cleric, 1, cleric.noOfHandsFree, testEquipShield.name);
 }
 
 function testRoleRequiredToHit()
@@ -601,20 +604,20 @@ function testRoleRequiredToHit()
 	cleric.equip(plateMail);
 	cleric.equip(shield);
 	
-	tests.checkRequiredToHitRoles(magicUser, 11, magicUser.roleRequiredToHit(magicUser, dagger)); //magic user has an AC of 9
-	tests.checkRequiredToHitRoles(magicUser, 19, magicUser.roleRequiredToHit(fighter, dagger));   //fighter has an AC of 1
-	tests.checkRequiredToHitRoles(magicUser, 14, magicUser.roleRequiredToHit(thief, dagger));     //thief has an AC of 6
-	tests.checkRequiredToHitRoles(magicUser, 16, magicUser.roleRequiredToHit(cleric, dagger));    //cleric has an AC of 4
-	tests.checkRequiredToHitRoles(fighter, 12, fighter.roleRequiredToHit(cleric, dagger));    //cleric has an AC of 4	
+	tests.checkRequiredToHitRoles(magicUser, 11, magicUser.roleRequiredToHit(magicUser, dagger), testRoleRequiredToHit.name); //magic user has an AC of 9
+	tests.checkRequiredToHitRoles(magicUser, 19, magicUser.roleRequiredToHit(fighter, dagger), testRoleRequiredToHit.name);   //fighter has an AC of 1
+	tests.checkRequiredToHitRoles(magicUser, 14, magicUser.roleRequiredToHit(thief, dagger), testRoleRequiredToHit.name);     //thief has an AC of 6
+	tests.checkRequiredToHitRoles(magicUser, 16, magicUser.roleRequiredToHit(cleric, dagger), testRoleRequiredToHit.name);    //cleric has an AC of 4
+	tests.checkRequiredToHitRoles(fighter, 12, fighter.roleRequiredToHit(cleric, dagger), testRoleRequiredToHit.name);    //cleric has an AC of 4	
 }
 
 function testIfAttackHits()
 {
  	var magicUser = new MagicUser(magaicUserTestParams);
 
-	tests.checkIfAttackHit(magicUser, false, magicUser.isAttackAHit(10, magicUser.roleRequiredToHit(magicUser)));
-	tests.checkIfAttackHit(magicUser, true, magicUser.isAttackAHit(11, magicUser.roleRequiredToHit(magicUser)));	
-	tests.checkIfAttackHit(magicUser, true, magicUser.isAttackAHit(12, magicUser.roleRequiredToHit(magicUser)));
+	tests.checkIfAttackHit(magicUser, false, magicUser.isAttackAHit(10, magicUser.roleRequiredToHit(magicUser)), testIfAttackHits.name);
+	tests.checkIfAttackHit(magicUser, true, magicUser.isAttackAHit(11, magicUser.roleRequiredToHit(magicUser)), testIfAttackHits.name);	
+	tests.checkIfAttackHit(magicUser, true, magicUser.isAttackAHit(12, magicUser.roleRequiredToHit(magicUser)), testIfAttackHits.name);
 }
 
 function testTakeDamage()
@@ -624,13 +627,13 @@ function testTakeDamage()
 
 	magicUser.currentHitPoints = 2;
 	magicUser.takeDamage(1);
-	tests.checkHitPoints(magicUser, 1, magicUser.currentHitPoints);
-	tests.checkIsDead(magicUser, false, magicUser.isDead);
+	tests.checkHitPoints(magicUser, 1, magicUser.currentHitPoints, testTakeDamage.name);
+	tests.checkIsDead(magicUser, false, magicUser.isDead, testTakeDamage.name);
 	
 	fighter.currentHitPoints = 8;
 	fighter.takeDamage(10);	
-	tests.checkHitPoints(fighter, -2, fighter.currentHitPoints);
-	tests.checkIsDead(fighter, true, fighter.isDead);	
+	tests.checkHitPoints(fighter, -2, fighter.currentHitPoints, testTakeDamage.name);
+	tests.checkIsDead(fighter, true, fighter.isDead, testTakeDamage.name);	
 }
 
 //----------------------------------------------------------
