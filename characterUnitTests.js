@@ -76,18 +76,13 @@ var fighterWithAverageStatsParams = {
 var swordParams = {
 	name: "sword",
 	description: "standard sword",
-	cost: 10,
-	damage: 8,
 	isMagical: false,
 	special: "",
-	is2Handed: false
 };
 
 var twoHandedSwordParams = {
 	name: "two handed sword",
 	description: "standard two handed sword",
-	cost: 15,
-	damage: 10,
 	isMagical: false,
 	special: ""
 };
@@ -95,8 +90,6 @@ var twoHandedSwordParams = {
 var shortSwordParams = {
 	name: "short sword",
 	description: "standard short sword",
-	cost: 7,
-	damage: 6,
 	isMagical: false,
 	special: ""
 };
@@ -104,8 +97,6 @@ var shortSwordParams = {
 var daggerParams = {
 	name: "dagger",
 	description: "standard dagger",
-	cost: 3,
-	damage: 4,
 	isMagical: false,
 	special: ""
 };
@@ -113,8 +104,6 @@ var daggerParams = {
 var silverDaggerParams = {
 	name: "silver dagger",
 	description: "silver dagger",
-	cost: 30,
-	damage: 4,
 	isMagical: false,
 	special: ""
 };
@@ -122,8 +111,6 @@ var silverDaggerParams = {
 var handAxeParams = {
 	name: "hand axe",
 	description: "standard hand axe",
-	cost: 4,
-	damage: 6,
 	isMagical: false,
 	special: ""
 };
@@ -131,8 +118,6 @@ var handAxeParams = {
 var battleAxeParams = {
 	name: "battle axe",
 	description: "standard battle axe",
-	cost: 7,
-	damage: 8,
 	isMagical: false,
 	special: ""
 };
@@ -140,30 +125,50 @@ var battleAxeParams = {
 var maceParams = {
 	name: "mace",
 	description: "standard mace",
-	cost: 5,
-	damage: 6,
 	isMagical: false,
 	special: ""
 };
 
+var clubParams = {
+	name: "club",
+	description: "standard club",
+	isMagical: false,
+	special: ""
+};
 
+var poleArmParams = {
+	name: "pole arm",
+	description: "standard pole arm",
+	isMagical: false,
+	special: ""
+};
 
+var spearParams = {
+	name: "spear",
+	description: "standard spear",
+	isMagical: false,
+	special: ""
+};
 
+var warHammerParams = {
+	name: "war hammer",
+	description: "standard war hammer",
+	isMagical: false,
+	special: ""
+};
 
 
 //armour
 var leatherArmourParams = {	
 	name: "Leather Armour",
 	description: "Leather Armour",
-	cost: 20,
 	isMagical: false,
 	special: ""
 };	
 
 var chainArmourParams = {	
 	name: "Chain Mail Armour",
-	description: "Chain Mail Armour",
-	cost: 40,  
+	description: "Chain Mail Armour", 
 	isMagical: false,
 	special: ""
 };
@@ -171,7 +176,6 @@ var chainArmourParams = {
 var plateArmourParams = {	
 	name: "Plate Mail Armour",
 	description: "Plate Mail Armour",
-	cost: 60,  
 	isMagical: false,
 	special: ""
 };	
@@ -180,7 +184,6 @@ var plateArmourParams = {
 var shieldParams = {
 	name: "Shield",
 	description: "Standard Shield",
-	cost: 10,
 	isMagical: false,
 	special: "",
 };
@@ -397,6 +400,10 @@ function runUnitTests()
 	testEquipHandAxe();
 	testEquipBattleAxe();
 	testEquipMace();
+	testEquipClub();
+	testEquipPoleArm();
+	testEquipSpear();
+	testEquipWarHammer();
 
 	testUnequipSword();
 	
@@ -776,6 +783,64 @@ function testEquipMace()
 	tests.checkItemEquiped(cleric, mace.name, true, cleric.equip(mace), testEquipMace.name);
 }
 
+function testEquipClub()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	
+	var club = new Club(clubParams);
+	
+	tests.checkItemEquiped(magicUser, club.name, false, magicUser.equip(club), testEquipClub.name);
+	tests.checkItemEquiped(fighter, club.name, true, fighter.equip(club), testEquipClub.name);		
+	tests.checkItemEquiped(thief, club.name, true, thief.equip(club), testEquipClub.name);		
+	tests.checkItemEquiped(cleric, club.name, true, cleric.equip(club), testEquipClub.name);
+}
+
+function testEquipPoleArm()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	
+	var polearm = new PoleArm(poleArmParams);
+	
+	tests.checkItemEquiped(magicUser, polearm.name, false, magicUser.equip(polearm), testEquipPoleArm.name);
+	tests.checkItemEquiped(fighter, polearm.name, true, fighter.equip(polearm), testEquipPoleArm.name);		
+	tests.checkItemEquiped(thief, polearm.name, true, thief.equip(polearm), testEquipPoleArm.name);		
+	tests.checkItemEquiped(cleric, polearm.name, false, cleric.equip(polearm), testEquipPoleArm.name);
+}
+
+function testEquipSpear()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	
+	var spear = new Spear(spearParams);
+	
+	tests.checkItemEquiped(magicUser, spear.name, false, magicUser.equip(spear), testEquipSpear.name);
+	tests.checkItemEquiped(fighter, spear.name, true, fighter.equip(spear), testEquipSpear.name);		
+	tests.checkItemEquiped(thief, spear.name, true, thief.equip(spear), testEquipSpear.name);		
+	tests.checkItemEquiped(cleric, spear.name, false, cleric.equip(spear), testEquipSpear.name);
+}
+function testEquipWarHammer()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	
+	var warHammer = new WarHammer(warHammerParams);
+	
+	tests.checkItemEquiped(magicUser, warHammer.name, false, magicUser.equip(warHammer), testEquipWarHammer.name);
+	tests.checkItemEquiped(fighter, warHammer.name, true, fighter.equip(warHammer), testEquipWarHammer.name);		
+	tests.checkItemEquiped(thief, warHammer.name, true, thief.equip(warHammer), testEquipWarHammer.name);		
+	tests.checkItemEquiped(cleric, warHammer.name, true, cleric.equip(warHammer), testEquipWarHammer.name);
+}
 
 
 function testUnequipSword()
@@ -864,6 +929,10 @@ function testWeaponIsTwoHanded()
 	var handAxe = new HandAxe(handAxeParams);
 	var battleAxe = new BattleAxe(battleAxeParams);
 	var mace = new Mace(maceParams);
+	var club = new Club(clubParams);
+	var poleArm = new PoleArm(poleArmParams);	
+	var spear = new Spear(spearParams);
+	var warHammer = new WarHammer(warHammerParams);
 
 	tests.checkWeaponIsTwoHanded(sword, false, sword.is2Handed, testWeaponIsTwoHanded.name);
 	tests.checkWeaponIsTwoHanded(twoHandedSword, true, twoHandedSword.is2Handed, testWeaponIsTwoHanded.name);
@@ -873,6 +942,10 @@ function testWeaponIsTwoHanded()
 	tests.checkWeaponIsTwoHanded(handAxe, false, handAxe.is2Handed, testWeaponIsTwoHanded.name);
 	tests.checkWeaponIsTwoHanded(battleAxe, true, battleAxe.is2Handed, testWeaponIsTwoHanded.name);
 	tests.checkWeaponIsTwoHanded(mace, false, mace.is2Handed, testWeaponIsTwoHanded.name);
+	tests.checkWeaponIsTwoHanded(club, false, club.is2Handed, testWeaponIsTwoHanded.name);
+	tests.checkWeaponIsTwoHanded(poleArm, true, poleArm.is2Handed, testWeaponIsTwoHanded.name);
+	tests.checkWeaponIsTwoHanded(spear, false, spear.is2Handed, testWeaponIsTwoHanded.name);
+	tests.checkWeaponIsTwoHanded(warHammer, false, warHammer.is2Handed, testWeaponIsTwoHanded.name);
 }
 
 function testEquipThirdHandItemFails()
