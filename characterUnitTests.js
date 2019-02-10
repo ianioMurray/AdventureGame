@@ -78,9 +78,27 @@ var swordParams = {
 	description: "standard sword",
 	cost: 10,
 	damage: 8,
-	isMagic: false,
+	isMagical: false,
 	special: "",
 	is2Handed: false
+};
+
+var twoHandedSwordParams = {
+	name: "two handed sword",
+	description: "standard two handed sword",
+	cost: 15,
+	damage: 10,
+	isMagical: false,
+	special: ""
+};
+
+var shortSwordParams = {
+	name: "short sword",
+	description: "standard short sword",
+	cost: 7,
+	damage: 6,
+	isMagical: false,
+	special: ""
 };
 
 var daggerParams = {
@@ -88,17 +106,57 @@ var daggerParams = {
 	description: "standard dagger",
 	cost: 3,
 	damage: 4,
-	typeOfWeapon: false,
-	isMagic: false,
+	isMagical: false,
 	special: ""
 };
+
+var silverDaggerParams = {
+	name: "silver dagger",
+	description: "silver dagger",
+	cost: 30,
+	damage: 4,
+	isMagical: false,
+	special: ""
+};
+
+var handAxeParams = {
+	name: "hand axe",
+	description: "standard hand axe",
+	cost: 4,
+	damage: 6,
+	isMagical: false,
+	special: ""
+};
+
+var battleAxeParams = {
+	name: "battle axe",
+	description: "standard battle axe",
+	cost: 7,
+	damage: 8,
+	isMagical: false,
+	special: ""
+};
+
+var maceParams = {
+	name: "mace",
+	description: "standard mace",
+	cost: 5,
+	damage: 6,
+	isMagical: false,
+	special: ""
+};
+
+
+
+
+
 
 //armour
 var leatherArmourParams = {	
 	name: "Leather Armour",
 	description: "Leather Armour",
 	cost: 20,
-	isMagic: false,
+	isMagical: false,
 	special: ""
 };	
 
@@ -106,7 +164,7 @@ var chainArmourParams = {
 	name: "Chain Mail Armour",
 	description: "Chain Mail Armour",
 	cost: 40,  
-	isMagic: false,
+	isMagical: false,
 	special: ""
 };
 
@@ -114,7 +172,7 @@ var plateArmourParams = {
 	name: "Plate Mail Armour",
 	description: "Plate Mail Armour",
 	cost: 60,  
-	isMagic: false,
+	isMagical: false,
 	special: ""
 };	
 
@@ -123,7 +181,7 @@ var shieldParams = {
 	name: "Shield",
 	description: "Standard Shield",
 	cost: 10,
-	isMagic: false,
+	isMagical: false,
 	special: "",
 };
 
@@ -286,6 +344,12 @@ function Tests()
 		var message = " FAIL " + testName + ": " + adventurer.name + "'s was dead " + actual + " but " + expected + " was expected";
 		this.validate(expected, actual, message);	
 	};	
+
+	this.checkWeaponIsTwoHanded = function(weapon, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + weapon.name + " is 2 handed: " + actual + " but " + expected + " was expected";
+		this.validate(expected, actual, message);
+	};
 	
 	this.testResults = function()
 	{
@@ -326,10 +390,19 @@ function runUnitTests()
 	testIndividualInitiativeBonus();
 	
 	testEquipDagger();
+	testEquipSilverDagger();
 	testEquipSword();
+	testEquipTwoHandedSword();
+	testEquipShortSword();
+	testEquipHandAxe();
+	testEquipBattleAxe();
+	testEquipMace();
+
 	testUnequipSword();
 	
 	testNoOfHandsFree();
+	testEquipTwoHandedWeaponWhenOnlyOneHandFree();
+	testWeaponIsTwoHanded();
 	testEquipThirdHandItemFails();
 	
 	testIsArmourEquiped();
@@ -598,6 +671,21 @@ function testEquipDagger()
 	tests.checkItemEquiped(cleric, dagger.name, false, cleric.equip(dagger), testEquipDagger.name);		
 }
 
+function testEquipSilverDagger()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	
+	var silverDagger = new SilverDagger(silverDaggerParams);
+		
+	tests.checkItemEquiped(magicUser, silverDagger.name, true, magicUser.equip(silverDagger), testEquipSilverDagger.name);		
+	tests.checkItemEquiped(fighter, silverDagger.name, true, fighter.equip(silverDagger), testEquipSilverDagger.name);		
+	tests.checkItemEquiped(thief, silverDagger.name, true, thief.equip(silverDagger), testEquipSilverDagger.name);
+	tests.checkItemEquiped(cleric, silverDagger.name, false, cleric.equip(silverDagger), testEquipSilverDagger.name);	
+}
+
 function testEquipSword()
 {
 	var magicUser = new MagicUser(magaicUserTestParams);
@@ -612,6 +700,83 @@ function testEquipSword()
 	tests.checkItemEquiped(thief, sword.name, true, thief.equip(sword), testEquipSword.name);		
 	tests.checkItemEquiped(cleric, sword.name, false, cleric.equip(sword), testEquipSword.name);
 }
+
+function testEquipTwoHandedSword()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	
+	var twoHandedSword = new TwoHandedSword(twoHandedSwordParams);
+	
+	tests.checkItemEquiped(magicUser, twoHandedSword.name, false, magicUser.equip(twoHandedSword), testEquipTwoHandedSword.name);
+	tests.checkItemEquiped(fighter, twoHandedSword.name, true, fighter.equip(twoHandedSword), testEquipTwoHandedSword.name);		
+	tests.checkItemEquiped(thief, twoHandedSword.name, true, thief.equip(twoHandedSword), testEquipTwoHandedSword.name);		
+	tests.checkItemEquiped(cleric, twoHandedSword.name, false, cleric.equip(twoHandedSword), testEquipTwoHandedSword.name);
+}
+
+function testEquipShortSword()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	
+	var shortSword = new ShortSword(shortSwordParams);
+	
+	tests.checkItemEquiped(magicUser, shortSword.name, false, magicUser.equip(shortSword), testEquipShortSword.name);
+	tests.checkItemEquiped(fighter, shortSword.name, true, fighter.equip(shortSword), testEquipShortSword.name);		
+	tests.checkItemEquiped(thief, shortSword.name, true, thief.equip(shortSword), testEquipShortSword.name);		
+	tests.checkItemEquiped(cleric, shortSword.name, false, cleric.equip(shortSword), testEquipShortSword.name);
+}
+
+function testEquipHandAxe()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	
+	var handAxe = new HandAxe(handAxeParams);
+	
+	tests.checkItemEquiped(magicUser, handAxe.name, false, magicUser.equip(handAxe), testEquipHandAxe.name);
+	tests.checkItemEquiped(fighter, handAxe.name, true, fighter.equip(handAxe), testEquipHandAxe.name);		
+	tests.checkItemEquiped(thief, handAxe.name, true, thief.equip(handAxe), testEquipHandAxe.name);		
+	tests.checkItemEquiped(cleric, handAxe.name, false, cleric.equip(handAxe), testEquipHandAxe.name);
+}
+
+function testEquipBattleAxe()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	
+	var battleAxe = new BattleAxe(battleAxeParams);
+	
+	tests.checkItemEquiped(magicUser, battleAxe.name, false, magicUser.equip(battleAxe), testEquipBattleAxe.name);
+	tests.checkItemEquiped(fighter, battleAxe.name, true, fighter.equip(battleAxe), testEquipBattleAxe.name);		
+	tests.checkItemEquiped(thief, battleAxe.name, true, thief.equip(battleAxe), testEquipBattleAxe.name);		
+	tests.checkItemEquiped(cleric, battleAxe.name, false, cleric.equip(battleAxe), testEquipBattleAxe.name);
+}
+
+function testEquipMace()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	
+	var mace = new Mace(maceParams);
+	
+	tests.checkItemEquiped(magicUser, mace.name, false, magicUser.equip(mace), testEquipMace.name);
+	tests.checkItemEquiped(fighter, mace.name, true, fighter.equip(mace), testEquipMace.name);		
+	tests.checkItemEquiped(thief, mace.name, true, thief.equip(mace), testEquipMace.name);		
+	tests.checkItemEquiped(cleric, mace.name, true, cleric.equip(mace), testEquipMace.name);
+}
+
+
 
 function testUnequipSword()
 {
@@ -635,11 +800,13 @@ function testNoOfHandsFree()
 	var magicUser = new MagicUser(magaicUserTestParams);
 	var fighter = new Fighter(fighterTestParams);
 	var thief = new Thief(thiefTestParams);	
+	var fighterSuper = new Fighter(fighterWithAwesomeStatsParams);
 
 	var sword = new Sword(swordParams);
 	var dagger = new Dagger(daggerParams);
 	var shield = new Shield(shieldParams);
 	var leatherArmour = new LeatherArmour(leatherArmourParams);
+	var twoHandedSword = new TwoHandedSword(twoHandedSwordParams);
 	
 	//test still both hands free if character cannot equip selected item 
 	magicUser.equip(sword);
@@ -656,7 +823,8 @@ function testNoOfHandsFree()
 	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree, testNoOfHandsFree.name);
 	//check equipping non hand item does not change no of hands free
 	fighter.equip(leatherArmour);
-	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree, testNoOfHandsFree.name)
+	tests.checkNoOfHandsFree(fighter, 1, fighter.noOfHandsFree, testNoOfHandsFree.name);
+	fighter.unEquip(sword);
 
 	//test to make sure no of hands free does not go below 0
 	thief.equip(sword);
@@ -664,6 +832,47 @@ function testNoOfHandsFree()
 	tests.checkNoOfHandsFree(thief, 0, thief.noOfHandsFree, testNoOfHandsFree.name);
 	thief.equip(dagger);
 	tests.checkNoOfHandsFree(thief, 0, thief.noOfHandsFree, testNoOfHandsFree.name);
+	thief.unEquip(sword);
+	thief.unEquip(dagger);
+
+	//test to make sure no hands free when 2 handed weapon equiped
+	fighterSuper.equip(twoHandedSword);
+	tests.checkNoOfHandsFree(fighterSuper, 0, fighterSuper.noOfHandsFree, testNoOfHandsFree.name);	
+	//ensure both hands free when 2 handed weapon unequiped
+	fighterSuper.unEquip(twoHandedSword);
+	tests.checkNoOfHandsFree(fighterSuper, 2, fighterSuper.noOfHandsFree, testNoOfHandsFree.name);	
+}
+
+function testEquipTwoHandedWeaponWhenOnlyOneHandFree()
+{
+	var fighterSuper = new Fighter(fighterWithAwesomeStatsParams);
+	
+	var sword = new Sword(swordParams);
+	var twoHandedSword = new TwoHandedSword(twoHandedSwordParams);
+
+	fighterSuper.equip(sword);
+	tests.checkItemEquiped(fighterSuper, twoHandedSword.name, false, fighterSuper.equip(twoHandedSword), testEquipTwoHandedWeaponWhenOnlyOneHandFree.name);	
+}
+
+function testWeaponIsTwoHanded()
+{
+	var sword = new Sword(swordParams);
+	var twoHandedSword = new TwoHandedSword(twoHandedSwordParams);
+	var shortSword = new ShortSword(shortSwordParams);
+	var dagger = new Dagger(daggerParams);
+	var silverDagger = new SilverDagger(silverDaggerParams);
+	var handAxe = new HandAxe(handAxeParams);
+	var battleAxe = new BattleAxe(battleAxeParams);
+	var mace = new Mace(maceParams);
+
+	tests.checkWeaponIsTwoHanded(sword, false, sword.is2Handed, testWeaponIsTwoHanded.name);
+	tests.checkWeaponIsTwoHanded(twoHandedSword, true, twoHandedSword.is2Handed, testWeaponIsTwoHanded.name);
+	tests.checkWeaponIsTwoHanded(shortSword, false, shortSword.is2Handed, testWeaponIsTwoHanded.name);
+	tests.checkWeaponIsTwoHanded(dagger, false, dagger.is2Handed, testWeaponIsTwoHanded.name);
+	tests.checkWeaponIsTwoHanded(silverDagger, false, silverDagger.is2Handed, testWeaponIsTwoHanded.name);
+	tests.checkWeaponIsTwoHanded(handAxe, false, handAxe.is2Handed, testWeaponIsTwoHanded.name);
+	tests.checkWeaponIsTwoHanded(battleAxe, true, battleAxe.is2Handed, testWeaponIsTwoHanded.name);
+	tests.checkWeaponIsTwoHanded(mace, false, mace.is2Handed, testWeaponIsTwoHanded.name);
 }
 
 function testEquipThirdHandItemFails()

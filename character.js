@@ -197,7 +197,7 @@ function Character()
 	
 	this.isCharacterUnableToUseThisWeapon = function(weapon)
 	{
-		return (this.hasWeaponRestrictions && ( this.useableWeapon.indexOf(weapon.typeOfWeapon) < 0));
+		return (this.hasWeaponRestrictions && ( this.useableWeapon.indexOf(weapon.name) < 0));
 	};
 	
 	this.isCharacterAbleToUseAShield = function()
@@ -803,14 +803,46 @@ function Sword(params)
 	this.description = params.description;
 	this.cost = params.cost;
 	this.damage = params.damage;
-	this.typeOfWeapon = "sword";
-	this.isMagic = params.isMagic;
+	this.isMagical = params.isMagical;
 	this.special = params.special;
 	this.is2Handed = params.is2Handed;
 }
 
 Sword.prototype = new Weapon();
 Sword.prototype.constructor = Sword;
+
+//-----------------------------------------
+//--------two handed Sword-----------------
+//-----------------------------------------
+function TwoHandedSword(params)
+ {
+	this.name = params.name;
+	this.description = params.description;
+	this.cost = params.cost;
+	this.damage = params.damage;
+	this.isMagical = params.isMagical;
+	this.special = params.special;
+}
+
+TwoHandedSword.prototype = new Weapon();
+TwoHandedSword.prototype.constructor = TwoHandedSword;
+TwoHandedSword.prototype.is2Handed = true;
+
+//-----------------------------------------
+//--------short Sword-----------------
+//-----------------------------------------
+function ShortSword(params)
+ {
+	this.name = params.name;
+	this.description = params.description;
+	this.cost = params.cost;
+	this.damage = params.damage;
+	this.isMagical = params.isMagical;
+	this.special = params.special;
+}
+
+ShortSword.prototype = new Weapon();
+ShortSword.prototype.constructor = ShortSword;
 
 //-----------------------------------------
 //-------------Dagger-----------------------
@@ -821,13 +853,83 @@ function Dagger(params)
 	this.description = params.description;
 	this.cost = params.cost;
 	this.damage = params.damage;
-	this.typeOfWeapon = "dagger";
-	this.isMagic = params.isMagic;
+	this.isMagical = params.isMagical;
 	this.special = params.special;
 }
 
 Dagger.prototype = new Weapon();
 Dagger.prototype.constructor = Dagger;
+
+//-----------------------------------------
+//---------Silver Dagger-------------------
+//-----------------------------------------
+function SilverDagger(params)
+ {
+	this.name = params.name;
+	this.description = params.description;
+	this.cost = params.cost;
+	this.damage = params.damage;
+	this.isMagical = params.isMagical;
+	this.special = params.special;
+}
+
+SilverDagger.prototype = new Weapon();
+SilverDagger.prototype.constructor = SilverDagger;
+
+//-----------------------------------------
+//--------------Hand Axe-------------------
+//-----------------------------------------
+function HandAxe(params)
+ {
+	this.name = params.name;
+	this.description = params.description;
+	this.cost = params.cost;
+	this.damage = params.damage;
+	this.isMagical = params.isMagical;
+	this.special = params.special;
+}
+
+HandAxe.prototype = new Weapon();
+HandAxe.prototype.constructor = HandAxe;
+
+//-----------------------------------------
+//-------------Battle Axe------------------
+//-----------------------------------------
+function BattleAxe(params)
+ {
+	this.name = params.name;
+	this.description = params.description;
+	this.cost = params.cost;
+	this.damage = params.damage;
+	this.isMagical = params.isMagical;
+	this.special = params.special;
+}
+
+BattleAxe.prototype = new Weapon();
+BattleAxe.prototype.constructor = BattleAxe;
+BattleAxe.prototype.is2Handed = true;
+
+//-----------------------------------------
+//----------------Mace---------------------
+//-----------------------------------------
+function Mace(params)
+ {
+	this.name = params.name;
+	this.description = params.description;
+	this.cost = params.cost;
+	this.damage = params.damage;
+	this.isMagical = params.isMagical;
+	this.special = params.special;
+}
+
+Mace.prototype = new Weapon();
+Mace.prototype.constructor = Mace;
+
+
+
+
+
+
 
 
 
@@ -839,14 +941,13 @@ function Shield(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = params.cost;
-	this.isMagic = params.isMagic;
+	this.isMagical = params.isMagical;
 	this.special = params.special;
 	this.equipTo = "hand";
 }
 
 Shield.prototype = new Item();
 Shield.prototype.constructor = Item;
-
 
 
 //------------------------------------------
@@ -868,7 +969,7 @@ function LeatherArmour(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = params.cost;
-	this.isMagic = params.isMagic;
+	this.isMagical = params.isMagical;
 	this.special = params.special;
 	this.armourClass = 7;
 	this.type = "leather";
@@ -885,7 +986,7 @@ function PlateMail(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = params.cost;
-	this.isMagic = params.isMagic;
+	this.isMagical = params.isMagical;
 	this.special = params.special;
 	this.armourClass = 3;
 	this.type = "plate";
@@ -902,7 +1003,7 @@ function ChainMail(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = params.cost;
-	this.isMagic = params.isMagic;
+	this.isMagical = params.isMagical;
 	this.special = params.special;
 	this.armourClass = 5;
 	this.type = "chain";
