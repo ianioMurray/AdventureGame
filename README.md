@@ -1,2 +1,3 @@
 # AdventureGame
-this is my garbage
+
+A programming project which attempts to model a role playing game
