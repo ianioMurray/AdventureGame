@@ -197,6 +197,8 @@ function Character()
 	
 	this.getEquipedWeapon = function()
 	{
+		//there is an assumption here that only 1 weapon is equiped as a character can only 
+		//attack once that makes sense though it would be possible to equip 2 weapons
 		for(var i=0; this.equipedInHands.length > i; i++)
 		{
 			if(this.equipedInHands[i] instanceof Weapon)
