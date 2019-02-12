@@ -13,6 +13,7 @@ function Weapon()
 {
 	this.equipTo = "hand";
 	this.is2Handed = false;
+	this.isRanged = false;
 }
 
 Weapon.prototype = new Item();
@@ -225,6 +226,86 @@ function WarHammer(params)
 WarHammer.prototype = new Weapon();
 WarHammer.prototype.constructor = WarHammer;
 
+//-----------------------------------------
+//--------------Crossbow-------------------
+//-----------------------------------------
+function Crossbow(params)
+ {
+	this.name = params.name;
+	this.description = params.description;
+	this.cost = 30;
+	this.damage = 6;
+	this.typeOfWeapon = "crossbow";
+	this.isMagical = params.isMagical;
+	this.special = params.special;
+	this.isRanged = true;
+	this.requires = "quarrel";
+}
+
+Crossbow.prototype = new Weapon();
+Crossbow.prototype.constructor = Crossbow;
+Crossbow.prototype.is2Handed = true;
+
+//-----------------------------------------
+//---------------Longbow-------------------
+//-----------------------------------------
+function Longbow(params)
+	{
+	this.name = params.name;
+	this.description = params.description;
+	this.cost = 40;
+	this.damage = 6;
+	this.typeOfWeapon = "longbow";
+	this.isMagical = params.isMagical;
+	this.special = params.special;
+	this.isRanged = true;
+	this.requires = "arrow";
+}
+
+Longbow.prototype = new Weapon();
+Longbow.prototype.constructor = Longbow;
+Longbow.prototype.is2Handed = true;        //there is nothing in the rules to say this but it just doesnt make sense for this not to be true
+	
+//-----------------------------------------
+//--------------Shortbow-------------------
+//-----------------------------------------
+function Shortbow(params)
+ {
+	this.name = params.name;
+	this.description = params.description;
+	this.cost = 25;
+	this.damage = 6;
+	this.typeOfWeapon = "shortbow";
+	this.isMagical = params.isMagical;
+	this.special = params.special;
+	this.isRanged = true;
+	this.requires = "arrow";
+}
+
+Shortbow.prototype = new Weapon();
+Shortbow.prototype.constructor = Shortbow;
+Shortbow.prototype.is2Handed = true;        //there is nothing in the rules to say this but it just doesnt make sense for this not to be true
+
+//-----------------------------------------
+//---------------sling---------------------
+//-----------------------------------------
+function Sling(params)
+ {
+	this.name = params.name;
+	this.description = params.description;
+	this.cost = 1;                        //rules set price at 2 with 30 stones so I have made price 1 and then stones will be 1 as well
+	this.damage = 4;
+	this.typeOfWeapon = "sling";
+	this.isMagical = params.isMagical;
+	this.special = params.special;
+	this.isRanged = true;
+	this.requires = "stones";
+}
+
+Sling.prototype = new Weapon();
+Sling.prototype.constructor = Sling;
+Sling.prototype.is2Handed = true;        //there is nothing in the rules to say this but it just doesnt make sense for this not to be true
+
 
 //------------------------------------------
 //---------------SHIELD---------------------
@@ -304,3 +385,43 @@ function PlateMail(params)
 
 PlateMail.prototype = new Armour();
 PlateMail.prototype.constructor = Armour;
+
+//------------------------------------------
+//---------------MISC-----------------------
+//------------------------------------------
+function Quarrel()
+{
+	this.name = params.name;
+	this.description = params.description;
+	this.cost = 0.3;
+	this.isMagical = params.isMagical;
+	this.special = params.special;
+}
+
+Quarrel.prototype = new Item();
+Quarrel.prototype.constructor = Item;
+
+
+function Arrow()
+{
+	this.name = params.name;
+	this.description = params.description;
+	this.cost = 0.25;
+	this.isMagical = params.isMagical;
+	this.special = params.special;
+}
+
+Arrow.prototype = new Item();
+Arrow.prototype.constructor = Item;
+
+function Stone()
+{
+	this.name = params.name;
+	this.description = params.description;
+	this.cost = 0.03;
+	this.isMagical = params.isMagical;
+	this.special = params.special;
+}
+
+Stone.prototype = new Item();
+Stone.prototype.constructor = Item;

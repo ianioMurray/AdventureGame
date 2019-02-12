@@ -157,6 +157,33 @@ var warHammerParams = {
 	special: ""
 };
 
+var crossbowParams = {
+	name: "crossbow",
+	description: "standard crossbow",
+	isMagical: false,
+	special: ""
+};
+
+var longbowParams = {
+	name: "longbow",
+	description: "standard longbow",
+	isMagical: false,
+	special: ""
+};
+
+var shortbowParams = {
+	name: "shortbow",
+	description: "standard shortbow",
+	isMagical: false,
+	special: ""
+};
+
+var slingParams = {
+	name: "sling",
+	description: "standard sling",
+	isMagical: false,
+	special: ""
+};
 
 //armour
 var leatherArmourParams = {	
@@ -210,7 +237,7 @@ function Tests()
 			this.allTestsPass = false;
 			this.noOfFailingTests++;		
 
-			console.log(message);
+			console.log("%c"+ message, "color: red;");
 		}
 	};
 	
@@ -353,20 +380,26 @@ function Tests()
 		var message = " FAIL " + testName + ": " + weapon.name + " is 2 handed: " + actual + " but " + expected + " was expected";
 		this.validate(expected, actual, message);
 	};
+
+	this.checkWeaponIsRanged = function(weapon, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + weapon.name + " is ranged: " + actual + " but " + expected + " was expected";
+		this.validate(expected, actual, message);
+	};
 	
 	this.testResults = function()
 	{
 		if(this.allTestsPass == true)
 		{
-			console.log("----------------------------------------------------------------");
-			console.log("PASS: all " + this.totalTests + " tests passed");
-			console.log("----------------------------------------------------------------");	
+			console.log("%c ----------------------------------------------------------------", "color: green;");
+			console.log("%cPASS: all " + this.totalTests + " tests passed", "color: green;");
+			console.log("%c----------------------------------------------------------------", "color: green;");	
 		}
 		else
 		{		
-			console.log("----------------------------------------------------------------");
-			console.log("FAIL: " + this.noOfFailingTests + " of " + this.totalTests + " failed");
-			console.log("----------------------------------------------------------------");			
+			console.log("%c----------------------------------------------------------------", "color: red;");
+			console.log("%cFAIL: " + this.noOfFailingTests + " of " + this.totalTests + " failed", "color: red;");
+			console.log("%c----------------------------------------------------------------", "color: red;");			
 		}
 	};
 }
@@ -404,12 +437,17 @@ function runUnitTests()
 	testEquipPoleArm();
 	testEquipSpear();
 	testEquipWarHammer();
+	testEquipCrossbow();
+	testEquipLongbow();
+	testEquipShortbow();
+	testEquipSling();
 
 	testUnequipSword();
 	
 	testNoOfHandsFree();
 	testEquipTwoHandedWeaponWhenOnlyOneHandFree();
 	testWeaponIsTwoHanded();
+	testWeaponIsRanged();
 	testEquipThirdHandItemFails();
 	
 	testIsArmourEquiped();
@@ -827,6 +865,7 @@ function testEquipSpear()
 	tests.checkItemEquiped(thief, spear.name, true, thief.equip(spear), testEquipSpear.name);		
 	tests.checkItemEquiped(cleric, spear.name, false, cleric.equip(spear), testEquipSpear.name);
 }
+
 function testEquipWarHammer()
 {
 	var magicUser = new MagicUser(magaicUserTestParams);
@@ -840,6 +879,66 @@ function testEquipWarHammer()
 	tests.checkItemEquiped(fighter, warHammer.name, true, fighter.equip(warHammer), testEquipWarHammer.name);		
 	tests.checkItemEquiped(thief, warHammer.name, true, thief.equip(warHammer), testEquipWarHammer.name);		
 	tests.checkItemEquiped(cleric, warHammer.name, true, cleric.equip(warHammer), testEquipWarHammer.name);
+}
+
+function testEquipCrossbow()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	
+	var crossbow = new Crossbow(crossbowParams);
+	
+	tests.checkItemEquiped(magicUser, crossbow.name, false, magicUser.equip(crossbow), testEquipCrossbow.name);
+	tests.checkItemEquiped(fighter, crossbow.name, true, fighter.equip(crossbow), testEquipCrossbow.name);		
+	tests.checkItemEquiped(thief, crossbow.name, true, thief.equip(crossbow), testEquipCrossbow.name);		
+	tests.checkItemEquiped(cleric, crossbow.name, false, cleric.equip(crossbow), testEquipCrossbow.name);
+}
+
+function testEquipLongbow()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	
+	var longbow = new Longbow(longbowParams);
+	
+	tests.checkItemEquiped(magicUser, longbow.name, false, magicUser.equip(longbow), testEquipLongbow.name);
+	tests.checkItemEquiped(fighter, longbow.name, true, fighter.equip(longbow), testEquipLongbow.name);		
+	tests.checkItemEquiped(thief, longbow.name, true, thief.equip(longbow), testEquipLongbow.name);		
+	tests.checkItemEquiped(cleric, longbow.name, false, cleric.equip(longbow), testEquipLongbow.name);
+}
+
+function testEquipShortbow()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	
+	var shortbow = new Shortbow(shortbowParams);
+	
+	tests.checkItemEquiped(magicUser, shortbow.name, false, magicUser.equip(shortbow), testEquipShortbow.name);
+	tests.checkItemEquiped(fighter, shortbow.name, true, fighter.equip(shortbow), testEquipShortbow.name);		
+	tests.checkItemEquiped(thief, shortbow.name, true, thief.equip(shortbow), testEquipShortbow.name);		
+	tests.checkItemEquiped(cleric, shortbow.name, false, cleric.equip(shortbow), testEquipShortbow.name);
+}
+
+function testEquipSling()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+	var cleric = new Cleric(clericTestParams);
+	var thief = new Thief(thiefTestParams);	
+	
+	var sling = new Sling(slingParams);
+	
+	tests.checkItemEquiped(magicUser, sling.name, false, magicUser.equip(sling), testEquipSling.name);
+	tests.checkItemEquiped(fighter, sling.name, true, fighter.equip(sling), testEquipSling.name);		
+	tests.checkItemEquiped(thief, sling.name, true, thief.equip(sling), testEquipSling.name);		
+	tests.checkItemEquiped(cleric, sling.name, true, cleric.equip(sling), testEquipSling.name);
 }
 
 
@@ -933,6 +1032,10 @@ function testWeaponIsTwoHanded()
 	var poleArm = new PoleArm(poleArmParams);	
 	var spear = new Spear(spearParams);
 	var warHammer = new WarHammer(warHammerParams);
+	var crossbow = new Crossbow(crossbowParams);
+	var longbow = new Longbow(longbowParams);
+	var shortbow = new Shortbow(shortbowParams);
+	var sling = new Sling(slingParams);
 
 	tests.checkWeaponIsTwoHanded(sword, false, sword.is2Handed, testWeaponIsTwoHanded.name);
 	tests.checkWeaponIsTwoHanded(twoHandedSword, true, twoHandedSword.is2Handed, testWeaponIsTwoHanded.name);
@@ -946,6 +1049,47 @@ function testWeaponIsTwoHanded()
 	tests.checkWeaponIsTwoHanded(poleArm, true, poleArm.is2Handed, testWeaponIsTwoHanded.name);
 	tests.checkWeaponIsTwoHanded(spear, false, spear.is2Handed, testWeaponIsTwoHanded.name);
 	tests.checkWeaponIsTwoHanded(warHammer, false, warHammer.is2Handed, testWeaponIsTwoHanded.name);
+	tests.checkWeaponIsTwoHanded(crossbow, true, crossbow.is2Handed, testWeaponIsTwoHanded.name);
+	tests.checkWeaponIsTwoHanded(longbow, true, longbow.is2Handed, testWeaponIsTwoHanded.name);
+	tests.checkWeaponIsTwoHanded(shortbow, true, shortbow.is2Handed, testWeaponIsTwoHanded.name);
+	tests.checkWeaponIsTwoHanded(sling, true, sling.is2Handed, testWeaponIsTwoHanded.name);
+}
+
+function testWeaponIsRanged()
+{
+	var sword = new Sword(swordParams);
+	var twoHandedSword = new TwoHandedSword(twoHandedSwordParams);
+	var shortSword = new ShortSword(shortSwordParams);
+	var dagger = new Dagger(daggerParams);
+	var silverDagger = new SilverDagger(silverDaggerParams);
+	var handAxe = new HandAxe(handAxeParams);
+	var battleAxe = new BattleAxe(battleAxeParams);
+	var mace = new Mace(maceParams);
+	var club = new Club(clubParams);
+	var poleArm = new PoleArm(poleArmParams);	
+	var spear = new Spear(spearParams);
+	var warHammer = new WarHammer(warHammerParams);
+	var crossbow = new Crossbow(crossbowParams);
+	var longbow = new Longbow(longbowParams);
+	var shortbow = new Shortbow(shortbowParams);
+	var sling = new Sling(slingParams);
+
+	tests.checkWeaponIsRanged(sword, false, sword.isRanged, testWeaponIsRanged.name);
+	tests.checkWeaponIsRanged(twoHandedSword, false, twoHandedSword.isRanged, testWeaponIsRanged.name);
+	tests.checkWeaponIsRanged(shortSword, false, shortSword.isRanged, testWeaponIsRanged.name);
+	tests.checkWeaponIsRanged(dagger, false, dagger.isRanged, testWeaponIsRanged.name);
+	tests.checkWeaponIsRanged(silverDagger, false, silverDagger.isRanged, testWeaponIsRanged.name);
+	tests.checkWeaponIsRanged(handAxe, false, handAxe.isRanged, testWeaponIsRanged.name);
+	tests.checkWeaponIsRanged(battleAxe, false, battleAxe.isRanged, testWeaponIsRanged.name);
+	tests.checkWeaponIsRanged(mace, false, mace.isRanged, testWeaponIsRanged.name);
+	tests.checkWeaponIsRanged(club, false, club.isRanged, testWeaponIsRanged.name);
+	tests.checkWeaponIsRanged(poleArm, false, poleArm.isRanged, testWeaponIsRanged.name);
+	tests.checkWeaponIsRanged(spear, false, spear.isRanged, testWeaponIsRanged.name);
+	tests.checkWeaponIsRanged(warHammer, false, warHammer.isRanged, testWeaponIsRanged.name);
+	tests.checkWeaponIsRanged(crossbow, true, crossbow.isRanged, testWeaponIsRanged.name);
+	tests.checkWeaponIsRanged(longbow, true, longbow.isRanged, testWeaponIsRanged.name);
+	tests.checkWeaponIsRanged(shortbow, true, shortbow.isRanged, testWeaponIsRanged.name);
+	tests.checkWeaponIsRanged(sling, true, sling.isRanged, testWeaponIsRanged.name);
 }
 
 function testEquipThirdHandItemFails()
