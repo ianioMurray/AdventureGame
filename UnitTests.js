@@ -218,7 +218,9 @@ var shieldParams = {
 
 //run tests
 var tests = new Tests();
-runUnitTests();
+runCharacterUnitTests();
+runWeaponUnitTests();
+tests.testResults();
 //runTestCombat();
 
 
@@ -407,7 +409,7 @@ function Tests()
 
 
 
-function runUnitTests()
+function runCharacterUnitTests()
 {	
 	testIsSpellCaster();
 	testHasWeaponRestrictions();
@@ -446,8 +448,6 @@ function runUnitTests()
 	
 	testNoOfHandsFree();
 	testEquipTwoHandedWeaponWhenOnlyOneHandFree();
-	testWeaponIsTwoHanded();
-	testWeaponIsRanged();
 	testEquipThirdHandItemFails();
 	
 	testIsArmourEquiped();
@@ -465,9 +465,15 @@ function runUnitTests()
 	testRoleRequiredToHit();
 	testIfAttackHits();
 	testTakeDamage();
-	
-	tests.testResults();
 }
+
+function runWeaponUnitTests()
+{
+	testWeaponIsTwoHanded();
+	testWeaponIsRanged();
+}
+
+
 
 function testIsSpellCaster()
 {
