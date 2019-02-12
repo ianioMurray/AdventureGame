@@ -13,11 +13,22 @@ function Weapon()
 {
 	this.equipTo = "hand";
 	this.is2Handed = false;
-	this.isRanged = false;
+
 }
 
 Weapon.prototype = new Item();
 Weapon.prototype.constructor = Weapon;
+
+//------------------------------------------
+//---------------MELEE WEAPON---------------
+//------------------------------------------
+function MeleeWeapon()
+{
+	this.isRanged = false;
+}
+
+MeleeWeapon.prototype = new Weapon();
+MeleeWeapon.prototype.constructor = MeleeWeapon;
 
 //-----------------------------------------
 //-------------Sword-----------------------
@@ -33,7 +44,7 @@ function Sword(params)
 	this.special = params.special;
 }
 
-Sword.prototype = new Weapon();
+Sword.prototype = new MeleeWeapon();
 Sword.prototype.constructor = Sword;
 
 //-----------------------------------------
@@ -50,7 +61,7 @@ function TwoHandedSword(params)
 	this.special = params.special;
 }
 
-TwoHandedSword.prototype = new Weapon();
+TwoHandedSword.prototype = new MeleeWeapon();
 TwoHandedSword.prototype.constructor = TwoHandedSword;
 TwoHandedSword.prototype.is2Handed = true;
 
@@ -68,7 +79,7 @@ function ShortSword(params)
 	this.special = params.special;
 }
 
-ShortSword.prototype = new Weapon();
+ShortSword.prototype = new MeleeWeapon();
 ShortSword.prototype.constructor = ShortSword;
 
 //-----------------------------------------
@@ -85,7 +96,7 @@ function Dagger(params)
 	this.special = params.special;
 }
 
-Dagger.prototype = new Weapon();
+Dagger.prototype = new MeleeWeapon();
 Dagger.prototype.constructor = Dagger;
 
 //-----------------------------------------
@@ -102,7 +113,7 @@ function SilverDagger(params)
 	this.special = params.special;
 }
 
-SilverDagger.prototype = new Weapon();
+SilverDagger.prototype = new MeleeWeapon();
 SilverDagger.prototype.constructor = SilverDagger;
 
 //-----------------------------------------
@@ -119,7 +130,7 @@ function HandAxe(params)
 	this.special = params.special;
 }
 
-HandAxe.prototype = new Weapon();
+HandAxe.prototype = new MeleeWeapon();
 HandAxe.prototype.constructor = HandAxe;
 
 //-----------------------------------------
@@ -136,7 +147,7 @@ function BattleAxe(params)
 	this.special = params.special;
 }
 
-BattleAxe.prototype = new Weapon();
+BattleAxe.prototype = new MeleeWeapon();
 BattleAxe.prototype.constructor = BattleAxe;
 BattleAxe.prototype.is2Handed = true;
 
@@ -154,7 +165,7 @@ function Mace(params)
 	this.special = params.special;
 }
 
-Mace.prototype = new Weapon();
+Mace.prototype = new MeleeWeapon();
 Mace.prototype.constructor = Mace;
 
 //-----------------------------------------
@@ -171,7 +182,7 @@ function Club(params)
 	this.special = params.special;
 }
 
-Club.prototype = new Weapon();
+Club.prototype = new MeleeWeapon();
 Club.prototype.constructor = Club;
 
 //-----------------------------------------
@@ -188,7 +199,7 @@ function PoleArm(params)
 	this.special = params.special;
 }
 
-PoleArm.prototype = new Weapon();
+PoleArm.prototype = new MeleeWeapon();
 PoleArm.prototype.constructor = PoleArm;
 PoleArm.prototype.is2Handed = true;
 
@@ -206,7 +217,7 @@ function Spear(params)
 	this.special = params.special;
 }
 
-Spear.prototype = new Weapon();
+Spear.prototype = new MeleeWeapon();
 Spear.prototype.constructor = Spear;
 
 //-----------------------------------------
@@ -223,8 +234,33 @@ function WarHammer(params)
 	this.special = params.special;
 }
 
-WarHammer.prototype = new Weapon();
+WarHammer.prototype = new MeleeWeapon();
 WarHammer.prototype.constructor = WarHammer;
+
+//-----------------------------------------
+//----------------Fist---------------------
+//-----------------------------------------
+function Fist()
+ {
+	this.name = "fist";
+	this.damage = 4;
+	this.typeOfWeapon = "fist";
+}
+
+Fist.prototype = new MeleeWeapon();
+Fist.prototype.constructor = Fist;
+
+//------------------------------------------
+//---------------RANGED WEAPON---------------
+//------------------------------------------
+function RangedWeapon()
+{
+	this.isRanged = true;
+}
+
+RangedWeapon.prototype = new Weapon();
+RangedWeapon.prototype.constructor = RangedWeapon;
+
 
 //-----------------------------------------
 //--------------Crossbow-------------------
@@ -242,7 +278,7 @@ function Crossbow(params)
 	this.requires = "quarrel";
 }
 
-Crossbow.prototype = new Weapon();
+Crossbow.prototype = new RangedWeapon();
 Crossbow.prototype.constructor = Crossbow;
 Crossbow.prototype.is2Handed = true;
 
@@ -262,7 +298,7 @@ function Longbow(params)
 	this.requires = "arrow";
 }
 
-Longbow.prototype = new Weapon();
+Longbow.prototype = new RangedWeapon();
 Longbow.prototype.constructor = Longbow;
 Longbow.prototype.is2Handed = true;        //there is nothing in the rules to say this but it just doesnt make sense for this not to be true
 	
@@ -282,7 +318,7 @@ function Shortbow(params)
 	this.requires = "arrow";
 }
 
-Shortbow.prototype = new Weapon();
+Shortbow.prototype = new RangedWeapon();
 Shortbow.prototype.constructor = Shortbow;
 Shortbow.prototype.is2Handed = true;        //there is nothing in the rules to say this but it just doesnt make sense for this not to be true
 
@@ -302,7 +338,7 @@ function Sling(params)
 	this.requires = "stones";
 }
 
-Sling.prototype = new Weapon();
+Sling.prototype = new RangedWeapon();
 Sling.prototype.constructor = Sling;
 Sling.prototype.is2Handed = true;        //there is nothing in the rules to say this but it just doesnt make sense for this not to be true
 

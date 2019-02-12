@@ -388,6 +388,12 @@ function Tests()
 		var message = " FAIL " + testName + ": " + weapon.name + " is ranged: " + actual + " but " + expected + " was expected";
 		this.validate(expected, actual, message);
 	};
+
+	this.checkGetEquipedWeapon = function(adventurer, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + adventurer.name + " should has a " + actual + " as a weapon but " + expected + " was expected";
+		this.validate(expected, actual, message);
+	}
 	
 	this.testResults = function()
 	{
@@ -405,7 +411,6 @@ function Tests()
 		}
 	};
 }
-
 
 
 
@@ -461,8 +466,9 @@ function runCharacterUnitTests()
 	testCalculateArmourClass();
 
 	testSetHitPoints();
-		
+	
 	testRoleRequiredToHit();
+	testGetEquipedWeapon();	
 	testIfAttackHits();
 	testTakeDamage();
 }
@@ -1403,10 +1409,13 @@ function testRoleRequiredToHit()
 	var fighter = new Fighter(fighterTestParams);
 	var cleric = new Cleric(clericTestParams);
 	var thief = new Thief(thiefTestParams);	
+	var badFighter = new Fighter(fighterWithAwfulStatsParams);
 	
 	var dagger = new Dagger(daggerParams);
 	var shield = new Shield(shieldParams);
 	var plateMail = new PlateMail(plateArmourParams);
+	var crossbow = new Crossbow(crossbowParams);
+	var fist = new Fist();
 	
 	fighter.equip(plateMail);
 	fighter.equip(shield);
@@ -1414,20 +1423,69 @@ function testRoleRequiredToHit()
 	cleric.equip(plateMail);
 	cleric.equip(shield);
 	
+	//to Hit with melee weapons -- takes into account str modifier
 	tests.checkRequiredToHitRoles(magicUser, 11, magicUser.roleRequiredToHit(magicUser, dagger), testRoleRequiredToHit.name); //magic user has an AC of 9
 	tests.checkRequiredToHitRoles(magicUser, 19, magicUser.roleRequiredToHit(fighter, dagger), testRoleRequiredToHit.name);   //fighter has an AC of 1
 	tests.checkRequiredToHitRoles(magicUser, 14, magicUser.roleRequiredToHit(thief, dagger), testRoleRequiredToHit.name);     //thief has an AC of 6
 	tests.checkRequiredToHitRoles(magicUser, 16, magicUser.roleRequiredToHit(cleric, dagger), testRoleRequiredToHit.name);    //cleric has an AC of 4
 	tests.checkRequiredToHitRoles(fighter, 12, fighter.roleRequiredToHit(cleric, dagger), testRoleRequiredToHit.name);    //cleric has an AC of 4	
+
+	//to Hit with Fist -- should be the same as melee weapon
+	tests.checkRequiredToHitRoles(magicUser, 11, magicUser.roleRequiredToHit(magicUser, fist), testRoleRequiredToHit.name); //magic user has an AC of 9
+
+	//to Hit with ranged weapons -- takes into account dex modifier
+	tests.checkRequiredToHitRoles(thief, 7, thief.roleRequiredToHit(magicUser, crossbow), testRoleRequiredToHit.name); //magic user has an AC of 9
+	tests.checkRequiredToHitRoles(thief, 15, thief.roleRequiredToHit(fighter, crossbow), testRoleRequiredToHit.name);   //fighter has an AC of 1
+	tests.checkRequiredToHitRoles(thief, 10, thief.roleRequiredToHit(thief, crossbow), testRoleRequiredToHit.name);     //thief has an AC of 6
+	tests.checkRequiredToHitRoles(thief, 12, thief.roleRequiredToHit(cleric, crossbow), testRoleRequiredToHit.name);    //cleric has an AC of 4
+	tests.checkRequiredToHitRoles(badFighter, 20, badFighter.roleRequiredToHit(fighter, crossbow), testRoleRequiredToHit.name);    //fighter has an AC of 1	
+}
+
+function testGetEquipedWeapon()
+{	
+	var fighterAverage = new Fighter(fighterWithAverageStatsParams);
+	var fighterBad = new Fighter(fighterWithAwfulStatsParams);
+	var fighterSuper = new Fighter(fighterWithAwesomeStatsParams);
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var thief = new Thief(thiefTestParams);	
+
+	var dagger = new Dagger(daggerParams);
+	var twoHandedSword = new TwoHandedSword(twoHandedSwordParams);
+	var crossbow = new Crossbow(crossbowParams);
+	var shield = new Shield(shieldParams);
+	var fist = new Fist();
+
+	//one handed melee weapon equiped
+	magicUser.equip(dagger);
+	tests.checkGetEquipedWeapon(magicUser, dagger.name, magicUser.getEquipedWeapon().name, testGetEquipedWeapon.name);
+
+	//two handed melee weapon equiped
+	fighterSuper.equip(twoHandedSword);
+	tests.checkGetEquipedWeapon(fighterSuper, twoHandedSword.name, fighterSuper.getEquipedWeapon().name, testGetEquipedWeapon.name);
+
+	//ranged weapon equiped
+	thief.equip(crossbow);
+	tests.checkGetEquipedWeapon(thief, crossbow.name, thief.getEquipedWeapon().name, testGetEquipedWeapon.name);	
+
+	//no weapon equiped but 1 hand free
+	fighterAverage.equip(shield);
+	tests.checkGetEquipedWeapon(fighterAverage, fist.name, fighterAverage.getEquipedWeapon().name, testGetEquipedWeapon.name);	
+
+	//no weapon equiped and no hands free	
+	fighterBad.equip(shield);
+	fighterBad.equip(shield);
+	tests.checkGetEquipedWeapon(fighterBad, null, fighterBad.getEquipedWeapon(), testGetEquipedWeapon.name);	
 }
 
 function testIfAttackHits()
 {
- 	var magicUser = new MagicUser(magaicUserTestParams);
+	 var magicUser = new MagicUser(magaicUserTestParams);
+	 
+	 var dagger = new Dagger(daggerParams);
 
-	tests.checkIfAttackHit(magicUser, false, magicUser.isAttackAHit(10, magicUser.roleRequiredToHit(magicUser)), testIfAttackHits.name);
-	tests.checkIfAttackHit(magicUser, true, magicUser.isAttackAHit(11, magicUser.roleRequiredToHit(magicUser)), testIfAttackHits.name);	
-	tests.checkIfAttackHit(magicUser, true, magicUser.isAttackAHit(12, magicUser.roleRequiredToHit(magicUser)), testIfAttackHits.name);
+	tests.checkIfAttackHit(magicUser, false, magicUser.isAttackAHit(10, magicUser.roleRequiredToHit(magicUser, dagger)), testIfAttackHits.name);
+	tests.checkIfAttackHit(magicUser, true, magicUser.isAttackAHit(11, magicUser.roleRequiredToHit(magicUser, dagger)), testIfAttackHits.name);	
+	tests.checkIfAttackHit(magicUser, true, magicUser.isAttackAHit(12, magicUser.roleRequiredToHit(magicUser, dagger)), testIfAttackHits.name);
 }
 
 function testTakeDamage()
@@ -1478,7 +1536,7 @@ function runTestCombat()
 		if(fighter1Initiative >= fighter2Initiative)
 		{
 			console.log("fighter1 attacks");
-			fighter1.attack(fighter2, sword);
+			fighter1.attack(fighter2);
 			console.log("fighter2's hit points are " + fighter2.currentHitPoints);
 			if(fighter2.isDead)
 			{
@@ -1486,7 +1544,7 @@ function runTestCombat()
 				break;
 			}
 			console.log("fighter2 attacks");
-			fighter2.attack(fighter1, sword);
+			fighter2.attack(fighter1);
 			console.log("fighter1's hit points are " + fighter1.currentHitPoints);
 			if(fighter1.isDead)
 			{
@@ -1497,7 +1555,7 @@ function runTestCombat()
 		else
 		{
 			console.log("fighter2 attacks");
-			fighter2.attack(fighter1, sword);
+			fighter2.attack(fighter1);
 			console.log("fighter1's hit points are " + fighter1.currentHitPoints);
 			if(fighter1.isDead)
 			{
@@ -1505,7 +1563,7 @@ function runTestCombat()
 				break;
 			}
 			console.log("fighter1 attacks");
-			fighter1.attack(fighter2, sword);		
+			fighter1.attack(fighter2);		
 			console.log("fighter2's hit points are " + fighter2.currentHitPoints);
 			if(fighter2.isDead)
 			{

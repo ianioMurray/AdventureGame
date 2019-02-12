@@ -193,7 +193,26 @@ function Character()
 			return true;
 		}
 		return false;
-	};		
+	};	
+	
+	this.getEquipedWeapon = function()
+	{
+		for(var i=0; this.equipedInHands.length > i; i++)
+		{
+			if(this.equipedInHands[i] instanceof Weapon)
+			{
+				return this.equipedInHands[i];
+			}
+		}
+
+		if (this.noOfHandsFree > 0)
+		{
+			return new Fist();
+		}
+
+		console.log("You have no weapon equiped and no hands free to punch with");
+		return null;
+	};
 	
 	this.isCharacterUnableToUseThisWeapon = function(weapon)
 	{
@@ -384,7 +403,7 @@ function Character()
 		return armourClass;
 	};
 	
-	this.roleRequiredToHit = function(opponent)
+	this.roleRequiredToHit = function(opponent, weapon)
 	{
 		var scoresToHit = [ 	{armourClass: 9, toHit: 10},
 								{armourClass: 8, toHit: 11},
@@ -404,7 +423,24 @@ function Character()
 		{
 			if(scoresToHit[i].armourClass === opponent.armourClass)
 			{
-				var toHit = scoresToHit[i].toHit - this.calculateAttributeModifier(this.strength);
+				var toHit = scoresToHit[i].toHit;
+
+				//if weapon is a melee weapon give strength modifier, if not its a ranged weapon so give dexitory modifier
+				if(weapon instanceof MeleeWeapon)
+				{
+					toHit = toHit - this.calculateAttributeModifier(this.strength);
+				}
+				else 
+				{
+					toHit = toHit - this.calculateAttributeModifier(this.dexterity);
+				}
+
+				//if modifiers make to the toHit greater than 20 set it back to 20
+				if(toHit > 20)
+				{
+					toHit = 20;
+				}
+
 				return toHit;
 			}	
 		}
@@ -420,9 +456,17 @@ function Character()
 		return false;
 	};
 	
-	this.attack = function(opponent, weapon)
+	this.attack = function(opponent)
 	{
-		var requiredToHit = this.roleRequiredToHit(opponent);
+		var weapon = this.getEquipedWeapon();
+
+		if(weapon === null)
+		{
+			console.log("You have no weapons equiped and no hands to punch with");
+			return;
+		}
+
+		var requiredToHit = this.roleRequiredToHit(opponent, weapon);
 		
 		var attackIsAHit = this.isAttackAHit(generateRandomNumber(20, 1), requiredToHit);
 		
