@@ -393,8 +393,33 @@ function Tests()
 	{
 		var message = " FAIL " + testName + ": " + adventurer.name + " should has a " + actual + " as a weapon but " + expected + " was expected";
 		this.validate(expected, actual, message);
-	}
+	};
+
+	this.checkCanAddItemToInventory = function(adventurer, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + adventurer.name + " is able to add item to inventory: " + actual + " but " + expected + " was expected";
+		this.validate(expected, actual, message);
+	};
+
+	this.checkAddItemToInventory = function(adventurer, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + adventurer.name + " has " + actual + " items in their inventory but " + expected + " was expected";
+		this.validate(expected, actual, message);
+	};
 	
+	this.checkIndexOfItemInInventory = function(adventurer, weaponName, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + adventurer.name + " has " + weaponName + " at inventory index: " + actual + " but " + expected + " was expected";
+		this.validate(expected, actual, message);
+	};
+
+	this.checkRemoveItemFromInventory = function(adventurer, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + adventurer.name + " has an inventory size of " + actual + " but " + expected + " was expected";
+		this.validate(expected, actual, message);
+	}
+
+
 	this.testResults = function()
 	{
 		if(this.allTestsPass == true)
@@ -431,6 +456,11 @@ function runCharacterUnitTests()
 	testConstitutionBonus();
 	
 	testIndividualInitiativeBonus();
+
+	testCanAddItemToInventory();
+	testAddItemToInventory();
+	testindexOfItemInInventroy();
+	testRemoveItemFromInventory();
 	
 	testEquipDagger();
 	testEquipSilverDagger();
@@ -711,6 +741,91 @@ function testIndividualInitiativeBonus()
 	tests.checkIndividualInitiativeModifier(fighterBad, -2, fighterBad.calculateInitativeModifier(), testIndividualInitiativeBonus.name);		
 	tests.checkIndividualInitiativeModifier(fighterSuper, 2, fighterSuper.calculateInitativeModifier(), testIndividualInitiativeBonus.name);
 	tests.checkIndividualInitiativeModifier(fighterAverage, 0, fighterAverage.calculateInitativeModifier(), testIndividualInitiativeBonus.name);
+}
+
+function testCanAddItemToInventory()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+
+	var sword = new Sword(swordParams);
+
+	//add max number of items to inventory
+	for(var i = 0; _MaxNumberOfInventoryItems > i; i++)
+	{
+		tests.checkCanAddItemToInventory(magicUser, true, magicUser.canAddItemToInventory(sword), testCanAddItemToInventory.name);
+		magicUser.inventory.push(sword);
+	}
+
+	//ensure attempting to add 1 more item to the inventory fails
+	tests.checkCanAddItemToInventory(magicUser, false, magicUser.canAddItemToInventory(sword), testCanAddItemToInventory.name);
+}
+
+function testAddItemToInventory()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+
+	var sword = new Sword(swordParams);
+
+	//add items to inventory till the max inventory size is reached 
+	for(var i = 0; _MaxNumberOfInventoryItems > i; i++)
+	{
+		var expectedInventoryItems = i + 1;
+		magicUser.addItemToInventory(sword);
+		tests.checkAddItemToInventory(magicUser, expectedInventoryItems, magicUser.inventory.length, testAddItemToInventory.name);
+	}
+
+	//ensure attempting to add 1 more item to the inventory fails so the number of items in the inventory is still set to the max
+	magicUser.addItemToInventory(sword);	
+	tests.checkAddItemToInventory(magicUser, _MaxNumberOfInventoryItems, magicUser.inventory.length, testAddItemToInventory.name);
+}
+
+function testindexOfItemInInventroy()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+
+	var sword = new Sword(swordParams);
+	var shield = new Shield(shieldParams);
+
+	//item not in inventory 
+	tests.checkIndexOfItemInInventory(MagicUser, sword.name, -1, magicUser.indexOfItemInInventroy(sword), testindexOfItemInInventroy.name);
+
+	//item in inventory 
+	magicUser.addItemToInventory(sword);
+	tests.checkIndexOfItemInInventory(MagicUser, sword.name, 0, magicUser.indexOfItemInInventroy(sword), testindexOfItemInInventroy.name);	
+
+	//add items to inventory till inventory is 1 away from full (start loop at 1 as 1 item already in inventory)
+	for(var i = 1; (_MaxNumberOfInventoryItems - 1) > i; i++)
+	{
+		magicUser.addItemToInventory(sword);
+	}
+
+	//item is last item in inventory
+	magicUser.addItemToInventory(shield);
+	tests.checkIndexOfItemInInventory(MagicUser, shield.name, (_MaxNumberOfInventoryItems - 1), magicUser.indexOfItemInInventroy(shield), testindexOfItemInInventroy.name);
+	//check to ensure inventory full (message should appear in console)
+	magicUser.addItemToInventory(shield);
+}
+
+function testRemoveItemFromInventory()
+{
+	var magicUser = new MagicUser(magaicUserTestParams);
+
+	var sword = new Sword(swordParams);
+	var shield = new Shield(shieldParams);
+	var twoHandedSword = new TwoHandedSword(twoHandedSwordParams);
+
+	//length of inventory should not change if attempting to remove an item not in inventory 
+	magicUser.removeItemFromInventory(sword);
+	tests.checkRemoveItemFromInventory(magicUser, 0, magicUser.inventory.length, testRemoveItemFromInventory.name);
+
+	//lenght of inventory should decrease when removing items
+	magicUser.addItemToInventory(twoHandedSword);
+	magicUser.addItemToInventory(shield);
+	tests.checkRemoveItemFromInventory(magicUser, 2, magicUser.inventory.length, testRemoveItemFromInventory.name);	
+	magicUser.removeItemFromInventory(twoHandedSword);
+	tests.checkRemoveItemFromInventory(magicUser, 1, magicUser.inventory.length, testRemoveItemFromInventory.name);
+	magicUser.removeItemFromInventory(shield);
+	tests.checkRemoveItemFromInventory(magicUser, 0, magicUser.inventory.length, testRemoveItemFromInventory.name);
 }
 
 function testEquipDagger()

@@ -140,6 +140,8 @@ function generateRandomNumber(diceType, noOfDice)
 //             CHARACTER TYPES
 //--------------------------------------------
 
+const _MaxNumberOfInventoryItems = 50;
+
 function Character()
 {	
 	this.isSpellCaster = false;
@@ -545,6 +547,50 @@ function Character()
 		
 		return hitPointsUplift + maxHps;
 	};
+
+	this.canAddItemToInventory = function(item)
+	{
+		if(this.inventory.length === _MaxNumberOfInventoryItems)
+		{
+			console.log("characters inventory is full"); 
+			return false;
+		}
+		return true;
+	};
+
+	this.addItemToInventory = function(item)
+	{
+		if(this.canAddItemToInventory(item))
+		{
+			this.inventory.push(item);
+		}
+	};
+
+	this.indexOfItemInInventroy = function(item)
+	{
+		for(var i = 0; this.inventory.length > i; i++)
+		{
+			if(this.inventory[i].name === item.name)
+			{
+				return i;
+			}
+		}
+
+		return -1;
+	};
+
+	this.removeItemFromInventory = function(item)
+	{
+		var index = this.indexOfItemInInventroy(item);
+		if(index === -1)
+		{
+			return;
+		}
+		else
+		{
+			this.inventory.splice(index, 1);
+		}
+	};
 }
 
 //--------------------------------------------
@@ -566,6 +612,7 @@ function Fighter(params)
 	this.equipedArmour = [];
 	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
+	this.inventory = [];
 }
 
 Fighter.prototype = new Character();
@@ -602,6 +649,7 @@ function Thief(params)
 	this.equipedArmour = [];
 	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
+	this.inventory = [];
 }
 
 Thief.prototype = new Character();
@@ -659,6 +707,7 @@ function Cleric(params)
 	this.equipedArmour = [];
 	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
+	this.inventory = [];
 }
 
 Cleric.prototype = new Character();
@@ -706,6 +755,7 @@ function MagicUser(params)
 	this.equipedArmour = [];
 	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
+	this.inventory = [];
 }
 
 MagicUser.prototype = new Character();
