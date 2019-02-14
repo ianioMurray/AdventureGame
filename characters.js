@@ -1,140 +1,5 @@
+
 "use strict"
-
-window.onload = init;
-
-var game = {
-	
-	characters: [],
-	magicUserSpells: [],
-	clericSpells: [],
-	
-	createCharacter: function(characterType, params)
-	{	
-		var  character ="";
-		switch(characterType) 
-		{
-			case "fighter":
-				character = new Fighter(params);
-				break;
-			case "thief":
-				character = new Thief(params);
-				break;
-			case "cleric":
-				character = new Cleric(params);
-				break;
-			case "magicUser":
-				character = new MagicUser(params);
-				break;
-			default:
-				throw "Unknown Character";
-		}
-		runCharacterGenerationTest(character);
-		this.characters.push(character);
-	},
-	
-	createSpells: function()
-	{
-		var charmPersonParams = {
-			name: "charm person",
-			level: 1,
-			range: 120, 
-			duration: "",
-			target: ["human", "bugbear", "gnoll", "gnome", "hobgoblin", "lizardman", "kolbold", "orge", "pixie", "sprite"],
-			savingThrowToAvoid: "spells",
-			areaAffected: null,
-			damage: null
-		};
-		
-		magicUserSpells.push(new magicUserSpells(charmPersonParams));
-	}
-};
-
-
-
-function init() 
-{
-	var uiElements = {
-		createCharacterButton: document.getElementById("createCharacter"),
-		acceptAttributes: document.getElementById("acceptAttributes"),
-		strengthField: document.getElementById("strengthfield"),
-		intelligenceField: document.getElementById("intelligencefield"),
-		wisdomField: document.getElementById("wisdomfield"),
-		dexterityField: document.getElementById("dexterityfield"),
-		constitutionField: document.getElementById("constitutionfield"),
-		charimsaField: document.getElementById("charismafield"),
-		container2: document.getElementById("radials"),
-		figherRadial: document.getElementById("figherRadial"),
-		thiefRadial: document.getElementById("thiefRadial"),
-		clericRadial: document.getElementById("clericRadial"),
-		magicUserRadial: document.getElementById("magicUserRadial"),
-		nameField: document.getElementById("namefield")
-	};	
-	
-	uiElements.nameField.value = "";
-	uiElements.strengthField.value = "";
-	uiElements.intelligenceField.value = "";
-	uiElements.wisdomField.value = "";
-	uiElements.dexterityField.value = "";	
-	uiElements.constitutionField.value = "";
-	uiElements.charimsaField.value = "";
-		
-	uiElements.createCharacterButton.onclick = function(){
-		generateAttributes(uiElements);
-	};
-
-	uiElements.acceptAttributes.style.display = 'none';
-	uiElements.acceptAttributes.onclick = function() {
-		chooseClass(uiElements);
-	};
-}
-
-function generateAttributes(uiElements)
-{
-	uiElements.createCharacterButton.innerHTML = "Reset Values";
-	uiElements.acceptAttributes.style.display = 'inline';
-	
-	uiElements.strengthField.value = generateRandomNumber(6, 3);
-	uiElements.intelligenceField.value = generateRandomNumber(6, 3);
-	uiElements.wisdomField.value = generateRandomNumber(6, 3);
-	uiElements.dexterityField.value = generateRandomNumber(6, 3);	
-	uiElements.constitutionField.value = generateRandomNumber(6, 3);
-	uiElements.charimsaField.value = generateRandomNumber(6, 3);	
-}
-
-function chooseClass(uiElements)
-{
-	uiElements.createCharacterButton.style.display = 'none';
-	uiElements.acceptAttributes.style.display = 'none';
-	uiElements.container2.style.display = 'inline-block';
-	
-	var attributes = {
-		name: uiElements.nameField.value,
-		strength: uiElements.strengthField.value,
-		intelligence: uiElements.intelligenceField.value,
-		wisdom: uiElements.wisdomField.value,
-		dexterity: uiElements.dexterityField.value,
-		constitution: uiElements.constitutionField.value,
-		charisma: uiElements.charimsaField.value 
-	};
-
-	uiElements.figherRadial.onclick = function() { game.createCharacter("fighter", attributes); }; 
-	uiElements.thiefRadial.onclick = function() { game.createCharacter("thief", attributes); }; 
-	uiElements.clericRadial.onclick = function() { game.createCharacter("cleric", attributes); }; 
-	uiElements.magicUserRadial.onclick = function() { game.createCharacter("magicUser", attributes); };
-}
-
-function generateRandomNumber(diceType, noOfDice)
-{
-	var totalVal = 0;
-	
-	for(var i= 0; noOfDice > i; i++)
-	{
-		totalVal += (Math.floor(Math.random() * diceType)) + 1;
-	} 
-	return totalVal;
-}
-
-
 
 //--------------------------------------------
 //             CHARACTER TYPES
@@ -219,7 +84,7 @@ function Character()
 	
 	this.isCharacterUnableToUseThisWeapon = function(weapon)
 	{
-		return (this.hasWeaponRestrictions && ( this.useableWeapon.indexOf(weapon.typeOfWeapon) < 0));
+		return (this.hasWeaponRestrictions && ( this.useableWeapon.indexOf(weapon.id) < 0));
 	};
 	
 	this.isCharacterAbleToUseAShield = function()
@@ -229,7 +94,7 @@ function Character()
 	
 	this.isCharacterUnableToUseThisArmour = function(armour)
 	{
-		return (this.hasArmourRestrictions && ( this.useableArmour.indexOf(armour.type) < 0 ));
+		return (this.hasArmourRestrictions && ( this.useableArmour.indexOf(armour.id) < 0 ));
 	};
 
 	this.getNumberOfHandsRequiredForItem = function(item)
@@ -285,7 +150,7 @@ function Character()
 			}
 		}
 		else if	(item.equipTo === "body")
-		{
+		{	
 			if(this.isCharacterUnableToUseThisArmour(item))
 			{
 				console.log(this.name + " cannot use " + item.name);
@@ -461,7 +326,7 @@ function Character()
 	
 	this.indexOfAmmo = function(weapon)
 	{
-		return this.indexOfItemInInventroy(weapon.requires);
+		return this.indexOfItemInInventroy(weapon.ammoId);
 	};
 
 	this.useAmmo = function(index)
@@ -495,11 +360,11 @@ function Character()
 
 		var requiredToHit = this.roleRequiredToHit(opponent, weapon);
 		
-		var attackIsAHit = this.isAttackAHit(generateRandomNumber(20, 1), requiredToHit);
+		var attackIsAHit = this.isAttackAHit(dice.rollAndSumDice("1D20"), requiredToHit);
 		
 		if(attackIsAHit)
 		{
-			opponent.takeDamage(generateRandomNumber(weapon.damage, 1));
+			opponent.takeDamage(dice.rollAndSumDice(weapon.damage));
 		}
 	};
 	
@@ -543,14 +408,14 @@ function Character()
 	
 	this.getIndividualInitative = function()
 	{
-		return generateRandomNumber(6, 1) + this.calculateInitativeModifier();
+		return dice.rollAndSumDice("D6") + this.calculateInitativeModifier();
 	};
 	
-	this.setHitPoints = function(randomHps)
+	this.setHitPoints = function(hpIncrease)
 	{
 		var maxHps;
 		
-		var hitPointsUplift =  randomHps + this.calculateAttributeModifier(this.constitution);
+		var hitPointsUplift =  hpIncrease + this.calculateAttributeModifier(this.constitution);
 		//its possible that hit points for a new character would be 0 or less after you take into account the constitution modifier
 		// so the min HPs is 1 
 		//this applies when you go up levels - HPs should increase by a min of 1 and not decrease or remain the same
@@ -559,7 +424,8 @@ function Character()
 			hitPointsUplift = 1;
 		}
 		
-		if(this.maxHitPoints == undefined)
+		//if the character is being created their hps will be undefined
+		if(this.maxHitPoints === undefined)
 		{
 			maxHps = 0;
 		}
@@ -589,11 +455,11 @@ function Character()
 		}
 	};
 
-	this.indexOfItemInInventroy = function(itemName)
+	this.indexOfItemInInventroy = function(itemId)
 	{
 		for(var i = 0; this.inventory.length > i; i++)
 		{
-			if(this.inventory[i].name === itemName)
+			if(this.inventory[i].id === itemId)
 			{
 				return i;
 			}
@@ -604,7 +470,7 @@ function Character()
 
 	this.removeItemFromInventory = function(item)
 	{
-		var index = this.indexOfItemInInventroy(item.name);
+		var index = this.indexOfItemInInventroy(item.id);
 		if(index === -1)
 		{
 			return;
@@ -628,7 +494,7 @@ function Fighter(params)
 	this.dexterity = params.dexterity; 
 	this.constitution = params.constitution; 
 	this.charisma = params.charisma; 
-	this.maxHitPoints = this.setHitPoints(generateRandomNumber(8, 1));
+	this.maxHitPoints = this.setHitPoints(dice.rollAndSumDice("D8"));
 	this.currentHitPoints = this.maxHitPoints;
 	this.noOfHandsFree = 2;
 	this.equipedInHands = [];
@@ -645,7 +511,7 @@ Fighter.prototype.levelExperience = [0, 2000, 4000];
 Fighter.prototype.levelUp = function() 
 	{
 		this.currentLevel++;
-		this.maxHitPoints = this.setHitPoints(generateRandomNumber(8, 1));
+		this.maxHitPoints = this.setHitPoints(dice.rollAndSumDice("D8"));
 		//when a character goes up a level this heal to max
 		this.currentHitPoints = this.maxHitPoints;
 	};
@@ -665,7 +531,7 @@ function Thief(params)
 	this.dexterity = params.dexterity; 
 	this.constitution = params.constitution; 
 	this.charisma = params.charisma;
-	this.maxHitPoints = this.setHitPoints(generateRandomNumber(4, 1));
+	this.maxHitPoints = this.setHitPoints(dice.rollAndSumDice("D4"));
 	this.currentHitPoints = this.maxHitPoints;
 	this.noOfHandsFree = 2;
 	this.equipedInHands = [];
@@ -679,7 +545,7 @@ Thief.prototype = new Character();
 Thief.prototype.constructor = Thief;
 
 Thief.prototype.hasArmourRestrictions = true;
-Thief.prototype.useableArmour = ["leather"];
+Thief.prototype.useableArmour = ["leather armour"];
 Thief.prototype.canUseShield = false;
 Thief.prototype.levelExperience = [0, 1200, 2400];
 Thief.prototype.pickLockChance = [15, 20, 25];
@@ -687,7 +553,7 @@ Thief.prototype.pickLockChance = [15, 20, 25];
 Thief.prototype.levelUp = function() 
 	{
 		this.currentLevel++;
-		this.maxHitPoints = this.setHitPoints(generateRandomNumber(4, 1));
+		this.maxHitPoints = this.setHitPoints(dice.rollAndSumDice("D4"));
 		//when a character goes up a level this heal to max
 		this.currentHitPoints = this.maxHitPoints;
 	};
@@ -696,7 +562,7 @@ Thief.prototype.pickLockSuccess = function()
 	{
 		//takes random perc and compares it to the lock pick success chance
 		//(we use their currentLevel in the array as level starts at 1 and array at 0)
-		if(generateRandomNumber(100, 1) >= this.pickLockChance[this.currentLevel - 1])
+		if(dice.rollAndSumDice("D100") >= this.pickLockChance[this.currentLevel - 1])
 		{
 			return true;
 		}
@@ -723,7 +589,7 @@ function Cleric(params)
 	this.dexterity = params.dexterity; 
 	this.constitution = params.constitution; 
 	this.charisma = params.charisma; 
-	this.maxHitPoints = this.setHitPoints(generateRandomNumber(6, 1));
+	this.maxHitPoints = this.setHitPoints(dice.rollAndSumDice("D6"));
 	this.currentHitPoints = this.maxHitPoints;
 	this.noOfHandsFree = 2;
 	this.equipedInHands = [];
@@ -744,7 +610,7 @@ Cleric.prototype.isSpellCaster = true;
 Cleric.prototype.levelUp = function() 
 	{
 		this.currentLevel++;
-		this.maxHitPoints = this.setHitPoints(generateRandomNumber(6, 1));
+		this.maxHitPoints = this.setHitPoints(dice.rollAndSumDice("D6"));
 		//when a character goes up a level this heal to max
 		this.currentHitPoints = this.maxHitPoints;
 	};
@@ -766,7 +632,7 @@ function MagicUser(params)
 	this.dexterity = params.dexterity; 
 	this.constitution = params.constitution; 
 	this.charisma = params.charisma; 
-	this.maxHitPoints = this.setHitPoints(generateRandomNumber(4, 1));
+	this.maxHitPoints = this.setHitPoints(dice.rollAndSumDice("D4"));
 	this.currentHitPoints = this.maxHitPoints;
 	this.noOfCurrentFirstLevelSpells = 0;
 	this.maxNoOfFirstLevelSpells = 1;
@@ -805,7 +671,7 @@ MagicUser.prototype.levelUp = function()
 			this.maxNoOfSecondLevelSpells++;
 		}
 		
-		this.maxHitPoints = this.setHitPoints(generateRandomNumber(4, 1));
+		this.maxHitPoints = this.setHitPoints(dice.rollAndSumDice("D4"));
 		//when a character goes up a level this heal to max
 		this.currentHitPoints = this.maxHitPoints;
 	};
@@ -872,21 +738,3 @@ MagicUserSpell.prototype.constructor = MagicUserSpell;
 
 
 
-//--------------------------------------------
-//             MONSTERS
-//--------------------------------------------
-function Monster()
-{
-}
-
-//-------------------------------------------
-//-------------------Orc---------------------
-//-------------------------------------------
-function Orc(params)
-{
-	this.armourClass = 6;
-	this.hitDice = 1;
-	this.movement = 120;
-	this.noAttacks = 1;
-	
-}

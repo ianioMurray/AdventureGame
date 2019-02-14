@@ -1,3 +1,26 @@
+//--------------------------------------------
+//             MONSTERS
+//--------------------------------------------
+function Monster()
+{
+}
+
+//-------------------------------------------
+//-------------------Orc---------------------
+//-------------------------------------------
+function Orc(params)
+{
+	this.armourClass = 6;
+	this.hitDice = 1;
+	this.movement = 120;
+	this.noAttacks = 1;
+	
+}
+
+
+
+
+
 // JavaScript source code
 
 //--------------------------------------------
@@ -118,7 +141,7 @@ function Djinni(params) {
     this.treasureType = nil;
     this.Alignment = Neutral;
     this.damage = [{ attackType = UnspecifiedAttack, damageAmount = "2d8" }];
-    this.specialAbilities = [{ description = "Can conjure food that is nutritionally sound, create drinkable beverages, magic soft goods and even wooden objects which have permanence into being, conjure metallic objects which will last for a short time (the harder the metal, the shorter the life, i.e. djinni gold lasts one day, but djinni steel lasts but one turn), create illusions with both visual and audial components which will remain until touched or dispelled magically (the djinni does not need to concentrate upon the illusion to maintain it in existence)" }, { form = invisibility }, { form = gaseous }, { form = whirlwind, description = "cone with a 10 foot base diameter, a 20 foot diameter at the top,and a height of 30 feet. It takes the djinni 1 full turn to go into this state — or come out of it. A djinni whirl-wind will sweep aside and kill all creatures with fewer than two hit dice which it encounters, and it causes 2-12 hit points of damage to all other creatures caught in its path." }, { description = "can carry up to 6,000 gold pieces in weight without tiring, walking or flying. It is able to carry a double load for a short time — 3 turns walking or 1 turn flying — but must then rest for a turn" }];
+    this.specialAbilities = [{ description = "Can conjure food that is nutritionally sound, create drinkable beverages, magic soft goods and even wooden objects which have permanence into being, conjure metallic objects which will last for a short time (the harder the metal, the shorter the life, i.e. djinni gold lasts one day, but djinni steel lasts but one turn), create illusions with both visual and audial components which will remain until touched or dispelled magically (the djinni does not need to concentrate upon the illusion to maintain it in existence)" }, { form = invisibility }, { form = gaseous }, { form = whirlwind, description = "cone with a 10 foot base diameter, a 20 foot diameter at the top,and a height of 30 feet. It takes the djinni 1 full turn to go into this state ï¿½ or come out of it. A djinni whirl-wind will sweep aside and kill all creatures with fewer than two hit dice which it encounters, and it causes 2-12 hit points of damage to all other creatures caught in its path." }, { description = "can carry up to 6,000 gold pieces in weight without tiring, walking or flying. It is able to carry a double load for a short time ï¿½ 3 turns walking or 1 turn flying ï¿½ but must then rest for a turn" }];
 }
 function Doppleganger(params) {
     this.name = "Doppleganger";

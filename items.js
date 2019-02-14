@@ -38,8 +38,8 @@ function Sword(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 10;
-	this.damage = 8;
-	this.typeOfWeapon = "sword";
+	this.damage = "D8";
+	this.id = "sword";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 }
@@ -55,8 +55,8 @@ function TwoHandedSword(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 15;
-	this.damage = 10;
-	this.typeOfWeapon = "two handed sword";
+	this.damage = "D10";
+	this.id = "two handed sword";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 }
@@ -73,8 +73,8 @@ function ShortSword(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 7;
-	this.damage = 6;
-	this.typeOfWeapon = "short sword";
+	this.damage = "D6";
+	this.id = "short sword";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 }
@@ -90,8 +90,8 @@ function Dagger(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 3;
-	this.damage = 4;
-	this.typeOfWeapon = "dagger";
+	this.damage = "D4";
+	this.id = "dagger";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 }
@@ -107,8 +107,8 @@ function SilverDagger(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 30;
-	this.damage = 4;
-	this.typeOfWeapon = "silver dagger";
+	this.damage = "D4";
+	this.id = "silver dagger";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 }
@@ -124,8 +124,8 @@ function HandAxe(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 4;
-	this.damage = 6;
-	this.typeOfWeapon = "hand axe";
+	this.damage = "D6";
+	this.id = "hand axe";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 }
@@ -141,8 +141,8 @@ function BattleAxe(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 7;
-	this.damage = 8;
-	this.typeOfWeapon = "battle axe";
+	this.damage = "D8";
+	this.id = "battle axe";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 }
@@ -159,8 +159,8 @@ function Mace(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 5;
-	this.damage = 6;
-	this.typeOfWeapon = "mace";
+	this.damage = "D6";
+	this.id = "mace";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 }
@@ -176,8 +176,8 @@ function Club(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 3;
-	this.damage = 4;
-	this.typeOfWeapon = "club";
+	this.damage = "D4";
+	this.id = "club";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 }
@@ -193,8 +193,8 @@ function PoleArm(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 7;
-	this.damage = 10;
-	this.typeOfWeapon = "pole arm";
+	this.damage = "D10";
+	this.id = "pole arm";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 }
@@ -211,8 +211,8 @@ function Spear(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 3;
-	this.damage = 6;
-	this.typeOfWeapon = "spear";
+	this.damage = "D6";
+	this.id = "spear";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 }
@@ -228,8 +228,8 @@ function WarHammer(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 5;
-	this.damage = 6;
-	this.typeOfWeapon = "war hammer";
+	this.damage = "D6";
+	this.id = "war hammer";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 }
@@ -243,8 +243,8 @@ WarHammer.prototype.constructor = WarHammer;
 function Fist()
  {
 	this.name = "fist";
-	this.damage = 4;
-	this.typeOfWeapon = "fist";
+	this.damage = "D4";
+	this.id = "fist";
 }
 
 Fist.prototype = new MeleeWeapon();
@@ -270,12 +270,12 @@ function Crossbow(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 30;
-	this.damage = 6;
-	this.typeOfWeapon = "crossbow";
+	this.damage = "D6";
+	this.id = "crossbow";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 	this.isRanged = true;
-	this.requires = "quarrel";
+	this.ammoId = "quarrel";
 }
 
 Crossbow.prototype = new RangedWeapon();
@@ -290,12 +290,12 @@ function Longbow(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 40;
-	this.damage = 6;
-	this.typeOfWeapon = "longbow";
+	this.damage = "D6";
+	this.id = "longbow";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 	this.isRanged = true;
-	this.requires = "arrow";
+	this.ammoId = "arrow";
 }
 
 Longbow.prototype = new RangedWeapon();
@@ -310,12 +310,12 @@ function Shortbow(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 25;
-	this.damage = 6;
-	this.typeOfWeapon = "shortbow";
+	this.damage = "D6";
+	this.id = "shortbow";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 	this.isRanged = true;
-	this.requires = "arrow";
+	this.ammoId = "arrow";
 }
 
 Shortbow.prototype = new RangedWeapon();
@@ -330,12 +330,12 @@ function Sling(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 1;                        //rules set price at 2 with 30 stones so I have made price 1 and then stones will be 1 as well
-	this.damage = 4;
-	this.typeOfWeapon = "sling";
+	this.damage = "D4";
+	this.id = "sling";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 	this.isRanged = true;
-	this.requires = "stone";
+	this.ammoId = "stone";
 }
 
 Sling.prototype = new RangedWeapon();
@@ -351,6 +351,7 @@ function Shield(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 10;
+	this.id = "shield";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 	this.equipTo = "hand";
@@ -382,7 +383,7 @@ function LeatherArmour(params)
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 	this.armourClass = 7;
-	this.type = "leather";
+	this.id = "leather armour";
 }
 
 LeatherArmour.prototype = new Armour();
@@ -399,7 +400,7 @@ function ChainMail(params)
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 	this.armourClass = 5;
-	this.type = "chain";
+	this.id = "chain mail";
 }
 
 ChainMail.prototype = new Armour();
@@ -416,7 +417,7 @@ function PlateMail(params)
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 	this.armourClass = 3;
-	this.type = "plate";
+	this.id = "plate mail";
 }
 
 PlateMail.prototype = new Armour();
@@ -430,6 +431,7 @@ function Quarrel(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 0.3;
+	this.id = "quarrel";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 }
@@ -443,6 +445,7 @@ function Arrow(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 0.25;
+	this.id = "arrow";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 }
@@ -455,6 +458,7 @@ function Stone(params)
 	this.name = params.name;
 	this.description = params.description;
 	this.cost = 0.03;
+	this.id = "stone";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 }

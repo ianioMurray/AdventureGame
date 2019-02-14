@@ -74,112 +74,112 @@ var fighterWithAverageStatsParams = {
 
 //weapons
 var swordParams = {
-	name: "sword",
+	name: "Sword",
 	description: "standard sword",
 	isMagical: false,
 	special: "",
 };
 
 var twoHandedSwordParams = {
-	name: "two handed sword",
+	name: "Two Handed Sword",
 	description: "standard two handed sword",
 	isMagical: false,
 	special: ""
 };
 
 var shortSwordParams = {
-	name: "short sword",
+	name: "Short Sword",
 	description: "standard short sword",
 	isMagical: false,
 	special: ""
 };
 
 var daggerParams = {
-	name: "dagger",
+	name: "Dagger",
 	description: "standard dagger",
 	isMagical: false,
 	special: ""
 };
 
 var silverDaggerParams = {
-	name: "silver dagger",
+	name: "Silver Dagger",
 	description: "silver dagger",
 	isMagical: false,
 	special: ""
 };
 
 var handAxeParams = {
-	name: "hand axe",
+	name: "Hand Axe",
 	description: "standard hand axe",
 	isMagical: false,
 	special: ""
 };
 
 var battleAxeParams = {
-	name: "battle axe",
+	name: "Battle Axe",
 	description: "standard battle axe",
 	isMagical: false,
 	special: ""
 };
 
 var maceParams = {
-	name: "mace",
+	name: "Mace",
 	description: "standard mace",
 	isMagical: false,
 	special: ""
 };
 
 var clubParams = {
-	name: "club",
+	name: "Club",
 	description: "standard club",
 	isMagical: false,
 	special: ""
 };
 
 var poleArmParams = {
-	name: "pole arm",
+	name: "Pole Arm",
 	description: "standard pole arm",
 	isMagical: false,
 	special: ""
 };
 
 var spearParams = {
-	name: "spear",
+	name: "Spear",
 	description: "standard spear",
 	isMagical: false,
 	special: ""
 };
 
 var warHammerParams = {
-	name: "war hammer",
+	name: "War Hammer",
 	description: "standard war hammer",
 	isMagical: false,
 	special: ""
 };
 
 var crossbowParams = {
-	name: "crossbow",
+	name: "Crossbow",
 	description: "standard crossbow",
 	isMagical: false,
 	special: ""
 };
 
 var longbowParams = {
-	name: "longbow",
+	name: "Longbow",
 	description: "standard longbow",
 	isMagical: false,
 	special: ""
 };
 
 var shortbowParams = {
-	name: "shortbow",
+	name: "Shortbow",
 	description: "standard shortbow",
 	isMagical: false,
 	special: ""
 };
 
 var slingParams = {
-	name: "sling",
+	name: "Sling",
 	description: "standard sling",
 	isMagical: false,
 	special: ""
@@ -217,21 +217,21 @@ var shieldParams = {
 
 //misc
 var quarrelParams = {
-	name: "quarrel",
+	name: "Quarrel",
 	description: "Standard Quarrel",
 	isMagical: false,
 	special: "",
 };
 
 var arrowParams = {
-	name: "arrow",
+	name: "Arrow",
 	description: "Standard Arrow",
 	isMagical: false,
 	special: "",
 };
 
 var stoneParams = {
-	name: "stone",
+	name: "Stone",
 	description: "Standard Sling Stone",
 	isMagical: false,
 	special: "",
@@ -241,7 +241,10 @@ var stoneParams = {
 var tests = new Tests();
 runCharacterUnitTests();
 runWeaponUnitTests();
+const noOfTests = 200;
+runDiceUnitTests();
 tests.testResults();
+
 //runTestCombat();
 
 
@@ -446,10 +449,33 @@ function Tests()
 		this.validate(expected, actual, message);
 	};
 
-
 	this.checkUseAmmo = function(adventurer, weaponName, expected, actual, testName)
 	{
 		var message = " FAIL " + testName + ": " + adventurer.name + " has an inventory size of "  + actual + " after firing the "  + weaponName + " but " + expected + " was expected";
+		this.validate(expected, actual, message);
+	};
+
+	this.checkNoOfDice = function(diceRoll, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + diceRoll + "'s number of dice was "  + actual + " but the expected was " + expected;
+		this.validate(expected, actual, message);
+	};
+
+	this.checkTypeOfDice = function(diceRoll, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + diceRoll + "'s type of dice was "  + actual + " but the expected was " + expected;
+		this.validate(expected, actual, message);
+	};
+
+	this.checkDiceModifier = function(diceRoll, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + diceRoll + "'s modifier was "  + actual + " but the expected was " + expected;
+		this.validate(expected, actual, message);
+	};
+
+	this.checkDiceRange = function(diceRoll, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + diceRoll + "'s result was outside the range: "  + actual + " but the expected was " + expected;
 		this.validate(expected, actual, message);
 	};
 
@@ -822,11 +848,11 @@ function testindexOfItemInInventroy()
 	var shield = new Shield(shieldParams);
 
 	//item not in inventory 
-	tests.checkIndexOfItemInInventory(MagicUser, sword.name, -1, magicUser.indexOfItemInInventroy(sword.name), testindexOfItemInInventroy.name);
+	tests.checkIndexOfItemInInventory(MagicUser, sword.name, -1, magicUser.indexOfItemInInventroy(sword.id), testindexOfItemInInventroy.name);
 
 	//item in inventory 
 	magicUser.addItemToInventory(sword);
-	tests.checkIndexOfItemInInventory(MagicUser, sword.name, 0, magicUser.indexOfItemInInventroy(sword.name), testindexOfItemInInventroy.name);	
+	tests.checkIndexOfItemInInventory(MagicUser, sword.name, 0, magicUser.indexOfItemInInventroy(sword.id), testindexOfItemInInventroy.name);	
 
 	//add items to inventory till inventory is 1 away from full (start loop at 1 as 1 item already in inventory)
 	for(var i = 1; (_MaxNumberOfInventoryItems - 1) > i; i++)
@@ -836,7 +862,7 @@ function testindexOfItemInInventroy()
 
 	//item is last item in inventory
 	magicUser.addItemToInventory(shield);
-	tests.checkIndexOfItemInInventory(MagicUser, shield.name, (_MaxNumberOfInventoryItems - 1), magicUser.indexOfItemInInventroy(shield.name), testindexOfItemInInventroy.name);
+	tests.checkIndexOfItemInInventory(MagicUser, shield.name, (_MaxNumberOfInventoryItems - 1), magicUser.indexOfItemInInventroy(shield.id), testindexOfItemInInventroy.name);
 	//check to ensure inventory full (message should appear in console)
 	magicUser.addItemToInventory(shield);
 }
@@ -1795,50 +1821,150 @@ function runTestCombat()
 	}
 }
 
-//----------------------------------------------------------
 
+//--------------------------------------------------------------------------------------------------------------
 
-function runCharacterGenerationTest(charact) 
+function runDiceUnitTests()
 {
-	function checkAttribute(attribute, charactAttribute)
+	test3d6();
+	test3D6();
+	testd10();
+	testd20();
+	test2D4Plus1();
+	test2D4Minus1();
+	testD100();
+	testD8();
+}
+
+function checkDice(params)
+{
+	dice.getDiceRoll(params.diceRollAsString);
+
+	tests.checkNoOfDice(params.diceRollAsString, params.noOfDice, dice.diceRoll.numberOfDice, test3d6.name);
+	tests.checkTypeOfDice(params.diceRollAsString, params.typeOfDice, dice.diceRoll.typeOfDice, test3d6.name);
+	tests.checkDiceModifier(params.diceRollAsString, params.modifier, dice.diceRoll.modifier, test3d6.name);
+
+	var resultOutsideRange = false
+
+	for(var i =0; noOfTests > i; i++)
 	{
-		if(charactAttribute < 3 || charactAttribute > 18)
+		var result = dice.rollAndSumDice(params.diceRollAsString);
+		if(result > params.max || result < params.min)
 		{
-			console.log("FAIL: character's " + attribute + " is not between 3 and 18");
+			resultOutsideRange = true;
 		}
 	}
-	
-	const checkHitPoints = function(expectedMin, expectedMax)
+	tests.checkDiceRange(params.diceRollAsString, false, resultOutsideRange, test3d6.name);
+}
+
+function test3d6()
+{
+	var params = 
 	{
-		if(charact.maxHitPoints < expectedMin || charact.maxHitPoints > expectedMax)
-		{
-			console.log("FAIL: character's hit points should be between " + expectedMin + " and " + expectedMax);
-		}
+		min: 3,
+		max: 18,
+		noOfDice: 3,
+		typeOfDice: 6,
+		modifier: 0,
+		diceRollAsString: "3d6"
 	};
+	checkDice(params);
+}
 
-	//check current character being generated
-	console.log(charact.name + " is a " + charact.constructor.name);
-	checkAttribute("strength", charact.getStrength());
-	checkAttribute("intelligence", charact.getIntelligence());		
-	checkAttribute("wisdom", charact.getWisdom());		
-	checkAttribute("dexterity", charact.getDexterity());
-	checkAttribute("constitution", charact.getConstitution());		
-	checkAttribute("charisma", charact.getCharisma());		
-
-	if(charact instanceof MagicUser)
-	{	
-		checkHitPoints(1 + charact.calculateAttributeModifier(charact.constitution), 4 + charact.calculateAttributeModifier(charact.constitution));
-	}
-	else if (charact instanceof Fighter)
+function test3D6()
+{
+	var params = 
 	{
-		checkHitPoints(1 + charact.calculateAttributeModifier(charact.constitution), 8 + charact.calculateAttributeModifier(charact.constitution));
-	}		
-	else if (charact instanceof Thief)
-	{		
-		checkHitPoints(1 + charact.calculateAttributeModifier(charact.constitution), 4 + charact.calculateAttributeModifier(charact.constitution));
-	}	
-	else if (charact instanceof Cleric)
-	{	
-		checkHitPoints(1 + charact.calculateAttributeModifier(charact.constitution), 6 + charact.calculateAttributeModifier(charact.constitution));
-	}
+		min: 3,
+		max: 18,
+		noOfDice: 3,
+		typeOfDice: 6,
+		modifier: 0,
+		diceRollAsString: "3D6"
+	};
+	checkDice(params);
+}
+
+function testd10()
+{
+	var params = 
+	{
+		min: 1,
+		max: 10,
+		noOfDice: 1,
+		typeOfDice: 10,
+		modifier: 0,
+		diceRollAsString: "d10"
+	};
+	checkDice(params);
+}
+
+function testd20()
+{
+	var params = 
+	{
+		min: 1,
+		max: 20,
+		noOfDice: 1,
+		typeOfDice: 20,
+		modifier: 0,
+		diceRollAsString: "d20"
+	};
+	checkDice(params);	
+}
+
+function test2D4Plus1()
+{
+	var params = 
+	{
+		min: 3,
+		max: 9,
+		noOfDice: 2,
+		typeOfDice: 4,
+		modifier: 1,
+		diceRollAsString: "2D4+1"
+	};
+	checkDice(params);		
+}
+
+function test2D4Minus1()
+{
+	var params = 
+	{
+		min: 1,
+		max: 7,
+		noOfDice: 2,
+		typeOfDice: 4,
+		modifier: -1,
+		diceRollAsString: "2D4-1"
+	};
+	checkDice(params);		
+}
+
+function testD100()
+{
+	var params = 
+	{
+		min: 1,
+		max: 100,
+		noOfDice: 1,
+		typeOfDice: 100,
+		modifier: 0,
+		diceRollAsString: "D100"
+	};
+	checkDice(params);		
+}
+
+function testD8()
+{
+	var params = 
+	{
+		min: 1,
+		max: 8,
+		noOfDice: 1,
+		typeOfDice: 8,
+		modifier: 0,
+		diceRollAsString: "D8"
+	};
+	checkDice(params);		
 }
