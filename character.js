@@ -214,7 +214,6 @@ function Character()
 			return new Fist();
 		}
 
-		console.log("You have no weapon equiped and no hands free to punch with");
 		return null;
 	};
 	
@@ -261,12 +260,12 @@ function Character()
 			//can this character use this weapon
 			if((item instanceof Weapon) && this.isCharacterUnableToUseThisWeapon(item))
 			{
-				console.log("this character cannot use this weapon");
+				console.log(this.name + " cannot use a "+ item.name);
 			}
 			//can this character use a shield
 			else if((item instanceof Shield) && !this.isCharacterAbleToUseAShield())
 			{
-				console.log("this character cannot use a shield");				
+				console.log(this.name + " cannot use a shield");				
 			}
 			else
 			{
@@ -281,7 +280,7 @@ function Character()
 				}
 				else 
 				{
-					console.log("you need to unequip something first");
+					console.log(this.name + " needs to unequip something first");
 				}
 			}
 		}
@@ -289,11 +288,11 @@ function Character()
 		{
 			if(this.isCharacterUnableToUseThisArmour(item))
 			{
-				console.log("this character cannot use this type of armour");
+				console.log(this.name + " cannot use " + item.name);
 			}
 			else if(this.isArmourEquiped())
 			{
-				console.log("you need to unequip the character current armour first");	
+				console.log(this.name +  " needs to unequip their current armour first");	
 			}
 			else
 			{
@@ -460,14 +459,38 @@ function Character()
 		return false;
 	};
 	
+	this.indexOfAmmo = function(weapon)
+	{
+		return this.indexOfItemInInventroy(weapon.requires);
+	};
+
+	this.useAmmo = function(index)
+	{
+		this.inventory.splice(index, 1);
+	}
+
 	this.attack = function(opponent)
 	{
 		var weapon = this.getEquipedWeapon();
 
 		if(weapon === null)
 		{
-			console.log("You have no weapons equiped and no hands to punch with");
+			console.log(this.name + " has no weapons equiped and no hands free to punch with");
 			return;
+		}
+
+		if(weapon instanceof RangedWeapon)
+		{
+			var index = this.hasAmmo(weapon);
+			if(index === -1)
+			{
+				console.log(this.name + " has no ammo for their " + weapon.name);
+				return;
+			}
+			else
+			{
+				this.useAmmo(index);
+			}
 		}
 
 		var requiredToHit = this.roleRequiredToHit(opponent, weapon);
@@ -552,7 +575,7 @@ function Character()
 	{
 		if(this.inventory.length === _MaxNumberOfInventoryItems)
 		{
-			console.log("characters inventory is full"); 
+			console.log(this.name + "'s inventory is full"); 
 			return false;
 		}
 		return true;
@@ -566,11 +589,11 @@ function Character()
 		}
 	};
 
-	this.indexOfItemInInventroy = function(item)
+	this.indexOfItemInInventroy = function(itemName)
 	{
 		for(var i = 0; this.inventory.length > i; i++)
 		{
-			if(this.inventory[i].name === item.name)
+			if(this.inventory[i].name === itemName)
 			{
 				return i;
 			}
@@ -581,7 +604,7 @@ function Character()
 
 	this.removeItemFromInventory = function(item)
 	{
-		var index = this.indexOfItemInInventroy(item);
+		var index = this.indexOfItemInInventroy(item.name);
 		if(index === -1)
 		{
 			return;

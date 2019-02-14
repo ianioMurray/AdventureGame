@@ -215,6 +215,27 @@ var shieldParams = {
 	special: "",
 };
 
+//misc
+var quarrelParams = {
+	name: "quarrel",
+	description: "Standard Quarrel",
+	isMagical: false,
+	special: "",
+};
+
+var arrowParams = {
+	name: "arrow",
+	description: "Standard Arrow",
+	isMagical: false,
+	special: "",
+};
+
+var stoneParams = {
+	name: "stone",
+	description: "Standard Sling Stone",
+	isMagical: false,
+	special: "",
+};
 
 //run tests
 var tests = new Tests();
@@ -417,8 +438,20 @@ function Tests()
 	{
 		var message = " FAIL " + testName + ": " + adventurer.name + " has an inventory size of " + actual + " but " + expected + " was expected";
 		this.validate(expected, actual, message);
-	}
+	};
 
+	this.checkIndexOfAmmo = function(adventurer, weaponName, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + adventurer.name + " has an index of "  + actual + " for the ammo of the "  + weaponName + " but " + expected + " was expected";
+		this.validate(expected, actual, message);
+	};
+
+
+	this.checkUseAmmo = function(adventurer, weaponName, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + adventurer.name + " has an inventory size of "  + actual + " after firing the "  + weaponName + " but " + expected + " was expected";
+		this.validate(expected, actual, message);
+	};
 
 	this.testResults = function()
 	{
@@ -499,6 +532,8 @@ function runCharacterUnitTests()
 	
 	testRoleRequiredToHit();
 	testGetEquipedWeapon();	
+	testIndexOfAmmo();
+	testUseAmmo();
 	testIfAttackHits();
 	testTakeDamage();
 }
@@ -787,11 +822,11 @@ function testindexOfItemInInventroy()
 	var shield = new Shield(shieldParams);
 
 	//item not in inventory 
-	tests.checkIndexOfItemInInventory(MagicUser, sword.name, -1, magicUser.indexOfItemInInventroy(sword), testindexOfItemInInventroy.name);
+	tests.checkIndexOfItemInInventory(MagicUser, sword.name, -1, magicUser.indexOfItemInInventroy(sword.name), testindexOfItemInInventroy.name);
 
 	//item in inventory 
 	magicUser.addItemToInventory(sword);
-	tests.checkIndexOfItemInInventory(MagicUser, sword.name, 0, magicUser.indexOfItemInInventroy(sword), testindexOfItemInInventroy.name);	
+	tests.checkIndexOfItemInInventory(MagicUser, sword.name, 0, magicUser.indexOfItemInInventroy(sword.name), testindexOfItemInInventroy.name);	
 
 	//add items to inventory till inventory is 1 away from full (start loop at 1 as 1 item already in inventory)
 	for(var i = 1; (_MaxNumberOfInventoryItems - 1) > i; i++)
@@ -801,7 +836,7 @@ function testindexOfItemInInventroy()
 
 	//item is last item in inventory
 	magicUser.addItemToInventory(shield);
-	tests.checkIndexOfItemInInventory(MagicUser, shield.name, (_MaxNumberOfInventoryItems - 1), magicUser.indexOfItemInInventroy(shield), testindexOfItemInInventroy.name);
+	tests.checkIndexOfItemInInventory(MagicUser, shield.name, (_MaxNumberOfInventoryItems - 1), magicUser.indexOfItemInInventroy(shield.name), testindexOfItemInInventroy.name);
 	//check to ensure inventory full (message should appear in console)
 	magicUser.addItemToInventory(shield);
 }
@@ -1590,6 +1625,77 @@ function testGetEquipedWeapon()
 	fighterBad.equip(shield);
 	fighterBad.equip(shield);
 	tests.checkGetEquipedWeapon(fighterBad, null, fighterBad.getEquipedWeapon(), testGetEquipedWeapon.name);	
+}
+
+function testIndexOfAmmo()
+{
+	var fighter = new Fighter(fighterTestParams);	
+
+	var crossbow = new Crossbow(crossbowParams);
+	var longbow = new Longbow(longbowParams);
+	var shortbow = new Shortbow(shortbowParams);
+	var sling = new Sling(slingParams);
+
+	var shield = new Shield(shieldParams);
+	var arrow = new Arrow(arrowParams);
+	var quarrel = new Quarrel(quarrelParams);
+	var stone = new Stone(stoneParams);
+
+	fighter.addItemToInventory(shield);
+	fighter.addItemToInventory(arrow);
+	fighter.addItemToInventory(quarrel);
+	fighter.addItemToInventory(stone);
+
+	//test index of quarrel using crossbow
+	fighter.equip(crossbow);
+	tests.checkIndexOfAmmo(fighter, crossbow.name, 2, fighter.indexOfAmmo(crossbow), testIndexOfAmmo.name);
+	fighter.unEquip(crossbow);
+
+	//test index of arrow using longbow
+	fighter.equip(longbow);
+	tests.checkIndexOfAmmo(fighter, longbow.name, 1, fighter.indexOfAmmo(longbow), testIndexOfAmmo.name);
+	fighter.unEquip(longbow);
+
+	//test index of stone using sling 
+	fighter.equip(sling);
+	tests.checkIndexOfAmmo(fighter, sling.name, 3, fighter.indexOfAmmo(sling), testIndexOfAmmo.name);
+	fighter.unEquip(sling);
+
+	//test index of arrow using shortbow 
+	fighter.equip(shortbow);
+	tests.checkIndexOfAmmo(fighter, shortbow.name, 1, fighter.indexOfAmmo(shortbow), testIndexOfAmmo.name);
+	fighter.unEquip(shortbow);
+}
+
+function testUseAmmo()
+{
+	var fighter = new Fighter(fighterTestParams);	
+
+	var crossbow = new Crossbow(crossbowParams);
+	var longbow = new Longbow(longbowParams);
+	var shortbow = new Shortbow(shortbowParams);
+	var sling = new Sling(slingParams);
+
+	var arrow = new Arrow(arrowParams);
+	var quarrel = new Quarrel(quarrelParams);
+	var stone = new Stone(stoneParams);
+
+	fighter.addItemToInventory(arrow);
+	fighter.addItemToInventory(quarrel);
+	fighter.addItemToInventory(stone);
+	fighter.addItemToInventory(arrow);
+
+	fighter.useAmmo(fighter.indexOfAmmo(crossbow));
+	tests.checkUseAmmo(fighter, crossbow.name, 3, fighter.inventory.length, testUseAmmo.name);
+
+	fighter.useAmmo(fighter.indexOfAmmo(longbow));
+	tests.checkUseAmmo(fighter, longbow.name, 2, fighter.inventory.length, testUseAmmo.name);
+
+	fighter.useAmmo(fighter.indexOfAmmo(sling));
+	tests.checkUseAmmo(fighter, sling.name, 1, fighter.inventory.length, testUseAmmo.name);
+	
+	fighter.useAmmo(fighter.indexOfAmmo(shortbow));
+	tests.checkUseAmmo(fighter, shortbow.name, 0, fighter.inventory.length, testUseAmmo.name);
 }
 
 function testIfAttackHits()

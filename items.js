@@ -335,7 +335,7 @@ function Sling(params)
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 	this.isRanged = true;
-	this.requires = "stones";
+	this.requires = "stone";
 }
 
 Sling.prototype = new RangedWeapon();
@@ -425,7 +425,7 @@ PlateMail.prototype.constructor = Armour;
 //------------------------------------------
 //---------------MISC-----------------------
 //------------------------------------------
-function Quarrel()
+function Quarrel(params)
 {
 	this.name = params.name;
 	this.description = params.description;
@@ -438,7 +438,7 @@ Quarrel.prototype = new Item();
 Quarrel.prototype.constructor = Item;
 
 
-function Arrow()
+function Arrow(params)
 {
 	this.name = params.name;
 	this.description = params.description;
@@ -450,7 +450,7 @@ function Arrow()
 Arrow.prototype = new Item();
 Arrow.prototype.constructor = Item;
 
-function Stone()
+function Stone(params)
 {
 	this.name = params.name;
 	this.description = params.description;
