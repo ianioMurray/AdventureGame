@@ -92,12 +92,12 @@ function generateAttributes(uiElements)
 	uiElements.createCharacterButton.innerHTML = "Reset Values";
 	uiElements.acceptAttributes.style.display = 'inline';
 	
-	uiElements.strengthField.value = dice.rollAndSumDice("3D6");
-	uiElements.intelligenceField.value = dice.rollAndSumDice("3D6");
-	uiElements.wisdomField.value = dice.rollAndSumDice("3D6");
-	uiElements.dexterityField.value = dice.rollAndSumDice("3D6");	
-	uiElements.constitutionField.value = dice.rollAndSumDice("3D6");
-	uiElements.charimsaField.value = dice.rollAndSumDice("3D6");	
+	uiElements.strengthField.value = dice.rollDice("3D6");
+	uiElements.intelligenceField.value = dice.rollDice("3D6");
+	uiElements.wisdomField.value = dice.rollDice("3D6");
+	uiElements.dexterityField.value = dice.rollDice("3D6");	
+	uiElements.constitutionField.value = dice.rollDice("3D6");
+	uiElements.charimsaField.value = dice.rollDice("3D6");	
 }
 
 function chooseClass(uiElements)

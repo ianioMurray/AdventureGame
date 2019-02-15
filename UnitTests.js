@@ -1848,7 +1848,7 @@ function checkDice(params)
 
 	for(var i =0; noOfTests > i; i++)
 	{
-		var result = dice.rollAndSumDice(params.diceRollAsString);
+		var result = dice.rollDice(params.diceRollAsString);
 		if(result > params.max || result < params.min)
 		{
 			resultOutsideRange = true;

@@ -360,11 +360,11 @@ function Character()
 
 		var requiredToHit = this.roleRequiredToHit(opponent, weapon);
 		
-		var attackIsAHit = this.isAttackAHit(dice.rollAndSumDice("1D20"), requiredToHit);
+		var attackIsAHit = this.isAttackAHit(dice.rollDice("1D20"), requiredToHit);
 		
 		if(attackIsAHit)
 		{
-			opponent.takeDamage(dice.rollAndSumDice(weapon.damage));
+			opponent.takeDamage(dice.rollDice(weapon.damage));
 		}
 	};
 	
@@ -408,7 +408,7 @@ function Character()
 	
 	this.getIndividualInitative = function()
 	{
-		return dice.rollAndSumDice("D6") + this.calculateInitativeModifier();
+		return dice.rollDice("D6") + this.calculateInitativeModifier();
 	};
 	
 	this.setHitPoints = function(hpIncrease)
@@ -494,7 +494,7 @@ function Fighter(params)
 	this.dexterity = params.dexterity; 
 	this.constitution = params.constitution; 
 	this.charisma = params.charisma; 
-	this.maxHitPoints = this.setHitPoints(dice.rollAndSumDice("D8"));
+	this.maxHitPoints = this.setHitPoints(dice.rollDice("D8"));
 	this.currentHitPoints = this.maxHitPoints;
 	this.noOfHandsFree = 2;
 	this.equipedInHands = [];
@@ -511,7 +511,7 @@ Fighter.prototype.levelExperience = [0, 2000, 4000];
 Fighter.prototype.levelUp = function() 
 	{
 		this.currentLevel++;
-		this.maxHitPoints = this.setHitPoints(dice.rollAndSumDice("D8"));
+		this.maxHitPoints = this.setHitPoints(dice.rollDice("D8"));
 		//when a character goes up a level this heal to max
 		this.currentHitPoints = this.maxHitPoints;
 	};
@@ -531,7 +531,7 @@ function Thief(params)
 	this.dexterity = params.dexterity; 
 	this.constitution = params.constitution; 
 	this.charisma = params.charisma;
-	this.maxHitPoints = this.setHitPoints(dice.rollAndSumDice("D4"));
+	this.maxHitPoints = this.setHitPoints(dice.rollDice("D4"));
 	this.currentHitPoints = this.maxHitPoints;
 	this.noOfHandsFree = 2;
 	this.equipedInHands = [];
@@ -553,7 +553,7 @@ Thief.prototype.pickLockChance = [15, 20, 25];
 Thief.prototype.levelUp = function() 
 	{
 		this.currentLevel++;
-		this.maxHitPoints = this.setHitPoints(dice.rollAndSumDice("D4"));
+		this.maxHitPoints = this.setHitPoints(dice.rollDice("D4"));
 		//when a character goes up a level this heal to max
 		this.currentHitPoints = this.maxHitPoints;
 	};
@@ -562,7 +562,7 @@ Thief.prototype.pickLockSuccess = function()
 	{
 		//takes random perc and compares it to the lock pick success chance
 		//(we use their currentLevel in the array as level starts at 1 and array at 0)
-		if(dice.rollAndSumDice("D100") >= this.pickLockChance[this.currentLevel - 1])
+		if(dice.rollDice("D100") >= this.pickLockChance[this.currentLevel - 1])
 		{
 			return true;
 		}
@@ -589,7 +589,7 @@ function Cleric(params)
 	this.dexterity = params.dexterity; 
 	this.constitution = params.constitution; 
 	this.charisma = params.charisma; 
-	this.maxHitPoints = this.setHitPoints(dice.rollAndSumDice("D6"));
+	this.maxHitPoints = this.setHitPoints(dice.rollDice("D6"));
 	this.currentHitPoints = this.maxHitPoints;
 	this.noOfHandsFree = 2;
 	this.equipedInHands = [];
@@ -610,7 +610,7 @@ Cleric.prototype.isSpellCaster = true;
 Cleric.prototype.levelUp = function() 
 	{
 		this.currentLevel++;
-		this.maxHitPoints = this.setHitPoints(dice.rollAndSumDice("D6"));
+		this.maxHitPoints = this.setHitPoints(dice.rollDice("D6"));
 		//when a character goes up a level this heal to max
 		this.currentHitPoints = this.maxHitPoints;
 	};
@@ -632,7 +632,7 @@ function MagicUser(params)
 	this.dexterity = params.dexterity; 
 	this.constitution = params.constitution; 
 	this.charisma = params.charisma; 
-	this.maxHitPoints = this.setHitPoints(dice.rollAndSumDice("D4"));
+	this.maxHitPoints = this.setHitPoints(dice.rollDice("D4"));
 	this.currentHitPoints = this.maxHitPoints;
 	this.noOfCurrentFirstLevelSpells = 0;
 	this.maxNoOfFirstLevelSpells = 1;
@@ -671,7 +671,7 @@ MagicUser.prototype.levelUp = function()
 			this.maxNoOfSecondLevelSpells++;
 		}
 		
-		this.maxHitPoints = this.setHitPoints(dice.rollAndSumDice("D4"));
+		this.maxHitPoints = this.setHitPoints(dice.rollDice("D4"));
 		//when a character goes up a level this heal to max
 		this.currentHitPoints = this.maxHitPoints;
 	};

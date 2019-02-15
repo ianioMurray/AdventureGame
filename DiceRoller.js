@@ -15,7 +15,7 @@ function Dice()
     };
 
 
-   this.rollAndSumDice = function(params) 
+   this.rollDice = function(params) 
    {
         var result = 0;
 
