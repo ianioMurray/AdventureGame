@@ -2120,11 +2120,11 @@ function runDiceUnitTests()
 
 function checkDice(params)
 {
-	dice.getDiceRoll(params.diceRollAsString);
+	dice.rollDice(params.diceRollAsString);
 
-	tests.checkNoOfDice(params.diceRollAsString, params.noOfDice, dice.diceRoll.numberOfDice, test3d6.name);
-	tests.checkTypeOfDice(params.diceRollAsString, params.typeOfDice, dice.diceRoll.typeOfDice, test3d6.name);
-	tests.checkDiceModifier(params.diceRollAsString, params.modifier, dice.diceRoll.modifier, test3d6.name);
+	tests.checkNoOfDice(params.diceRollAsString, params.noOfDice, dice.getNumberOfDice(), test3d6.name);
+	tests.checkTypeOfDice(params.diceRollAsString, params.typeOfDice, dice.getTypeOfDice(), test3d6.name);
+	tests.checkDiceModifier(params.diceRollAsString, params.modifier, dice.getDiceModifier(), test3d6.name);
 
 	var resultOutsideRange = false
 

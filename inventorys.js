@@ -3,7 +3,7 @@
 
 const _MaxNumberOfInventoryItems = 50;
 
-this.Inventory = function()
+function Inventory()
 {
     this.itemsInInvetory = [];
 

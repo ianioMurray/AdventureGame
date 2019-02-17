@@ -1,13 +1,13 @@
 
 "use strict"
 
-var dice = new Dice();
 
-function Dice()
+//created so the methods and properties are private unless they are identifed in the return
+
+var dice = (function Dice()
 {
-
     // Default dice roll
-    this.diceRoll = 
+    var diceRoll = 
     { 
         typeOfDice: 6, 
         numberOfDice: 1, 
@@ -15,53 +15,53 @@ function Dice()
     };
 
 
-   this.rollDice = function(params) 
+   var rollDice = function(params) 
    {
         var result = 0;
 
         //covert params to a valid diceRoll
-        this.getDiceRoll(params);
+       getDiceRoll(params);
 
         // Roll the appropriate dice the appropriate number of times and get the sum of the result 
-        for (var i = 0; i < this.diceRoll.numberOfDice; i++)
+        for (var i = 0; i < diceRoll.numberOfDice; i++)
         {
-            result += (Math.floor(Math.random() * (this.diceRoll.typeOfDice))) + 1;
+            result += (Math.floor(Math.random() * (diceRoll.typeOfDice))) + 1;
         }
 
         // Add any modifiers to the total
-        if ('modifier' in this.diceRoll) {
-            this.diceRoll.modifier = parseInt(this.diceRoll.modifier);
-            if (!isNaN(this.diceRoll.modifier)) {
-                result += this.diceRoll.modifier;
+        if ('modifier' in diceRoll) {
+            diceRoll.modifier = parseInt(diceRoll.modifier);
+            if (!isNaN(diceRoll.modifier)) {
+                result += diceRoll.modifier;
             }
         }
         return result;
     };
     
-    this.getDiceRoll = function(params)
+    var getDiceRoll = function(params)
     {
          if (typeof params === "string") {
-            this.diceRoll = this.parseStringToDiceRoll(params);
+            diceRoll = parseStringToDiceRoll(params);
 
         } else {
             // Examine our parameters
 
             if ('typeOfDice' in params){
-                this.diceRoll.typeOfDice = params.typeOfDice;
+                diceRoll.typeOfDice = params.typeOfDice;
             }
 
             if ('numberOfDice' in params) {
-                this.diceRoll.numberOfDice = params.numberOfDice;
+                diceRoll.numberOfDice = params.numberOfDice;
             }
 
             if ('modifier' in params){
-                this.diceRoll.modifier = params.modifier;
+                diceRoll.modifier = params.modifier;
             }
         }
     };
 
-    this.parseStringToDiceRoll = function(params)
-     {
+    var parseStringToDiceRoll = function(params)
+    {
         var match = /^(\d+)?d(\d+)([+-]\d+)?$/i.exec(params);
 
         if (!match) {
@@ -74,4 +74,27 @@ function Dice()
             modifier: (typeof match[3] == 'undefined') ? 0 : parseInt(match[3])
         };
     };
-}
+
+    var getNumberOfDice = function()
+    {
+        return diceRoll.numberOfDice;
+    };
+
+    var getTypeOfDice = function()
+    {
+        return diceRoll.typeOfDice;
+    };
+
+    var getDiceModifier = function()
+    {
+        return diceRoll.modifier;
+    };
+
+    //expose these functions ONLY
+    return {
+        rollDice: rollDice,
+        getNumberOfDice: getNumberOfDice,  //for testing only
+        getTypeOfDice: getTypeOfDice,     //for testing only
+        getDiceModifier: getDiceModifier //for testing only
+    }
+})();
