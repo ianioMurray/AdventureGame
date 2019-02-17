@@ -1,11 +1,11 @@
 
-"use strict"
-
-const _MaxNumberOfInventoryItems = 50;
+"use strict";
+const _MaxNumberOfInventoryItems = 50;   
 
 function Inventory()
 {
-    this.itemsInInvetory = [];
+	this.itemsInInvetory = [];
+	//this._MaxNumberOfInventoryItems = 50;
 
     this.addItemToInventory = function(item)
 	{
@@ -105,3 +105,5 @@ function Inventory()
 		} 
 	};
 }
+
+//export default {Inventory};

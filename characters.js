@@ -1,5 +1,7 @@
 
-"use strict"
+"use strict";
+
+//import {Inventory} from './inventorys';
 
 //--------------------------------------------
 //             CHARACTER TYPES
@@ -201,7 +203,7 @@ function Character()
 			}
 		}
 		return false;		
-	}
+	};
 	
 	this.calculateAttributeModifier = function(attribute)
 	{
@@ -229,7 +231,7 @@ function Character()
 		{
 			return 2;
 		}
-		else if (attribute = 18 )
+		else if (attribute === 18 )
 		{
 			return 3;
 		}
@@ -237,7 +239,7 @@ function Character()
 		{
 			throw("attribute should be between 3 and 18");
 		}
-	}
+	};
 	
 	this.calculateArmourClass = function() 
 	{
@@ -325,7 +327,7 @@ function Character()
 	this.useAmmo = function(index)
 	{
 		this.inventory.reduceUsesOfAmmo(index);
-	}
+	};
 
 	this.attack = function(opponent)
 	{
@@ -389,7 +391,7 @@ function Character()
 		{
 			return 1;
 		}
-		else if (attribute = 18 )
+		else if (attribute === 18 )
 		{
 			return 2;
 		}
@@ -631,7 +633,7 @@ MagicUser.prototype.learnSpell = function(spell)
 		{
 			if(this.maxNoOfFirstLevelSpells > this.noOfCurrentFirstLevelSpells)
 			{
-				noOfCurrentFirstLevelSpells++;
+				this.noOfCurrentFirstLevelSpells++;
 				this.currentSpells.push(spell);
 			}
 			else
@@ -643,7 +645,7 @@ MagicUser.prototype.learnSpell = function(spell)
 		{
 			if(this.maxNoOfSecondLevelSpells > this.noOfCurrentSecondLevelSpells)
 			{
-				noOfCurrentSecondLevelSpells++;
+				this.noOfCurrentSecondLevelSpells++;
 				this.currentSpells.push(spell);
 			}
 			else
