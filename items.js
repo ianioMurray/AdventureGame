@@ -3,6 +3,7 @@
 //----------------------------------------
 function Item() 
 {
+	this.isCombinableInInventory = false;
 }
 
 
@@ -424,7 +425,26 @@ PlateMail.prototype = new Armour();
 PlateMail.prototype.constructor = Armour;
 
 //------------------------------------------
-//---------------MISC-----------------------
+//                 AMMO
+//------------------------------------------
+function Ammo()
+{
+	this.isCombinableInInventory = true;
+}
+
+Ammo.prototype = new Item();
+Ammo.prototype.constructor = Ammo;
+Ammo.prototype.setRemainingNumberOfUses = function(numberOfUses) 
+	{ 
+		if (numberOfUses > this.maxNumberOfUses)
+			{
+				throw(this.name + " created with too many uses")
+			}
+		return numberOfUses;
+	};
+
+//------------------------------------------
+//---------------Quarrels-------------------
 //------------------------------------------
 function Quarrel(params)
 {
@@ -434,12 +454,16 @@ function Quarrel(params)
 	this.id = "quarrel";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
+	this.maxNumberOfUses = 30;
+	this.remainingNumberOfUses = this.setRemainingNumberOfUses(params.remainingNumberOfUses);
 }
 
-Quarrel.prototype = new Item();
-Quarrel.prototype.constructor = Item;
+Quarrel.prototype = new Ammo();
+Quarrel.prototype.constructor = Quarrel;
 
-
+//------------------------------------------
+//---------------Arrows---------------------
+//------------------------------------------
 function Arrow(params)
 {
 	this.name = params.name;
@@ -448,11 +472,16 @@ function Arrow(params)
 	this.id = "arrow";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
+	this.maxNumberOfUses = 20;
+	this.remainingNumberOfUses = this.setRemainingNumberOfUses(params.remainingNumberOfUses);
 }
 
-Arrow.prototype = new Item();
-Arrow.prototype.constructor = Item;
+Arrow.prototype = new Ammo();
+Arrow.prototype.constructor = Arrow;
 
+//------------------------------------------
+//---------------Stones---------------------
+//------------------------------------------
 function Stone(params)
 {
 	this.name = params.name;
@@ -461,7 +490,9 @@ function Stone(params)
 	this.id = "stone";
 	this.isMagical = params.isMagical;
 	this.special = params.special;
+	this.maxNumberOfUses = 30;
+	this.remainingNumberOfUses = this.setRemainingNumberOfUses(params.remainingNumberOfUses); 
 }
 
-Stone.prototype = new Item();
-Stone.prototype.constructor = Item;
+Stone.prototype = new Ammo();
+Stone.prototype.constructor = Stone;

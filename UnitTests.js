@@ -212,7 +212,7 @@ var shieldParams = {
 	name: "Shield",
 	description: "Standard Shield",
 	isMagical: false,
-	special: "",
+	special: ""
 };
 
 //misc
@@ -221,6 +221,7 @@ var quarrelParams = {
 	description: "Standard Quarrel",
 	isMagical: false,
 	special: "",
+	remainingNumberOfUses: 30
 };
 
 var arrowParams = {
@@ -228,6 +229,7 @@ var arrowParams = {
 	description: "Standard Arrow",
 	isMagical: false,
 	special: "",
+	remainingNumberOfUses: 20
 };
 
 var stoneParams = {
@@ -235,12 +237,81 @@ var stoneParams = {
 	description: "Standard Sling Stone",
 	isMagical: false,
 	special: "",
+	remainingNumberOfUses: 30
 };
+
+var arrowNotFullParams = {
+	name: "Arrow",
+	description: "Standard Arrow",
+	isMagical: false,
+	special: "",
+	remainingNumberOfUses: 10
+};
+
+var arrow8UsesParams = {
+	name: "Arrow",
+	description: "Standard Arrow",
+	isMagical: false,
+	special: "",
+	remainingNumberOfUses: 8
+};
+
+var arrow7UsesParams = {
+	name: "Arrow",
+	description: "Standard Arrow",
+	isMagical: false,
+	special: "",
+	remainingNumberOfUses: 7
+};
+
+var arrow18UsesParams = {
+	name: "Arrow",
+	description: "Standard Arrow",
+	isMagical: false,
+	special: "",
+	remainingNumberOfUses: 18
+};
+
+var arrow11UsesParams = {
+	name: "Arrow",
+	description: "Standard Arrow",
+	isMagical: false,
+	special: "",
+	remainingNumberOfUses: 11
+};
+
+var arrow2UsesParams = {
+	name: "Arrow",
+	description: "Standard Arrow",
+	isMagical: false,
+	special: "",
+	remainingNumberOfUses: 2
+};
+
+var arrow15UsesParams = {
+	name: "Arrow",
+	description: "Standard Arrow",
+	isMagical: false,
+	special: "",
+	remainingNumberOfUses: 15
+};
+
+var arrow20UsesParams = {
+	name: "Arrow",
+	description: "Standard Arrow",
+	isMagical: false,
+	special: "",
+	remainingNumberOfUses: 20
+};
+
+
 
 //run tests
 var tests = new Tests();
 runCharacterUnitTests();
+runInventoryUnitTests();
 runWeaponUnitTests();
+//runAmmoTests();
 const noOfTests = 200;
 runDiceUnitTests();
 tests.testResults();
@@ -419,7 +490,7 @@ function Tests()
 		this.validate(expected, actual, message);
 	};
 
-	this.checkCanAddItemToInventory = function(adventurer, expected, actual, testName)
+	this.checkIsInventoryFull = function(adventurer, expected, actual, testName)
 	{
 		var message = " FAIL " + testName + ": " + adventurer.name + " is able to add item to inventory: " + actual + " but " + expected + " was expected";
 		this.validate(expected, actual, message);
@@ -479,6 +550,18 @@ function Tests()
 		this.validate(expected, actual, message);
 	};
 
+	this.checkNumberOfUses = function(adventurer, ammoName, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + ammoName + "'s number of uses in this slot are: "  + actual + " but the expected was " + expected;
+		this.validate(expected, actual, message);		
+	};
+
+	this.checkIsCombinableInInventory = function(weaponName, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + weaponName + " is combinable in inventory: "  + actual + " but the expected was " + expected;
+		this.validate(expected, actual, message);	
+	};
+
 	this.testResults = function()
 	{
 		if(this.allTestsPass == true)
@@ -515,11 +598,6 @@ function runCharacterUnitTests()
 	testConstitutionBonus();
 	
 	testIndividualInitiativeBonus();
-
-	testCanAddItemToInventory();
-	testAddItemToInventory();
-	testindexOfItemInInventroy();
-	testRemoveItemFromInventory();
 	
 	testEquipDagger();
 	testEquipSilverDagger();
@@ -564,13 +642,45 @@ function runCharacterUnitTests()
 	testTakeDamage();
 }
 
+//-----------------------------------------------
+
+function runInventoryUnitTests()
+{
+	testIsInventoryFull();
+	testAddItemToInventory();
+	testindexOfItemInInventroy();
+	testRemoveItemFromInventory();
+}
+
+//-----------------------------------------------
+
 function runWeaponUnitTests()
 {
 	testWeaponIsTwoHanded();
 	testWeaponIsRanged();
+	testIsCombinableInInventory();
 }
 
+//-----------------------------------------------
 
+function runAmmoTests()
+{
+	//this should cause an exception to be thrown as it is not possible to create an instance of ammo with remainingNumberOfUses greater than MaxNumberOfUses
+	var badStonesParams = {
+		name: "Stone",
+		description: "Standard Sling Stone",
+		isMagical: false,
+		special: "",
+		remainingNumberOfUses: 50
+	};
+	
+	var stone = new Stone(stoneParams);
+	console.log(stone.remainingNumberOfUses);
+	var badStone = new Stone(badStonesParams);
+	console.log(badStone.remainingNumberOfUses);
+}
+
+//-----------------------------------------------
 
 function testIsSpellCaster()
 {
@@ -804,7 +914,7 @@ function testIndividualInitiativeBonus()
 	tests.checkIndividualInitiativeModifier(fighterAverage, 0, fighterAverage.calculateInitativeModifier(), testIndividualInitiativeBonus.name);
 }
 
-function testCanAddItemToInventory()
+function testIsInventoryFull()
 {
 	var magicUser = new MagicUser(magaicUserTestParams);
 
@@ -813,12 +923,12 @@ function testCanAddItemToInventory()
 	//add max number of items to inventory
 	for(var i = 0; _MaxNumberOfInventoryItems > i; i++)
 	{
-		tests.checkCanAddItemToInventory(magicUser, true, magicUser.canAddItemToInventory(sword), testCanAddItemToInventory.name);
-		magicUser.inventory.push(sword);
+		tests.checkIsInventoryFull(magicUser, false, magicUser.inventory.isInventoryFull(sword), testIsInventoryFull.name);
+		magicUser.inventory.itemsInInvetory.push(sword);
 	}
 
 	//ensure attempting to add 1 more item to the inventory fails
-	tests.checkCanAddItemToInventory(magicUser, false, magicUser.canAddItemToInventory(sword), testCanAddItemToInventory.name);
+	tests.checkIsInventoryFull(magicUser, true, magicUser.inventory.isInventoryFull(sword), testIsInventoryFull.name);
 }
 
 function testAddItemToInventory()
@@ -826,18 +936,147 @@ function testAddItemToInventory()
 	var magicUser = new MagicUser(magaicUserTestParams);
 
 	var sword = new Sword(swordParams);
+	var arrow = new Arrow(arrowParams);
 
 	//add items to inventory till the max inventory size is reached 
 	for(var i = 0; _MaxNumberOfInventoryItems > i; i++)
 	{
 		var expectedInventoryItems = i + 1;
-		magicUser.addItemToInventory(sword);
-		tests.checkAddItemToInventory(magicUser, expectedInventoryItems, magicUser.inventory.length, testAddItemToInventory.name);
+		magicUser.inventory.addItemToInventory(sword);
+		tests.checkAddItemToInventory(magicUser, expectedInventoryItems, magicUser.inventory.itemsInInvetory.length, testAddItemToInventory.name);
 	}
 
 	//ensure attempting to add 1 more item to the inventory fails so the number of items in the inventory is still set to the max
-	magicUser.addItemToInventory(sword);	
-	tests.checkAddItemToInventory(magicUser, _MaxNumberOfInventoryItems, magicUser.inventory.length, testAddItemToInventory.name);
+	magicUser.inventory.addItemToInventory(sword);	
+	tests.checkAddItemToInventory(magicUser, _MaxNumberOfInventoryItems, magicUser.inventory.itemsInInvetory.length, testAddItemToInventory.name);
+
+	//----
+
+	var fighter = new Fighter(fighterTestParams);
+
+	var arrowFirst10 = new Arrow(arrowNotFullParams);
+	var arrowSecond10 = new Arrow(arrowNotFullParams);
+	var arrowThird10 = new Arrow(arrowNotFullParams);
+
+	//test inventory with combinable items 
+	fighter.inventory.addItemToInventory(arrow);
+	tests.checkAddItemToInventory(fighter, 1, fighter.inventory.itemsInInvetory.length, testAddItemToInventory.name);	
+	tests.checkNumberOfUses(fighter, fighter.inventory.itemsInInvetory[0].name, 20, fighter.inventory.itemsInInvetory[0].remainingNumberOfUses, testAddItemToInventory.name);
+
+	//fill inventory so that only 1 slot left (-2 as 1 slot already used and want 1 left free) 
+	for(var i = 0; (_MaxNumberOfInventoryItems - 2) > i; i++)
+	{
+		fighter.inventory.addItemToInventory(sword);
+	}
+
+	tests.checkAddItemToInventory(fighter, 49, fighter.inventory.itemsInInvetory.length, testAddItemToInventory.name);
+	//add 10 arrows to last inventory slot (inventory is now full)
+	fighter.inventory.addItemToInventory(arrowFirst10);
+	tests.checkAddItemToInventory(fighter, 50, fighter.inventory.itemsInInvetory.length, testAddItemToInventory.name);
+	tests.checkNumberOfUses(fighter, fighter.inventory.itemsInInvetory[49].name, 10, fighter.inventory.itemsInInvetory[49].remainingNumberOfUses, testAddItemToInventory.name);
+	//add another 10 arrows (total 20) to last inventory slot (inventory is still full)
+	fighter.inventory.addItemToInventory(arrowSecond10);
+	tests.checkAddItemToInventory(fighter, 50, fighter.inventory.itemsInInvetory.length, testAddItemToInventory.name);
+	tests.checkNumberOfUses(fighter, fighter.inventory.itemsInInvetory[49].name, 20, fighter.inventory.itemsInInvetory[49].remainingNumberOfUses, testAddItemToInventory.name);	
+	//attempt to add more arrows but all slots full and all arrows in inventory have max number of uses	
+	fighter.inventory.addItemToInventory(arrowThird10);
+	tests.checkAddItemToInventory(fighter, 50, fighter.inventory.itemsInInvetory.length, testAddItemToInventory.name);
+
+	//----
+
+	var anotherFighter = new Fighter(fighterTestParams);
+
+	var arrowUses8 = new Arrow(arrow8UsesParams);
+	var arrowUses7 = new Arrow(arrow7UsesParams);
+	var arrowUses18 = new Arrow(arrow18UsesParams);
+	var arrowUses11 = new Arrow(arrow11UsesParams);
+	var arrowUses2 = new Arrow(arrow2UsesParams);
+	var arrowUses15 = new Arrow(arrow15UsesParams);
+	var arrowUses20 = new Arrow(arrow20UsesParams);
+	var anotherSword = new Sword(swordParams);
+
+	//add items to inventory to fill first 10 spaces
+	for(var i = 0; 10 > i; i++)
+	{
+		anotherFighter.inventory.addItemToInventory(anotherSword);
+	}
+	tests.checkAddItemToInventory(anotherFighter, 10, anotherFighter.inventory.itemsInInvetory.length, testAddItemToInventory.name);
+
+	//add 8 arrows in slot 11
+	anotherFighter.inventory.addItemToInventory(arrowUses8);
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[10].name, 8, anotherFighter.inventory.itemsInInvetory[10].remainingNumberOfUses, testAddItemToInventory.name);	
+
+	//add items to inventory to fill up to space 27
+	for(var i = 0; 15 > i; i++)
+	{
+		anotherFighter.inventory.addItemToInventory(anotherSword);
+	}
+	tests.checkAddItemToInventory(anotherFighter, 26, anotherFighter.inventory.itemsInInvetory.length, testAddItemToInventory.name);
+
+	//add 7 arrows in slot 27
+	anotherFighter.inventory.addItemToInventory(arrowUses7);
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[10].name, 8, anotherFighter.inventory.itemsInInvetory[10].remainingNumberOfUses, testAddItemToInventory.name);
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[26].name, 7, anotherFighter.inventory.itemsInInvetory[26].remainingNumberOfUses, testAddItemToInventory.name);		
+
+	//add items to inventory to fill up to space 39
+	for(var i = 0; 11 > i; i++)
+	{
+		anotherFighter.inventory.addItemToInventory(anotherSword);
+	}
+	tests.checkAddItemToInventory(anotherFighter, 38, anotherFighter.inventory.itemsInInvetory.length, testAddItemToInventory.name);
+
+	//add 18 arrows in slot 39  -- then check no of arrows and that arrows have not combined as inventory is not full 
+	anotherFighter.inventory.addItemToInventory(arrowUses18);
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[10].name, 8, anotherFighter.inventory.itemsInInvetory[10].remainingNumberOfUses, testAddItemToInventory.name);	
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[26].name, 7, anotherFighter.inventory.itemsInInvetory[26].remainingNumberOfUses, testAddItemToInventory.name);		
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[38].name, 18, anotherFighter.inventory.itemsInInvetory[38].remainingNumberOfUses, testAddItemToInventory.name);		
+
+	//add items to inventory to fill up to space 45
+	for(var i = 0; 5 > i; i++)
+	{
+		anotherFighter.inventory.addItemToInventory(anotherSword);
+	}
+	tests.checkAddItemToInventory(anotherFighter, 44, anotherFighter.inventory.itemsInInvetory.length, testAddItemToInventory.name);
+
+	//add 11 arrows in slot 45  -- then check no of arrows and that arrows have not combined as inventory is not full 
+	anotherFighter.inventory.addItemToInventory(arrowUses11);
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[10].name, 8, anotherFighter.inventory.itemsInInvetory[10].remainingNumberOfUses, testAddItemToInventory.name);	
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[26].name, 7, anotherFighter.inventory.itemsInInvetory[26].remainingNumberOfUses, testAddItemToInventory.name);		
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[38].name, 18, anotherFighter.inventory.itemsInInvetory[38].remainingNumberOfUses, testAddItemToInventory.name);		
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[44].name, 11, anotherFighter.inventory.itemsInInvetory[44].remainingNumberOfUses, testAddItemToInventory.name);	
+
+	//fill the rest of the inventory 
+	for(var i = 0; 6 > i; i++)
+	{
+		anotherFighter.inventory.addItemToInventory(anotherSword);
+	}
+	tests.checkAddItemToInventory(anotherFighter, 50, anotherFighter.inventory.itemsInInvetory.length, testAddItemToInventory.name);
+
+	//inventory is now full 
+	//add 2 more arrows -- these should combine with the arrows in slot 11 to increase the total there to 10
+	anotherFighter.inventory.addItemToInventory(arrowUses2);	
+	tests.checkAddItemToInventory(anotherFighter, 50, anotherFighter.inventory.itemsInInvetory.length, testAddItemToInventory.name);	
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[10].name, 10, anotherFighter.inventory.itemsInInvetory[10].remainingNumberOfUses, testAddItemToInventory.name);	
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[26].name, 7, anotherFighter.inventory.itemsInInvetory[26].remainingNumberOfUses, testAddItemToInventory.name);		
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[38].name, 18, anotherFighter.inventory.itemsInInvetory[38].remainingNumberOfUses, testAddItemToInventory.name);		
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[44].name, 11, anotherFighter.inventory.itemsInInvetory[44].remainingNumberOfUses, testAddItemToInventory.name);	
+
+	//add another 15 arrows -- this should combine with those in slot 11 to its max of 20 and the remaining 5 should combine with those in slot 27 to make its total 12
+	anotherFighter.inventory.addItemToInventory(arrowUses15);	
+	tests.checkAddItemToInventory(anotherFighter, 50, anotherFighter.inventory.itemsInInvetory.length, testAddItemToInventory.name);	
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[10].name, 20, anotherFighter.inventory.itemsInInvetory[10].remainingNumberOfUses, testAddItemToInventory.name);	
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[26].name, 12, anotherFighter.inventory.itemsInInvetory[26].remainingNumberOfUses, testAddItemToInventory.name);		
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[38].name, 18, anotherFighter.inventory.itemsInInvetory[38].remainingNumberOfUses, testAddItemToInventory.name);		
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[44].name, 11, anotherFighter.inventory.itemsInInvetory[44].remainingNumberOfUses, testAddItemToInventory.name);	
+	
+	//add another 20 arrows -- this should combine with those in slot 27 to its max of 20, slot 39 to max its slot at 20 and the remaining 11 should attempt to combine with those 
+	//in slot 45. it will max at 20 and leave 1 which will not be added to the inventory
+	anotherFighter.inventory.addItemToInventory(arrowUses20);	
+	tests.checkAddItemToInventory(anotherFighter, 50, anotherFighter.inventory.itemsInInvetory.length, testAddItemToInventory.name);	
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[10].name, 20, anotherFighter.inventory.itemsInInvetory[10].remainingNumberOfUses, testAddItemToInventory.name);	
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[26].name, 20, anotherFighter.inventory.itemsInInvetory[26].remainingNumberOfUses, testAddItemToInventory.name);		
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[38].name, 20, anotherFighter.inventory.itemsInInvetory[38].remainingNumberOfUses, testAddItemToInventory.name);		
+	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[44].name, 20, anotherFighter.inventory.itemsInInvetory[44].remainingNumberOfUses, testAddItemToInventory.name);	
 }
 
 function testindexOfItemInInventroy()
@@ -848,23 +1087,23 @@ function testindexOfItemInInventroy()
 	var shield = new Shield(shieldParams);
 
 	//item not in inventory 
-	tests.checkIndexOfItemInInventory(MagicUser, sword.name, -1, magicUser.indexOfItemInInventroy(sword.id), testindexOfItemInInventroy.name);
+	tests.checkIndexOfItemInInventory(MagicUser, sword.name, -1, magicUser.inventory.indexOfItemInInventroy(sword.id), testindexOfItemInInventroy.name);
 
 	//item in inventory 
-	magicUser.addItemToInventory(sword);
-	tests.checkIndexOfItemInInventory(MagicUser, sword.name, 0, magicUser.indexOfItemInInventroy(sword.id), testindexOfItemInInventroy.name);	
+	magicUser.inventory.addItemToInventory(sword);
+	tests.checkIndexOfItemInInventory(MagicUser, sword.name, 0, magicUser.inventory.indexOfItemInInventroy(sword.id), testindexOfItemInInventroy.name);	
 
 	//add items to inventory till inventory is 1 away from full (start loop at 1 as 1 item already in inventory)
 	for(var i = 1; (_MaxNumberOfInventoryItems - 1) > i; i++)
 	{
-		magicUser.addItemToInventory(sword);
+		magicUser.inventory.addItemToInventory(sword);
 	}
 
 	//item is last item in inventory
-	magicUser.addItemToInventory(shield);
-	tests.checkIndexOfItemInInventory(MagicUser, shield.name, (_MaxNumberOfInventoryItems - 1), magicUser.indexOfItemInInventroy(shield.id), testindexOfItemInInventroy.name);
+	magicUser.inventory.addItemToInventory(shield);
+	tests.checkIndexOfItemInInventory(MagicUser, shield.name, (_MaxNumberOfInventoryItems - 1), magicUser.inventory.indexOfItemInInventroy(shield.id), testindexOfItemInInventroy.name);
 	//check to ensure inventory full (message should appear in console)
-	magicUser.addItemToInventory(shield);
+	magicUser.inventory.addItemToInventory(shield);
 }
 
 function testRemoveItemFromInventory()
@@ -876,17 +1115,17 @@ function testRemoveItemFromInventory()
 	var twoHandedSword = new TwoHandedSword(twoHandedSwordParams);
 
 	//length of inventory should not change if attempting to remove an item not in inventory 
-	magicUser.removeItemFromInventory(sword);
-	tests.checkRemoveItemFromInventory(magicUser, 0, magicUser.inventory.length, testRemoveItemFromInventory.name);
+	magicUser.inventory.removeItemFromInventory(sword);
+	tests.checkRemoveItemFromInventory(magicUser, 0, magicUser.inventory.itemsInInvetory.length, testRemoveItemFromInventory.name);
 
 	//lenght of inventory should decrease when removing items
-	magicUser.addItemToInventory(twoHandedSword);
-	magicUser.addItemToInventory(shield);
-	tests.checkRemoveItemFromInventory(magicUser, 2, magicUser.inventory.length, testRemoveItemFromInventory.name);	
-	magicUser.removeItemFromInventory(twoHandedSword);
-	tests.checkRemoveItemFromInventory(magicUser, 1, magicUser.inventory.length, testRemoveItemFromInventory.name);
-	magicUser.removeItemFromInventory(shield);
-	tests.checkRemoveItemFromInventory(magicUser, 0, magicUser.inventory.length, testRemoveItemFromInventory.name);
+	magicUser.inventory.addItemToInventory(twoHandedSword);
+	magicUser.inventory.addItemToInventory(shield);
+	tests.checkRemoveItemFromInventory(magicUser, 2, magicUser.inventory.itemsInInvetory.length, testRemoveItemFromInventory.name);	
+	magicUser.inventory.removeItemFromInventory(twoHandedSword);
+	tests.checkRemoveItemFromInventory(magicUser, 1, magicUser.inventory.itemsInInvetory.length, testRemoveItemFromInventory.name);
+	magicUser.inventory.removeItemFromInventory(shield);
+	tests.checkRemoveItemFromInventory(magicUser, 0, magicUser.inventory.itemsInInvetory.length, testRemoveItemFromInventory.name);
 }
 
 function testEquipDagger()
@@ -1280,6 +1519,36 @@ function testWeaponIsRanged()
 	tests.checkWeaponIsRanged(sling, true, sling.isRanged, testWeaponIsRanged.name);
 }
 
+function testIsCombinableInInventory()
+{
+	var sword = new Sword(swordParams);
+	var twoHandedSword = new TwoHandedSword(twoHandedSwordParams);
+	var shortSword = new ShortSword(shortSwordParams);
+
+	var chainMail = new ChainMail(chainArmourParams);
+	var plateMail = new PlateMail(plateArmourParams);
+	var shield = new Shield(shieldParams);
+
+	var arrow = new Arrow(arrowParams);
+	var quarrel = new Quarrel(quarrelParams);
+	var stone = new Stone(stoneParams);
+
+	//weapons should not combine
+	tests.checkIsCombinableInInventory(sword.name, false, sword.isCombinableInInventory, testIsCombinableInInventory.name);
+	tests.checkIsCombinableInInventory(twoHandedSword.name, false, twoHandedSword.isCombinableInInventory, testIsCombinableInInventory.name);
+	tests.checkIsCombinableInInventory(shortSword.name, false, shortSword.isCombinableInInventory, testIsCombinableInInventory.name);
+
+	//armoun and shield should not combine
+	tests.checkIsCombinableInInventory(chainMail.name, false, chainMail.isCombinableInInventory, testIsCombinableInInventory.name);
+	tests.checkIsCombinableInInventory(plateMail.name, false, plateMail.isCombinableInInventory, testIsCombinableInInventory.name);
+	tests.checkIsCombinableInInventory(shield.name, false, shield.isCombinableInInventory, testIsCombinableInInventory.name);
+
+	//ammo should combine
+	tests.checkIsCombinableInInventory(arrow.name, true, arrow.isCombinableInInventory, testIsCombinableInInventory.name);
+	tests.checkIsCombinableInInventory(quarrel.name, true, quarrel.isCombinableInInventory, testIsCombinableInInventory.name);
+	tests.checkIsCombinableInInventory(stone.name, true, stone.isCombinableInInventory, testIsCombinableInInventory.name);
+}
+
 function testEquipThirdHandItemFails()
 {
 	var fighter = new Fighter(fighterTestParams);
@@ -1667,29 +1936,29 @@ function testIndexOfAmmo()
 	var quarrel = new Quarrel(quarrelParams);
 	var stone = new Stone(stoneParams);
 
-	fighter.addItemToInventory(shield);
-	fighter.addItemToInventory(arrow);
-	fighter.addItemToInventory(quarrel);
-	fighter.addItemToInventory(stone);
+	fighter.inventory.addItemToInventory(shield);
+	fighter.inventory.addItemToInventory(arrow);
+	fighter.inventory.addItemToInventory(quarrel);
+	fighter.inventory.addItemToInventory(stone);
 
 	//test index of quarrel using crossbow
 	fighter.equip(crossbow);
-	tests.checkIndexOfAmmo(fighter, crossbow.name, 2, fighter.indexOfAmmo(crossbow), testIndexOfAmmo.name);
+	tests.checkIndexOfAmmo(fighter, crossbow.name, 2, fighter.inventory.indexOfAmmo(crossbow), testIndexOfAmmo.name);
 	fighter.unEquip(crossbow);
 
 	//test index of arrow using longbow
 	fighter.equip(longbow);
-	tests.checkIndexOfAmmo(fighter, longbow.name, 1, fighter.indexOfAmmo(longbow), testIndexOfAmmo.name);
+	tests.checkIndexOfAmmo(fighter, longbow.name, 1, fighter.inventory.indexOfAmmo(longbow), testIndexOfAmmo.name);
 	fighter.unEquip(longbow);
 
 	//test index of stone using sling 
 	fighter.equip(sling);
-	tests.checkIndexOfAmmo(fighter, sling.name, 3, fighter.indexOfAmmo(sling), testIndexOfAmmo.name);
+	tests.checkIndexOfAmmo(fighter, sling.name, 3, fighter.inventory.indexOfAmmo(sling), testIndexOfAmmo.name);
 	fighter.unEquip(sling);
 
 	//test index of arrow using shortbow 
 	fighter.equip(shortbow);
-	tests.checkIndexOfAmmo(fighter, shortbow.name, 1, fighter.indexOfAmmo(shortbow), testIndexOfAmmo.name);
+	tests.checkIndexOfAmmo(fighter, shortbow.name, 1, fighter.inventory.indexOfAmmo(shortbow), testIndexOfAmmo.name);
 	fighter.unEquip(shortbow);
 }
 
@@ -1706,22 +1975,35 @@ function testUseAmmo()
 	var quarrel = new Quarrel(quarrelParams);
 	var stone = new Stone(stoneParams);
 
-	fighter.addItemToInventory(arrow);
-	fighter.addItemToInventory(quarrel);
-	fighter.addItemToInventory(stone);
-	fighter.addItemToInventory(arrow);
+	fighter.inventory.addItemToInventory(arrow);
+	fighter.inventory.addItemToInventory(quarrel);
+	fighter.inventory.addItemToInventory(stone);
+	fighter.inventory.addItemToInventory(arrow);
 
-	fighter.useAmmo(fighter.indexOfAmmo(crossbow));
-	tests.checkUseAmmo(fighter, crossbow.name, 3, fighter.inventory.length, testUseAmmo.name);
-
-	fighter.useAmmo(fighter.indexOfAmmo(longbow));
-	tests.checkUseAmmo(fighter, longbow.name, 2, fighter.inventory.length, testUseAmmo.name);
-
-	fighter.useAmmo(fighter.indexOfAmmo(sling));
-	tests.checkUseAmmo(fighter, sling.name, 1, fighter.inventory.length, testUseAmmo.name);
+	//use 1 ammo should reduce the number of uses of the ammo in the inventroy -- the ammo item should not be removed unless there are no uses left
+	var indexOfQuarrel = fighter.inventory.indexOfAmmo(crossbow);
+	fighter.useAmmo(indexOfQuarrel);
+	tests.checkUseAmmo(fighter, crossbow.name, 29, fighter.inventory.itemsInInvetory[indexOfQuarrel].remainingNumberOfUses, testUseAmmo.name);
+	tests.checkRemoveItemFromInventory(fighter.name, 4, fighter.inventory.itemsInInvetory.length, testUseAmmo.name);	
 	
-	fighter.useAmmo(fighter.indexOfAmmo(shortbow));
-	tests.checkUseAmmo(fighter, shortbow.name, 0, fighter.inventory.length, testUseAmmo.name);
+	var indexOfArrow = fighter.inventory.indexOfAmmo(longbow);
+	fighter.useAmmo(indexOfArrow);
+	tests.checkUseAmmo(fighter, longbow.name, 19, fighter.inventory.itemsInInvetory[indexOfArrow].remainingNumberOfUses, testUseAmmo.name);
+	tests.checkRemoveItemFromInventory(fighter.name, 4, fighter.inventory.itemsInInvetory.length, testUseAmmo.name);	
+
+	var indexOfStone = fighter.inventory.indexOfAmmo(sling);
+	fighter.useAmmo(indexOfStone);
+	tests.checkUseAmmo(fighter, sling.name, 29, fighter.inventory.itemsInInvetory[indexOfStone].remainingNumberOfUses, testUseAmmo.name);
+	tests.checkRemoveItemFromInventory(fighter.name, 4, fighter.inventory.itemsInInvetory.length, testUseAmmo.name);	
+	
+	fighter.useAmmo(indexOfArrow);
+	tests.checkUseAmmo(fighter, shortbow.name, 18, fighter.inventory.itemsInInvetory[indexOfArrow].remainingNumberOfUses, testUseAmmo.name);
+	tests.checkRemoveItemFromInventory(fighter.name, 4, fighter.inventory.itemsInInvetory.length, testUseAmmo.name);	
+
+	//change the number of quarrels to 1 and then use it should remove the quarrels from the inventory
+	fighter.inventory.itemsInInvetory[indexOfQuarrel].remainingNumberOfUses = 1;
+	fighter.useAmmo(indexOfQuarrel);
+	tests.checkRemoveItemFromInventory(fighter.name, 3, fighter.inventory.itemsInInvetory.length, testUseAmmo.name);	
 }
 
 function testIfAttackHits()

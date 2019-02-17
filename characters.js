@@ -5,8 +5,6 @@
 //             CHARACTER TYPES
 //--------------------------------------------
 
-const _MaxNumberOfInventoryItems = 50;
-
 function Character()
 {	
 	this.isSpellCaster = false;
@@ -323,15 +321,10 @@ function Character()
 		}
 		return false;
 	};
-	
-	this.indexOfAmmo = function(weapon)
-	{
-		return this.indexOfItemInInventroy(weapon.ammoId);
-	};
 
 	this.useAmmo = function(index)
 	{
-		this.inventory.splice(index, 1);
+		this.inventory.reduceUsesOfAmmo(index);
 	}
 
 	this.attack = function(opponent)
@@ -436,50 +429,6 @@ function Character()
 		
 		return hitPointsUplift + maxHps;
 	};
-
-	this.canAddItemToInventory = function(item)
-	{
-		if(this.inventory.length === _MaxNumberOfInventoryItems)
-		{
-			console.log(this.name + "'s inventory is full"); 
-			return false;
-		}
-		return true;
-	};
-
-	this.addItemToInventory = function(item)
-	{
-		if(this.canAddItemToInventory(item))
-		{
-			this.inventory.push(item);
-		}
-	};
-
-	this.indexOfItemInInventroy = function(itemId)
-	{
-		for(var i = 0; this.inventory.length > i; i++)
-		{
-			if(this.inventory[i].id === itemId)
-			{
-				return i;
-			}
-		}
-
-		return -1;
-	};
-
-	this.removeItemFromInventory = function(item)
-	{
-		var index = this.indexOfItemInInventroy(item.id);
-		if(index === -1)
-		{
-			return;
-		}
-		else
-		{
-			this.inventory.splice(index, 1);
-		}
-	};
 }
 
 //--------------------------------------------
@@ -501,7 +450,7 @@ function Fighter(params)
 	this.equipedArmour = [];
 	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
-	this.inventory = [];
+	this.inventory = new Inventory();
 }
 
 Fighter.prototype = new Character();
@@ -538,7 +487,7 @@ function Thief(params)
 	this.equipedArmour = [];
 	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
-	this.inventory = [];
+	this.inventory = new Inventory();
 }
 
 Thief.prototype = new Character();
@@ -596,7 +545,7 @@ function Cleric(params)
 	this.equipedArmour = [];
 	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
-	this.inventory = [];
+	this.inventory = new Inventory();
 }
 
 Cleric.prototype = new Character();
@@ -644,7 +593,7 @@ function MagicUser(params)
 	this.equipedArmour = [];
 	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
-	this.inventory = [];
+	this.inventory = new Inventory();
 }
 
 MagicUser.prototype = new Character();
