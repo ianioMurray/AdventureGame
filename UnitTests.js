@@ -316,7 +316,8 @@ const noOfTests = 200;
 runDiceUnitTests();
 tests.testResults();
 
-//runTestCombat();
+//runTestCombatvCharacter();
+runTestCombatvMonsters();
 
 
 function Tests()
@@ -2044,7 +2045,7 @@ function testTakeDamage()
 
 //----------------------------------------------------------
 
-function runTestCombat()
+function runTestCombatvCharacter()
 {
 	var fighter1 = new Fighter(fighterTestParams);
 	var fighter2 = new Fighter(fighterTestParams);
@@ -2100,6 +2101,28 @@ function runTestCombat()
 				break;
 			}
 		}
+	}
+}
+
+
+function runTestCombatvMonsters()
+{
+	var fighter1 = new Fighter(fighterTestParams);
+	var fighter2 = new Fighter(fighterTestParams);
+	var fighter3 = new Fighter(fighterTestParams);
+	var sword = new Sword(swordParams);
+	var sword1 = new Sword(swordParams);
+	var sword2 = new Sword(swordParams);
+	fighter1.equip(sword);
+	fighter2.equip(sword1);
+	fighter3.equip(sword2);
+
+	var monsters = Monster.createMonsters(Bandit);
+
+	console.log("you encounter " + monsters.length + " " + monsters[0].name + "s");
+	for(var i = 0; monsters.length > i; i++)
+	{
+		console.log(monsters[i].name + " " + i + " has " + monsters[i].currentHitPoints + " hit points");
 	}
 }
 

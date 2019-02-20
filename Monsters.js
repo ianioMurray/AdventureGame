@@ -1,23 +1,12 @@
 
 
+
 //--------------------------------------------
 //             MONSTERS
 //--------------------------------------------
 
 function Monster()
 {
-    this.createMonsters = function()
-    {
-        var monsters = [];
-
-        for(var i = 0; this.getNumberAppearing() > i; i++)
-        {
-            var monster = new this();
-            monsters.push(monster);
-        }
-        return monsters;
-    };
-
     this.attack = function(opponent)
     {
         for(var i=0; this.attacks.length > i; i++ )
@@ -27,7 +16,7 @@ function Monster()
             if(hit)
             {
                 //all attacks will be against an opponent even if they die. 
-                opponent.takeDamage(Dice.getDiceRoll(this.attacks[i].damage));
+                opponent.takeDamage(dice.rollDice(this.attacks[i].damage));
             }
         }
     };
@@ -41,11 +30,23 @@ function Monster()
         }
     };
 
-    this.GetHPs() = function()
+    this.GetHPs = function()
     {
-        return Dice.getDiceRoll(this.hitDice + "D8");
+        return dice.rollDice(this.hitDice + "D8");
     };
 }
+
+Monster.createMonsters = function(typeOfMonster)
+{
+    var monsters = [];
+
+    for(var i = 0; typeOfMonster.getNumberAppearing() > i; i++)
+    {
+        var monster = new typeOfMonster();
+        monsters.push(monster);
+    }
+    return monsters;
+};
 
 
 //--------------------------------------------
@@ -64,16 +65,16 @@ function Acolyte()
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
     this.movement = 60;
-    this.attacks = [{ attackType = WeaponAttack, damage= "1d6" }];
+    this.attacks = [{ attackType: "WeaponAttack", damage: "1d6" }];
     this.saveAs = { class: "Cleric", level: 1};
     this.morale = 7;
     this.treasureType = "U";
-    this.Alignment = [{ alignment = Lawful, probability =  33 }, { alignment = Chaotic, probability = 33 }, { alignment = Neutral, probability = 34 }];
+    //this.Alignment = [{ alignment: Lawful, probability: 33 }, { alignment: Chaotic, probability: 33 }, { alignment: Neutral, probability: 34 }];
 }
 
 Acolyte.prototype = new Monster()
 Acolyte.prototype.Constructor = Acolyte;
-Acolyte.prototype.getNumberAppearing = function() {return Dice.getDiceRoll("1D8")};
+Acolyte.getNumberAppearing = function() {return dice.rollDice("1D8")};
 
 
 //--------------------------------------------
@@ -89,16 +90,16 @@ function Ape()
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
     this.movement = 120;
-    this.attacks = [{ attackType = Claw, damage= "1d4" }, { attackType = Claw, damage= "1d4" }];
+    this.attacks = [{ attackType: "Claw", damage: "1d4" }, { attackType: "Claw", damage: "1d4" }];
     this.saveAs = { class: "Fighter", level: 2};
     this.morale = 7;
     this.treasureType = "Nil";
-    this.Alignment = [{ alignment = Neutral, probability = 100 }];
+    //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
 Ape.prototype = new Monster()
 Ape.prototype.Constructor = Ape;
-Ape.prototype.getNumberAppearing = function() {return Dice.getDiceRoll("1D6")};
+Ape.getNumberAppearing = function() {return dice.rollDice("1D6")};
 
 
 //--------------------------------------------
@@ -118,16 +119,16 @@ function Bandit()
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
     this.movement = 120;
-    this.attacks = [{ attackType = WeaponAttack, damage= "1d6" }];
+    this.attacks = [{ attackType: "WeaponAttack", damage: "1d6" }];
     this.saveAs = { class: "Thief", level: 1};  
     this.morale = 8;
     this.treasureType = "U";
-    this.Alignment = [{ alignment = Chaotic, probability = 50 }, { alignment = Neutral, probability = 50 }];
+    //this.Alignment = [{ alignment: Chaotic, probability: 50 }, { alignment: Neutral, probability: 50 }];
 }
 
 Bandit.prototype = new Monster()
 Bandit.prototype.Constructor = Bandit;
-Bandit.prototype.getNumberAppearing = function() {return Dice.getDiceRoll("1D8")};
+Bandit.getNumberAppearing = function() {return dice.rollDice("1D8")};
 
 
 //--------------------------------------------
@@ -145,16 +146,16 @@ function Bat()
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
     this.movement = 120;
-    this.attacks = [{ attackType = Confusion, damage= "0D4" }]; //does no damage
+    this.attacks = [{ attackType: "Confusion", damage: "0D4" }]; //does no damage
     this.saveAs = { class: "Human", level: 0};  
     this.morale = 6;
     this.treasureType = "Nil";
-    this.Alignment = [{ alignment = Neutral, probability = 100 }];
+    //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
 Bat.prototype = new Monster()
 Bat.prototype.Constructor = Bat;
-Bat.prototype.getNumberAppearing = function() {return Dice.getDiceRoll("1D100")};
+Bat.getNumberAppearing = function() {return dice.rollDice("1D100")};
 
 
 //--------------------------------------------
@@ -171,16 +172,16 @@ function BatGiant()
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
     this.movement = 180;
-    this.attacks = [{ attackType = Bite, damage= "1D4" }]; 
+    this.attacks = [{ attackType: "Bite", damage: "1D4" }]; 
     this.saveAs = { class: "Fighter", level: 1};  
     this.morale = 8;
     this.treasureType = "Nil";
-    this.Alignment = [{ alignment = Neutral, probability = 100 }];
+    //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
 BatGiant.prototype = new Monster()
 BatGiant.prototype.Constructor = BatGiant;
-BatGiant.prototype.getNumberAppearing = function() {return Dice.getDiceRoll("1D10")};
+BatGiant.getNumberAppearing = function() {return dice.rollDice("1D10")};
 
 
 //--------------------------------------------
@@ -197,16 +198,16 @@ function BearBlack()
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
     this.movement = 120;
-    this.attacks = [{ attackType = Claw, damage= "1D3" }, { attackType = Claw, damage= "1D3" }, { attackType = Bite, damage= "1D6"}]; 
+    this.attacks = [{ attackType: "Claw", damage: "1D3" }, { attackType: "Claw", damage: "1D3" }, { attackType: "Bite", damage: "1D6"}]; 
     this.saveAs = { class: "Fighter", level: 2};  
     this.morale = 7;
     this.treasureType = "U";
-    this.Alignment = [{ alignment = Neutral, probability = 100 }];
+   // this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
 BearBlack.prototype = new Monster()
 BearBlack.prototype.Constructor = BearBlack;
-BearBlack.prototype.getNumberAppearing = function() {return Dice.getDiceRoll("1D4")};
+BearBlack.getNumberAppearing = function() {return dice.rollDice("1D4")};
 
 //--------------------------------------------
 //---------------Bear, Grizzly------------------
@@ -222,23 +223,23 @@ function BearGrizzly()
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
     this.movement = 120;
-    this.attacks = [{ attackType = Claw, damage= "1D4" }, { attackType = Claw, damage= "1D4" }, { attackType = Bite, damage= "1D8"}]; 
+    this.attacks = [{ attackType: "Claw", damage: "1D4" }, { attackType: "Claw", damage: "1D4" }, { attackType: "Bite", damage: "1D8"}]; 
     this.saveAs = { class: "Fighter", level: 2};  
     this.morale = 8;
     this.treasureType = "U";
-    this.Alignment = [{ alignment = Neutral, probability = 100 }];
+   //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
-BearBlack.prototype = new Monster()
-BearBlack.prototype.Constructor = BearBlack;
-BearBlack.prototype.getNumberAppearing = function() {return 1};
+BearGrizzly.prototype = new Monster()
+BearGrizzly.prototype.Constructor = BearGrizzly;
+BearGrizzly.getNumberAppearing = function() { return 1 };
 
 
 
 
 
 
-
+/*
 
 
 
@@ -929,3 +930,4 @@ function Zombie(params) {
     this.attacks = [{ attackType = UnspecifiedAttack, damageAmount = "1d8" }];
     this.specialAbilities = [{ description = "Immune to Sleep, Charm, ESP" }, { description = "Slow, can only attack every other round" }];
 }
+*/
