@@ -208,7 +208,30 @@ BearBlack.prototype = new Monster()
 BearBlack.prototype.Constructor = BearBlack;
 BearBlack.prototype.getNumberAppearing = function() {return Dice.getDiceRoll("1D4")};
 
+//--------------------------------------------
+//---------------Bear, Grizzly------------------
+//--------------------------------------------
 
+function BearGrizzly()
+ {
+    this.name = "Grizzly Bear";
+    this.race = "animal";
+    this.armourClass = 6;
+    this.hitDice = 5;
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 120;
+    this.attacks = [{ attackType = Claw, damage= "1D4" }, { attackType = Claw, damage= "1D4" }, { attackType = Bite, damage= "1D8"}]; 
+    this.saveAs = { class: "Fighter", level: 2};  
+    this.morale = 8;
+    this.treasureType = "U";
+    this.Alignment = [{ alignment = Neutral, probability = 100 }];
+}
+
+BearBlack.prototype = new Monster()
+BearBlack.prototype.Constructor = BearBlack;
+BearBlack.prototype.getNumberAppearing = function() {return 1};
 
 
 
