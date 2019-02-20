@@ -1,42 +1,225 @@
+
+
 //--------------------------------------------
 //             MONSTERS
 //--------------------------------------------
+
 function Monster()
 {
+    this.createMonsters = function()
+    {
+        var monsters = [];
+
+        for(var i = 0; this.getNumberAppearing() > i; i++)
+        {
+            var monster = new this();
+            monsters.push(monster);
+        }
+        return monsters;
+    };
+
+    this.attack = function(opponent)
+    {
+        for(var i=0; this.attacks.length > i; i++ )
+        {
+            var hit = this.rollToHit();
+
+            if(hit)
+            {
+                //all attacks will be against an opponent even if they die. 
+                opponent.takeDamage(Dice.getDiceRoll(this.attacks[i].damage));
+            }
+        }
+    };
+
+    this.takeDamage = function(damageAmount)
+    {
+        this.currentHitPoints = this.currentHitPoints - damageAmount;
+        if(this.currentHitPoints <= 0)
+        {
+            this.isDead = true;
+        }
+    };
+
+    this.GetHPs() = function()
+    {
+        return Dice.getDiceRoll(this.hitDice + "D8");
+    };
 }
 
-//-------------------------------------------
-//-------------------Orc---------------------
-//-------------------------------------------
-function Orc(params)
+
+//--------------------------------------------
+//-------------Acolyte------------------------
+//--------------------------------------------
+
+//if there are more than 4 then 1 is a leader roll a 1D10 on 1-4 level 2 / 5-7 level 3 / 8-9 level 4 / 10 level 5
+//the leader will know a random spell 
+function Acolyte()
 {
-	this.armourClass = 6;
-	this.hitDice = 1;
-	this.movement = 120;
-	this.noAttacks = 1;
-	
+    this.name = "Acolyte";
+    this.race = "human";
+    this.armourClass = 2;
+    this.hitDice = 1;
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 60;
+    this.attacks = [{ attackType = WeaponAttack, damage= "1d6" }];
+    this.saveAs = { class: "Cleric", level: 1};
+    this.morale = 7;
+    this.treasureType = "U";
+    this.Alignment = [{ alignment = Lawful, probability =  33 }, { alignment = Chaotic, probability = 33 }, { alignment = Neutral, probability = 34 }];
 }
 
+Acolyte.prototype = new Monster()
+Acolyte.prototype.Constructor = Acolyte;
+Acolyte.prototype.getNumberAppearing = function() {return Dice.getDiceRoll("1D8")};
 
-
-
-
-// JavaScript source code
 
 //--------------------------------------------
-//             MONSTERS
+//-------------Ape, White---------------------
 //--------------------------------------------
-
-
-function Bandit(params) {
-    this.name = "Bandit";
-    this.movement = 120;
-    this.hitDice = "1d8";
+function Ape()
+{
+    this.name = "White Ape";
+    this.race = "animal";
     this.armourClass = 6;
-    this.treasureType = "A";
-    this.Alignment = [{ alignment = LawfulEvil, probability = 25 }, { alignment = ChaoticEvil, probability = 25 }, { alignment = Neutral, probability = 50 }];
-    this.attacks = { attackType = WeaponAttack, damage= "1d6" };
+    this.hitDice = 4;
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 120;
+    this.attacks = [{ attackType = Claw, damage= "1d4" }, { attackType = Claw, damage= "1d4" }];
+    this.saveAs = { class: "Fighter", level: 2};
+    this.morale = 7;
+    this.treasureType = "Nil";
+    this.Alignment = [{ alignment = Neutral, probability = 100 }];
 }
+
+Ape.prototype = new Monster()
+Ape.prototype.Constructor = Ape;
+Ape.prototype.getNumberAppearing = function() {return Dice.getDiceRoll("1D6")};
+
+
+//--------------------------------------------
+//-------------Bandit-------------------------
+//--------------------------------------------
+
+//This is a typical bandit 
+//If a bandit Camp is encountered the teasureType will be "U" and the noAppearing "3D10"
+//Bandits might have a leader who can be any class and is 1 level higher than a standard bandit
+function Bandit()
+ {
+    this.name = "Bandit";
+    this.race = "human";
+    this.armourClass = 6;
+    this.hitDice = 1;
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 120;
+    this.attacks = [{ attackType = WeaponAttack, damage= "1d6" }];
+    this.saveAs = { class: "Thief", level: 1};  
+    this.morale = 8;
+    this.treasureType = "U";
+    this.Alignment = [{ alignment = Chaotic, probability = 50 }, { alignment = Neutral, probability = 50 }];
+}
+
+Bandit.prototype = new Monster()
+Bandit.prototype.Constructor = Bandit;
+Bandit.prototype.getNumberAppearing = function() {return Dice.getDiceRoll("1D8")};
+
+
+//--------------------------------------------
+//---------------Bat--------------------------
+//--------------------------------------------
+
+//confusion = -2 to hit and saving throws and cannot cast spells
+function Bat()
+ {
+    this.name = "Bat";
+    this.race = "animal";
+    this.armourClass = 6;
+    this.hitDice = 0;
+    this.hitPoints = 1;
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 120;
+    this.attacks = [{ attackType = Confusion, damage= "0D4" }]; //does no damage
+    this.saveAs = { class: "Human", level: 0};  
+    this.morale = 6;
+    this.treasureType = "Nil";
+    this.Alignment = [{ alignment = Neutral, probability = 100 }];
+}
+
+Bat.prototype = new Monster()
+Bat.prototype.Constructor = Bat;
+Bat.prototype.getNumberAppearing = function() {return Dice.getDiceRoll("1D100")};
+
+
+//--------------------------------------------
+//---------------Bat, Giant-------------------
+//--------------------------------------------
+
+function BatGiant()
+ {
+    this.name = "Giant Bat";
+    this.race = "animal";
+    this.armourClass = 6;
+    this.hitDice = 2;
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 180;
+    this.attacks = [{ attackType = Bite, damage= "1D4" }]; 
+    this.saveAs = { class: "Fighter", level: 1};  
+    this.morale = 8;
+    this.treasureType = "Nil";
+    this.Alignment = [{ alignment = Neutral, probability = 100 }];
+}
+
+BatGiant.prototype = new Monster()
+BatGiant.prototype.Constructor = BatGiant;
+BatGiant.prototype.getNumberAppearing = function() {return Dice.getDiceRoll("1D10")};
+
+
+//--------------------------------------------
+//---------------Bear, Black------------------
+//--------------------------------------------
+
+function BearBlack()
+ {
+    this.name = "Black Bear";
+    this.race = "animal";
+    this.armourClass = 6;
+    this.hitDice = 4;
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 120;
+    this.attacks = [{ attackType = Claw, damage= "1D3" }, { attackType = Claw, damage= "1D3" }, { attackType = Bite, damage= "1D6"}]; 
+    this.saveAs = { class: "Fighter", level: 2};  
+    this.morale = 7;
+    this.treasureType = "U";
+    this.Alignment = [{ alignment = Neutral, probability = 100 }];
+}
+
+BearBlack.prototype = new Monster()
+BearBlack.prototype.Constructor = BearBlack;
+BearBlack.prototype.getNumberAppearing = function() {return Dice.getDiceRoll("1D4")};
+
+
+
+
+
+
+
+
+
+
+
+
+
 function Basilisk(params) {
     this.name = "Basilisk";
     this.movement = 60;
