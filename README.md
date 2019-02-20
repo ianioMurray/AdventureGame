@@ -10,8 +10,8 @@ currently this project contains 10 files
 - DiceRoller.js = contains functions for generating random numbers
 - gameUI.js = eventHandlers and game function 
 - inventory.js = character equipment inventory
+- monsters.js = models the monsters
 
 
 - Alignments.js - TODO 
 - Attacks.js - TODO
-- Monsters.js - TODO
