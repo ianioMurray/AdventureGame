@@ -11,7 +11,7 @@ currently this project contains 11 files
 - gameUI.js = eventHandlers and game function 
 - inventory.js = character equipment inventory
 - monsters.js = models the monsters
-- toHit.js = returns the roll required to hit an oppoent for monsters and characters
+- toHit.js = returns the roll required to hit an opponent for monsters and characters
 
 
 - Alignments.js - TODO 
