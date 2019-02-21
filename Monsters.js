@@ -11,9 +11,9 @@ function Monster()
     {
         for(var i=0; this.attacks.length > i; i++ )
         {
-            var hit = this.rollToHit();
+            var ToHit = requiredToHit.getToHit(this, opponent);
 
-            if(hit)
+            if(dice.rollDice("1D20") >= ToHit)
             {
                 //all attacks will be against an opponent even if they die. 
                 opponent.takeDamage(dice.rollDice(this.attacks[i].damage));
@@ -60,7 +60,7 @@ function Acolyte()
     this.name = "Acolyte";
     this.race = "human";
     this.armourClass = 2;
-    this.hitDice = 1;
+    this.hitDice = "1";
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
@@ -85,7 +85,7 @@ function Ape()
     this.name = "White Ape";
     this.race = "animal";
     this.armourClass = 6;
-    this.hitDice = 4;
+    this.hitDice = "4";
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
@@ -114,7 +114,7 @@ function Bandit()
     this.name = "Bandit";
     this.race = "human";
     this.armourClass = 6;
-    this.hitDice = 1;
+    this.hitDice = "1";
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
@@ -142,7 +142,7 @@ function Bat()
     this.race = "animal";
     this.armourClass = 6;
     this.hitDice = 0;
-    this.hitPoints = 1;
+    this.hitPoints = "1";
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
     this.movement = 120;
@@ -167,7 +167,7 @@ function BatGiant()
     this.name = "Giant Bat";
     this.race = "animal";
     this.armourClass = 6;
-    this.hitDice = 2;
+    this.hitDice = "2";
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
@@ -193,7 +193,7 @@ function BearBlack()
     this.name = "Black Bear";
     this.race = "animal";
     this.armourClass = 6;
-    this.hitDice = 4;
+    this.hitDice = "4";
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
@@ -218,7 +218,7 @@ function BearGrizzly()
     this.name = "Grizzly Bear";
     this.race = "animal";
     this.armourClass = 6;
-    this.hitDice = 5;
+    this.hitDice = "5";
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;

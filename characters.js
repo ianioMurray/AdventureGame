@@ -272,47 +272,26 @@ function Character()
 	};
 	
 	this.roleRequiredToHit = function(opponent, weapon)
-	{
-		var scoresToHit = [ 	{armourClass: 9, toHit: 10},
-								{armourClass: 8, toHit: 11},
-								{armourClass: 7, toHit: 12},
-								{armourClass: 6, toHit: 13},
-								{armourClass: 5, toHit: 14},
-								{armourClass: 4, toHit: 15},
-								{armourClass: 3, toHit: 16},
-								{armourClass: 2, toHit: 17},
-								{armourClass: 1, toHit: 18},
-								{armourClass: 0, toHit: 19},
-								{armourClass: -1, toHit: 20},
-								{armourClass: -2, toHit: 20},
-								{armourClass: -3, toHit: 20} ];
-		
-		for(var i = 0; scoresToHit.length > i; i++)
+	{	
+		var toHit = requiredToHit.getToHit(this, opponent);
+			
+		//if weapon is a melee weapon give strength modifier, if not its a ranged weapon so give dexitory modifier
+		if(weapon instanceof MeleeWeapon)
 		{
-			if(scoresToHit[i].armourClass === opponent.armourClass)
-			{
-				var toHit = scoresToHit[i].toHit;
-
-				//if weapon is a melee weapon give strength modifier, if not its a ranged weapon so give dexitory modifier
-				if(weapon instanceof MeleeWeapon)
-				{
-					toHit = toHit - this.calculateAttributeModifier(this.strength);
-				}
-				else 
-				{
-					toHit = toHit - this.calculateAttributeModifier(this.dexterity);
-				}
-
-				//if modifiers make to the toHit greater than 20 set it back to 20
-				if(toHit > 20)
-				{
-					toHit = 20;
-				}
-
-				return toHit;
-			}	
+			toHit = toHit - this.calculateAttributeModifier(this.strength);
 		}
-		return 20;
+		else 
+		{
+			toHit = toHit - this.calculateAttributeModifier(this.dexterity);
+		}
+
+		//if modifiers make to the toHit greater than 20 set it back to 20
+		if(toHit > 20)
+		{
+			toHit = 20;
+		}
+
+		return toHit;
 	};
 	
 	this.isAttackAHit = function(role, requiredToHit)

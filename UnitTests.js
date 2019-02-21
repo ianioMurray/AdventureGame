@@ -8,7 +8,7 @@ var magaicUserTestParams = {
 	wisdom: 13,
 	dexterity: 12,
 	constitution: 7,
-	chrisma: 15
+	charisma: 15
 };
 	
 var fighterTestParams = { 
@@ -18,7 +18,7 @@ var fighterTestParams = {
 	wisdom: 8,
 	dexterity: 14,
 	constitution: 11,
-	chrisma: 6
+	charisma: 6
 };
 
 var clericTestParams = { 
@@ -28,7 +28,7 @@ var clericTestParams = {
 	wisdom: 17,
 	dexterity: 5,
 	constitution: 8,
-	chrisma: 16
+	charisma: 16
 };
 
 var thiefTestParams = { 
@@ -38,7 +38,7 @@ var thiefTestParams = {
 	wisdom: 3,
 	dexterity: 18,
 	constitution: 17,
-	chrisma: 11
+	charisma: 11
 };
 
 var fighterWithAwfulStatsParams = {
@@ -48,7 +48,7 @@ var fighterWithAwfulStatsParams = {
 	wisdom: 3,
 	dexterity: 3,
 	constitution: 3,
-	chrisma: 3
+	charisma: 3
 };
 
 var fighterWithAwesomeStatsParams = {
@@ -58,7 +58,7 @@ var fighterWithAwesomeStatsParams = {
 	wisdom: 18,
 	dexterity: 18,
 	constitution: 18,
-	chrisma: 18
+	charisma: 18
 };
 
 var fighterWithAverageStatsParams = {
@@ -68,7 +68,7 @@ var fighterWithAverageStatsParams = {
 	wisdom: 11,
 	dexterity: 11,
 	constitution: 11,
-	chrisma: 11
+	charisma: 11
 };
 
 
@@ -308,12 +308,13 @@ var arrow20UsesParams = {
 
 //run tests
 var tests = new Tests();
-runCharacterUnitTests();
-runInventoryUnitTests();
-runWeaponUnitTests();
+//runCharacterUnitTests();
+//runInventoryUnitTests();
+//runWeaponUnitTests();
+//runMonsterUnitTests();
 //runAmmoTests();
 const noOfTests = 200;
-runDiceUnitTests();
+//runDiceUnitTests();
 tests.testResults();
 
 //runTestCombatvCharacter();
@@ -660,6 +661,14 @@ function runWeaponUnitTests()
 	testWeaponIsTwoHanded();
 	testWeaponIsRanged();
 	testIsCombinableInInventory();
+}
+
+//-----------------------------------------------
+
+function runMonsterUnitTests()
+{
+	testMonsterToHit();
+	testMonsterTakeDamage();
 }
 
 //-----------------------------------------------
@@ -1887,6 +1896,29 @@ function testRoleRequiredToHit()
 	tests.checkRequiredToHitRoles(badFighter, 20, badFighter.roleRequiredToHit(fighter, crossbow), testRoleRequiredToHit.name);    //fighter has an AC of 1	
 }
 
+function testMonsterToHit()
+{
+	var ape = new Ape();
+	var acolyte = new Acolyte(); 
+
+	var magicUser = new MagicUser(magaicUserTestParams);
+	var fighter = new Fighter(fighterTestParams);
+
+	var shield = new Shield(shieldParams);
+	var plateMail = new PlateMail(plateArmourParams);
+
+	fighter.equip(plateMail);
+	fighter.equip(shield);
+
+	//4 hit dice monster
+	tests.checkRequiredToHitRoles(ape, 7, requiredToHit.getToHit(ape, magicUser), testMonsterToHit.name);  //mager user has an AC of 9
+	tests.checkRequiredToHitRoles(ape, 15, requiredToHit.getToHit(ape, fighter), testMonsterToHit.name);  //fighter user has an AC of 1
+
+	//1 hit dice monster
+	tests.checkRequiredToHitRoles(acolyte, 10, requiredToHit.getToHit(acolyte, magicUser), testMonsterToHit.name);  //mager user has an AC of 9
+	tests.checkRequiredToHitRoles(acolyte, 18, requiredToHit.getToHit(acolyte, fighter), testMonsterToHit.name);  //fighter user has an AC of 1
+}
+
 function testGetEquipedWeapon()
 {	
 	var fighterAverage = new Fighter(fighterWithAverageStatsParams);
@@ -2043,6 +2075,22 @@ function testTakeDamage()
 	tests.checkIsDead(thief, true, thief.isDead, testTakeDamage.name);	
 }
 
+function testMonsterTakeDamage()
+{
+	var ape = new Ape();
+	var acolyte = new Acolyte(); 
+
+	ape.currentHitPoints = 7;
+	ape.takeDamage(4);	
+	tests.checkHitPoints(ape, 3, ape.currentHitPoints, testMonsterTakeDamage.name);
+	tests.checkIsDead(ape, false, ape.isDead, testMonsterTakeDamage.name);	
+
+	acolyte.currentHitPoints = 6;
+	acolyte.takeDamage(10);	
+	tests.checkHitPoints(acolyte, -4, acolyte.currentHitPoints, testMonsterTakeDamage.name);
+	tests.checkIsDead(acolyte, true, acolyte.isDead, testMonsterTakeDamage.name);	
+}
+
 //----------------------------------------------------------
 
 function runTestCombatvCharacter()
@@ -2107,6 +2155,9 @@ function runTestCombatvCharacter()
 
 function runTestCombatvMonsters()
 {
+	function getRandomMonster() { return dice.rollDice("1D" + monsters.length); }
+	function getRandomCharacter()  { return dice.rollDice("1D" + characters.length); }
+	
 	var fighter1 = new Fighter(fighterTestParams);
 	var fighter2 = new Fighter(fighterTestParams);
 	var fighter3 = new Fighter(fighterTestParams);
@@ -2118,11 +2169,60 @@ function runTestCombatvMonsters()
 	fighter3.equip(sword2);
 
 	var monsters = Monster.createMonsters(Bandit);
+	var characters = [fighter1, fighter2, fighter3];
 
 	console.log("you encounter " + monsters.length + " " + monsters[0].name + "s");
 	for(var i = 0; monsters.length > i; i++)
 	{
 		console.log(monsters[i].name + " " + i + " has " + monsters[i].currentHitPoints + " hit points");
+	}
+
+	console.log("----------------------------");
+
+
+	while(characters.length > 0 && monsters.length > 0)
+	{
+		for(var i=0; characters.length > i; i++)
+		{
+			var monsterIndex = getRandomMonster() - 1;
+			console.log("fighter " + i + " attacks bandit " + monsterIndex);
+			characters[i].attack(monsters[monsterIndex]);
+			console.log("bandit " + monsterIndex + "'s hit points are " + monsters[monsterIndex].currentHitPoints);			
+		}
+
+		for(var i=0; monsters.length > i; i++)
+		{
+			if(monsters[i].isDead)
+			{
+				monsters.splice(i, 1);
+				i = i -1;
+			}
+		}
+
+		console.log("There are now " + monsters.length + " bandits left");
+
+		console.log("----------------------------");
+
+		for(var i=0; monsters.length > i; i++)
+		{
+			var characterIndex = getRandomCharacter() - 1;
+			console.log("bandit " + i + " attacks fighter " + characterIndex);
+			monsters[i].attack(characters[characterIndex]);
+			console.log("fighter " + characterIndex + "'s hit points are " + characters[characterIndex].currentHitPoints);			
+		}
+
+		for(var i=0; characters.length > i; i++)
+		{
+			if(characters[i].isDead)
+			{
+				characters.splice(i, 1);
+				i = i -1;
+			}
+		}
+
+		console.log("Thare are now " + characters.length + " fighters left");
+
+		console.log("----------------------------");
 	}
 }
 

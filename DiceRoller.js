@@ -4,7 +4,7 @@
 
 //created so the methods and properties are private unless they are identifed in the return
 
-var dice = (function Dice()
+var dice = (function()
 {
     // Default dice roll
     var diceRoll = 
@@ -35,6 +35,7 @@ var dice = (function Dice()
                 result += diceRoll.modifier;
             }
         }
+        
         return result;
     };
     
