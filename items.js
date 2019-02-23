@@ -438,7 +438,7 @@ Ammo.prototype.setRemainingNumberOfUses = function(numberOfUses)
 	{ 
 		if (numberOfUses > this.maxNumberOfUses)
 			{
-				throw(this.name + " created with too many uses")
+				throw this.name + " created with too many uses";
 			}
 		return numberOfUses;
 	};

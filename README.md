@@ -2,7 +2,7 @@
 
 A programming project which attempts to model a role playing game
 
-currently this project contains 11 files 
+currently this project contains 13 files 
 - items.js = models things like weapons and armour
 - characters.js = models character classes 
 - unitTests.js = the unit tests and intergration tests for the project
@@ -12,6 +12,8 @@ currently this project contains 11 files
 - inventory.js = character equipment inventory
 - monsters.js = models the monsters
 - toHit.js = returns the roll required to hit an opponent for monsters and characters
+- toSave.js = returns the roll required to save for monsters and characters
+- spells.js = models the spells
 
 
 - Alignments.js - TODO 

@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 var requiredToHit = (function()
 {
@@ -244,7 +244,7 @@ var requiredToHit = (function()
         }
         else 
         {
-            throw("unknown attacker type");
+            throw "unknown attacker type";
         }
 
         for(var i = 0; toHitCollection.length > i; i++)
@@ -322,7 +322,7 @@ var requiredToHit = (function()
                 toHitScores = monsterHitDice15PlusTo17ScoresToHit;
                 break;     
             default:
-                throw("unknown hit dice");
+                throw "unknown hit dice";
         }
 
         return toHitScores;
@@ -340,11 +340,11 @@ var requiredToHit = (function()
         }
         else
         {
-            throw("character level is unknown");
+            throw "character level is unknown";
         }
     };
 
     return  {
         getToHit: getToHit
-    }
+    };
 })();

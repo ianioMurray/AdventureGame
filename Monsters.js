@@ -1,5 +1,5 @@
 
-
+"use strict";
 
 //--------------------------------------------
 //             MONSTERS
@@ -72,9 +72,9 @@ function Acolyte()
     //this.Alignment = [{ alignment: Lawful, probability: 33 }, { alignment: Chaotic, probability: 33 }, { alignment: Neutral, probability: 34 }];
 }
 
-Acolyte.prototype = new Monster()
+Acolyte.prototype = new Monster();
 Acolyte.prototype.Constructor = Acolyte;
-Acolyte.getNumberAppearing = function() {return dice.rollDice("1D8")};
+Acolyte.getNumberAppearing = function() {return dice.rollDice("1D8");};
 
 
 //--------------------------------------------
@@ -97,9 +97,9 @@ function Ape()
     //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
-Ape.prototype = new Monster()
+Ape.prototype = new Monster();
 Ape.prototype.Constructor = Ape;
-Ape.getNumberAppearing = function() {return dice.rollDice("1D6")};
+Ape.getNumberAppearing = function() {return dice.rollDice("1D6");};
 
 
 //--------------------------------------------
@@ -126,9 +126,9 @@ function Bandit()
     //this.Alignment = [{ alignment: Chaotic, probability: 50 }, { alignment: Neutral, probability: 50 }];
 }
 
-Bandit.prototype = new Monster()
+Bandit.prototype = new Monster();
 Bandit.prototype.Constructor = Bandit;
-Bandit.getNumberAppearing = function() {return dice.rollDice("1D8")};
+Bandit.getNumberAppearing = function() {return dice.rollDice("1D8");};
 
 
 //--------------------------------------------
@@ -153,9 +153,9 @@ function Bat()
     //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
-Bat.prototype = new Monster()
+Bat.prototype = new Monster();
 Bat.prototype.Constructor = Bat;
-Bat.getNumberAppearing = function() {return dice.rollDice("1D100")};
+Bat.getNumberAppearing = function() {return dice.rollDice("1D100");};
 
 
 //--------------------------------------------
@@ -179,9 +179,9 @@ function BatGiant()
     //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
-BatGiant.prototype = new Monster()
+BatGiant.prototype = new Monster();
 BatGiant.prototype.Constructor = BatGiant;
-BatGiant.getNumberAppearing = function() {return dice.rollDice("1D10")};
+BatGiant.getNumberAppearing = function() {return dice.rollDice("1D10");};
 
 
 //--------------------------------------------
@@ -205,9 +205,9 @@ function BearBlack()
    // this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
-BearBlack.prototype = new Monster()
+BearBlack.prototype = new Monster();
 BearBlack.prototype.Constructor = BearBlack;
-BearBlack.getNumberAppearing = function() {return dice.rollDice("1D4")};
+BearBlack.getNumberAppearing = function() {return dice.rollDice("1D4");};
 
 //--------------------------------------------
 //---------------Bear, Grizzly------------------
@@ -230,9 +230,9 @@ function BearGrizzly()
    //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
-BearGrizzly.prototype = new Monster()
+BearGrizzly.prototype = new Monster();
 BearGrizzly.prototype.Constructor = BearGrizzly;
-BearGrizzly.getNumberAppearing = function() { return 1 };
+BearGrizzly.getNumberAppearing = function() { return 1; };
 
 
 

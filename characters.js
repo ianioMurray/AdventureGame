@@ -16,13 +16,13 @@ function Character()
 	this.noOfHands = 2;
 	this.useableWeapon = [];
 
-	this.getStrength = function() { return this.strength };
-	this.getIntelligence = function() { return this.intelligence };
-	this.getWisdom = function() { return this.wisdom };
-	this.getDexterity = function() { return this.dexterity };
-	this.getConstitution = function() { return this.constitution };
-	this.getCharisma = function() { return this.charisma };
-	this.getCurrentHitPoints = function() { return this.currentHitPoints };
+	this.getStrength = function() { return this.strength; };
+	this.getIntelligence = function() { return this.intelligence; };
+	this.getWisdom = function() { return this.wisdom; };
+	this.getDexterity = function() { return this.dexterity; };
+	this.getConstitution = function() { return this.constitution; };
+	this.getCharisma = function() { return this.charisma; };
+	this.getCurrentHitPoints = function() { return this.currentHitPoints; };
 	
 	
 	this.gainExperience = function(experience)
@@ -84,7 +84,8 @@ function Character()
 	
 	this.isCharacterUnableToUseThisWeapon = function(weapon)
 	{
-		return (this.hasWeaponRestrictions && ( this.useableWeapon.indexOf(weapon.id) < 0));
+		var canUseWeapon = this.hasWeaponRestrictions &&  this.useableWeapon.indexOf(weapon.id) < 0;
+		return canUseWeapon;
 	};
 	
 	this.isCharacterAbleToUseAShield = function()
@@ -94,7 +95,8 @@ function Character()
 	
 	this.isCharacterUnableToUseThisArmour = function(armour)
 	{
-		return (this.hasArmourRestrictions && ( this.useableArmour.indexOf(armour.id) < 0 ));
+		var canUseArmour = this.hasArmourRestrictions && this.useableArmour.indexOf(armour.id) < 0;
+		return canUseArmour;
 	};
 
 	this.getNumberOfHandsRequiredForItem = function(item)
@@ -237,7 +239,7 @@ function Character()
 		}
 		else
 		{
-			throw("attribute should be between 3 and 18");
+			throw "attribute should be between 3 and 18";
 		}
 	};
 	
@@ -252,7 +254,7 @@ function Character()
 		}
 		
 		//recalculate thier armour class taking into account their dexterity
-		armourClass = armourClass + ( this.calculateAttributeModifier(this.dexterity) * -1)
+		armourClass = armourClass + ( this.calculateAttributeModifier(this.dexterity) * -1);
 		
 		//if the characters AC is now greater than 9 set it back to 9
 		if(armourClass > 9)
@@ -376,7 +378,7 @@ function Character()
 		}
 		else
 		{
-			throw("attribute should be between 3 and 18");
+			throw "attribute should be between 3 and 18";
 		}
 	};	
 	
@@ -435,6 +437,7 @@ function Fighter(params)
 	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
 	this.inventory = new Inventory();
+	this.saveAs = { class: "Fighter", level: this.currentLevel};
 }
 
 Fighter.prototype = new Character();
@@ -472,6 +475,7 @@ function Thief(params)
 	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
 	this.inventory = new Inventory();
+	this.saveAs = { class: "Thief", level: this.currentLevel};
 }
 
 Thief.prototype = new Character();
@@ -530,6 +534,7 @@ function Cleric(params)
 	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
 	this.inventory = new Inventory();
+	this.saveAs = { class: "Cleric", level: this.currentLevel};
 }
 
 Cleric.prototype = new Character();
@@ -578,6 +583,7 @@ function MagicUser(params)
 	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
 	this.inventory = new Inventory();
+	this.saveAs = { class: "MagicUser", level: this.currentLevel};
 }
 
 MagicUser.prototype = new Character();
@@ -644,30 +650,7 @@ MagicUser.prototype.resetSpells = function()
 		this.currentSpells = [];
 	};
 
-//--------------------------------------------
-//             SPELLS
-//--------------------------------------------
-function Spell()
-{
-}
 
-//-------------------------------------------
-//---------Magic-User Spells-----------------
-//-------------------------------------------
-function MagicUserSpell(params)
-{
-	this.name = params.name;
-	this.level = params.level;
-	this.range = params.range;
-	this.duration = params.duration;
-	this.target = params.target;
-	this.savingThrowToAvoid = params.savingThrowToAvoid;
-	this.areaAffected = params.areaAffected;
-	this.damage = params.damage;
-}
-
-MagicUserSpell.prototype = new Spell();
-MagicUserSpell.prototype.constructor = MagicUserSpell;
 
 
 

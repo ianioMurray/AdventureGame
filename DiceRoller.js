@@ -1,5 +1,5 @@
 
-"use strict"
+"use strict";
 
 
 //created so the methods and properties are private unless they are identifed in the return
@@ -25,7 +25,7 @@ var dice = (function()
         // Roll the appropriate dice the appropriate number of times and get the sum of the result 
         for (var i = 0; i < diceRoll.numberOfDice; i++)
         {
-            result += (Math.floor(Math.random() * (diceRoll.typeOfDice))) + 1;
+            result += Math.floor(Math.random() * diceRoll.typeOfDice) + 1;
         }
 
         // Add any modifiers to the total
@@ -70,9 +70,9 @@ var dice = (function()
         }
 
         return {
-            numberOfDice: (typeof match[1] == 'undefined') ? 1 : parseInt(match[1]),
+            numberOfDice: (typeof match[1] === 'undefined') ? 1 : parseInt(match[1]),
             typeOfDice: parseInt(match[2]),
-            modifier: (typeof match[3] == 'undefined') ? 0 : parseInt(match[3])
+            modifier: (typeof match[3] === 'undefined') ? 0 : parseInt(match[3])
         };
     };
 
@@ -97,5 +97,5 @@ var dice = (function()
         getNumberOfDice: getNumberOfDice,  //for testing only
         getTypeOfDice: getTypeOfDice,     //for testing only
         getDiceModifier: getDiceModifier //for testing only
-    }
+    };
 })();
