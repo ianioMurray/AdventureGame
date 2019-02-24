@@ -71,6 +71,37 @@ var fighterWithAverageStatsParams = {
 	charisma: 11
 };
 
+var magaicUserWithAverageStatsParams = { 
+	name: "Odo",
+	strength: 11,
+	intelligence: 12,
+	wisdom: 10,
+	dexterity: 12,
+	constitution: 11,
+	charisma: 10
+};
+
+var clericWithAverageStatsParams = { 
+	name: "Brian",
+	strength: 9,
+	intelligence: 10,
+	wisdom: 11,
+	dexterity: 10,
+	constitution: 9,
+	charisma: 12
+};
+
+var thiefWithAverageStatsParams = { 
+	name: "Tacky",
+	strength: 9,
+	intelligence: 12,
+	wisdom: 11,
+	dexterity: 12,
+	constitution: 10,
+	charisma: 9
+};
+
+
 
 //weapons
 var swordParams = {
@@ -773,16 +804,20 @@ function testUseableWeapon()
 
 function testGainExperience() 
 {
+	var aveMagicUser = new MagicUser(magaicUserWithAverageStatsParams);
+	var fighter = new Fighter(fighterWithAverageStatsParams);
+	var cleric = new Cleric(clericWithAverageStatsParams);
+	var aveThief = new Thief(thiefWithAverageStatsParams);
+	var badFighter = new Fighter(fighterWithAwfulStatsParams);
+	var goodFighter = new Fighter(fighterWithAwesomeStatsParams);
+	var thief = new Thief(thiefTestParams);
 	var magicUser = new MagicUser(magaicUserTestParams);
-	var fighter = new Fighter(fighterTestParams);
-	var cleric = new Cleric(clericTestParams);
-	var thief = new Thief(thiefTestParams);	
 
 	//newly created character with no experience
-	tests.checkExperience(magicUser, 0, magicUser.experience, testGainExperience.name);
+	tests.checkExperience(aveMagicUser, 0, aveMagicUser.experience, testGainExperience.name);
 	//add 100 experience
-	magicUser.gainExperience(100);
-	tests.checkExperience(magicUser, 100, magicUser.experience, testGainExperience.name);	
+	aveMagicUser.gainExperience(100);
+	tests.checkExperience(aveMagicUser, 100, aveMagicUser.experience, testGainExperience.name);	
 		
 	//newly created character with no experience
 	tests.checkExperience(fighter, 0, fighter.experience, testGainExperience.name);
@@ -797,23 +832,47 @@ function testGainExperience()
 	tests.checkExperience(cleric, 3400, cleric.experience, testGainExperience.name);	
 		
 	//newly created character with no experience
-	tests.checkExperience(thief, 0, thief.experience, testGainExperience.name);
+	tests.checkExperience(aveThief, 0, aveThief.experience, testGainExperience.name);
 	//add 34 experience
-	thief.gainExperience(34);
-	tests.checkExperience(thief, 34, thief.experience, testGainExperience.name);
+	aveThief.gainExperience(34);
+	tests.checkExperience(aveThief, 34, aveThief.experience, testGainExperience.name);
 
 	//lose experience (I am thinking of drain level for the future)
 	//subtract 10 experience
-	thief.gainExperience(-10);
-	tests.checkExperience(thief, 24, thief.experience, testGainExperience.name);	
+	aveThief.gainExperience(-10);
+	tests.checkExperience(aveThief, 24, aveThief.experience, testGainExperience.name);
+	
+	//newly created character with no experience
+	tests.checkExperience(badFighter, 0, badFighter.experience, testGainExperience.name);
+	//add 100 experience but this character has a xp modifier of -20%
+	badFighter.gainExperience(100);	
+	tests.checkExperience(badFighter, 80, badFighter.experience, testGainExperience.name);
+
+	//newly created character with no experience
+	tests.checkExperience(goodFighter, 0, goodFighter.experience, testGainExperience.name);
+	//add 100 experience but this character has a xp modifier of 10%
+	goodFighter.gainExperience(100);	
+	tests.checkExperience(goodFighter, 110, goodFighter.experience, testGainExperience.name);
+
+	//newly created character with no experience
+	tests.checkExperience(thief, 0, thief.experience, testGainExperience.name);
+	//add 100 experience but this character has a xp modifier of 10%
+	thief.gainExperience(100);	
+	tests.checkExperience(thief, 110, thief.experience, testGainExperience.name);	
+
+	//newly created character with no experience
+	tests.checkExperience(magicUser, 0, magicUser.experience, testGainExperience.name);
+	//add 100 experience but this character has a xp modifier of 5%
+	magicUser.gainExperience(100);	
+	tests.checkExperience(magicUser, 105, magicUser.experience, testGainExperience.name);		
 }	
 
 function testLevelUp()
 {
-	var magicUser = new MagicUser(magaicUserTestParams);
-	var fighter = new Fighter(fighterTestParams);
-	var cleric = new Cleric(clericTestParams);
-	var thief = new Thief(thiefTestParams);	
+	var magicUser = new MagicUser(magaicUserWithAverageStatsParams);
+	var fighter = new Fighter(fighterWithAverageStatsParams);
+	var cleric = new Cleric(clericWithAverageStatsParams);
+	var thief = new Thief(thiefWithAverageStatsParams);	
 	
 	var characters = [	{ classType: magicUser, secondLevel: 2500, thirdLevel: 5000 },
 						{ classType: fighter, secondLevel: 2000, thirdLevel: 4000 },

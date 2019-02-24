@@ -27,10 +27,59 @@ function Character()
 	
 	this.gainExperience = function(experience)
 	{
-		this.experience = this.experience + experience;
+		var bonusExperience = experience * this.calculateExperinceBonus();
+		this.experience = this.experience + experience + bonusExperience;
 		this.checkIfLevelGained();
 	};
 	
+	this.calculateExperinceBonus = function()
+	{
+		var primeAttribute = this.primeRequisite;
+		var attribute;
+		switch(primeAttribute)
+		{
+			case charactersPrimeRequisite.Strength:
+				attribute = this.strength;
+				break;
+			case charactersPrimeRequisite.Intelligence:
+				attribute = this.intelligence;
+				break;
+			case charactersPrimeRequisite.Wisdom:
+				attribute = this.wisdom;
+				break;
+			case charactersPrimeRequisite.Dexterity:
+				attribute = this.dexterity;
+				break;
+			default:
+				throw "Prime Requisite not found";
+		}
+
+		if( attribute >= 3 && attribute <= 5 )
+		{
+			return -0.2;
+		}
+		else if ( attribute <= 8 )
+		{
+			return -0.1;
+		}
+		else if ( attribute <= 12 )
+		{
+			return 0;
+		}
+		else if  ( attribute <= 15 )
+		{
+			return 0.05;
+		}
+		else if ( attribute > 16 && attribute < 19 )
+		{
+			return 0.1;
+		}
+		else
+		{
+			throw "Attribute score is not within the range 3 to 18";
+		}
+	};
+
 	this.checkIfLevelGained = function() 
 	{
 		//takes characters current experience and compares it to the 
@@ -438,10 +487,12 @@ function Fighter(params)
 	this.isDead = false;
 	this.inventory = new Inventory();
 	this.saveAs = { class: characterType.Fighter, level: this.currentLevel};
+	this.moneyGold = dice.rollDice("3D6") * 10;
 }
 
 Fighter.prototype = new Character();
 Fighter.prototype.constructor = Fighter;
+Fighter.prototype.primeRequisite = charactersPrimeRequisite.Strength;
 
 Fighter.prototype.levelExperience = [0, 2000, 4000];
 Fighter.prototype.levelUp = function() 
@@ -476,6 +527,7 @@ function Thief(params)
 	this.isDead = false;
 	this.inventory = new Inventory();
 	this.saveAs = { class: characterType.Thief, level: this.currentLevel};
+	this.moneyGold = dice.rollDice("3D6") * 10;
 }
 
 Thief.prototype = new Character();
@@ -486,6 +538,7 @@ Thief.prototype.useableArmour = ["leather armour"];
 Thief.prototype.canUseShield = false;
 Thief.prototype.levelExperience = [0, 1200, 2400];
 Thief.prototype.pickLockChance = [15, 20, 25];
+Thief.prototype.primeRequisite = charactersPrimeRequisite.Dexterity;
 
 Thief.prototype.levelUp = function() 
 	{
@@ -535,6 +588,7 @@ function Cleric(params)
 	this.isDead = false;
 	this.inventory = new Inventory();
 	this.saveAs = { class: characterType.Cleric, level: this.currentLevel};
+	this.moneyGold = dice.rollDice("3D6") * 10;
 }
 
 Cleric.prototype = new Character();
@@ -544,6 +598,7 @@ Cleric.prototype.hasWeaponRestrictions = true;
 Cleric.prototype.useableWeapon = ["club", "mace", "sling", "war hammer"];
 Cleric.prototype.levelExperience = [0, 1500, 3000];
 Cleric.prototype.isSpellCaster = true;
+Cleric.prototype.primeRequisite = charactersPrimeRequisite.Wisdom;
 
 Cleric.prototype.levelUp = function() 
 	{
@@ -584,6 +639,7 @@ function MagicUser(params)
 	this.isDead = false;
 	this.inventory = new Inventory();
 	this.saveAs = { class: characterType.MagicUser, level: this.currentLevel};
+	this.moneyGold = dice.rollDice("3D6") * 10;
 }
 
 MagicUser.prototype = new Character();
@@ -596,6 +652,7 @@ MagicUser.prototype.useableArmour = [];
 MagicUser.prototype.canUseShield = false;
 MagicUser.prototype.levelExperience = [0, 2500, 5000];
 MagicUser.prototype.isSpellCaster = true;
+MagicUser.prototype.primeRequisite = charactersPrimeRequisite.Intelligence;
 
 MagicUser.prototype.levelUp = function() 
 	{
