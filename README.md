@@ -12,8 +12,9 @@ currently this project contains 13 files
 - inventory.js = character equipment inventory
 - monsters.js = models the monsters
 - toHit.js = returns the roll required to hit an opponent for monsters and characters
-- toSave.js = returns the roll required to save for monsters and characters
+- saveThrow.js = returns the roll required to save for monsters and characters
 - spells.js = models the spells
+- characterType = object that holds charcter types to prevent passing strings
 
 
 - Alignments.js - TODO 
