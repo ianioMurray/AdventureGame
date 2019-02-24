@@ -437,7 +437,7 @@ function Fighter(params)
 	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
 	this.inventory = new Inventory();
-	this.saveAs = { class: "Fighter", level: this.currentLevel};
+	this.saveAs = { class: characterType.Fighter, level: this.currentLevel};
 }
 
 Fighter.prototype = new Character();
@@ -475,7 +475,7 @@ function Thief(params)
 	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
 	this.inventory = new Inventory();
-	this.saveAs = { class: "Thief", level: this.currentLevel};
+	this.saveAs = { class: characterType.Thief, level: this.currentLevel};
 }
 
 Thief.prototype = new Character();
@@ -534,7 +534,7 @@ function Cleric(params)
 	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
 	this.inventory = new Inventory();
-	this.saveAs = { class: "Cleric", level: this.currentLevel};
+	this.saveAs = { class: characterType.Cleric, level: this.currentLevel};
 }
 
 Cleric.prototype = new Character();
@@ -583,7 +583,7 @@ function MagicUser(params)
 	this.armourClass = this.calculateArmourClass();
 	this.isDead = false;
 	this.inventory = new Inventory();
-	this.saveAs = { class: "MagicUser", level: this.currentLevel};
+	this.saveAs = { class: characterType.MagicUser, level: this.currentLevel};
 }
 
 MagicUser.prototype = new Character();

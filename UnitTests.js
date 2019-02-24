@@ -312,7 +312,7 @@ runCharacterUnitTests();
 runInventoryUnitTests();
 runWeaponUnitTests();
 runMonsterUnitTests();
-runToSaveTests();
+runsavingThrowTests();
 //runAmmoTests();
 const noOfTests = 200;
 runDiceUnitTests();
@@ -681,7 +681,7 @@ function runMonsterUnitTests()
 
 //-----------------------------------------------
 
-function runToSaveTests()
+function runsavingThrowTests()
 {
 	testRequiredSavingThrow();
 }
@@ -820,7 +820,7 @@ function testLevelUp()
 						{ classType: cleric, secondLevel: 1500, thirdLevel: 3000 },
 						{ classType: thief, secondLevel: 1200, thirdLevel: 2400 } ];
 
-	for(var i = 0; characters.length > i; i++)
+	for(let i = 0; characters.length > i; i++)
 	{
 		//newly created character 
 		tests.checkLevel(characters[i].classType, 1, characters[i].classType.currentLevel, testLevelUp.name);
@@ -945,7 +945,7 @@ function testIsInventoryFull()
 	var sword = new Sword(swordParams);
 
 	//add max number of items to inventory
-	for(var i = 0; _MaxNumberOfInventoryItems > i; i++)
+	for(let i = 0; _MaxNumberOfInventoryItems > i; i++)
 	{
 		tests.checkIsInventoryFull(magicUser, false, magicUser.inventory.isInventoryFull(sword), testIsInventoryFull.name);
 		magicUser.inventory.itemsInInvetory.push(sword);
@@ -963,7 +963,7 @@ function testAddItemToInventory()
 	var arrow = new Arrow(arrowParams);
 
 	//add items to inventory till the max inventory size is reached 
-	for(var i = 0; _MaxNumberOfInventoryItems > i; i++)
+	for(let i = 0; _MaxNumberOfInventoryItems > i; i++)
 	{
 		var expectedInventoryItems = i + 1;
 		magicUser.inventory.addItemToInventory(sword);
@@ -988,7 +988,7 @@ function testAddItemToInventory()
 	tests.checkNumberOfUses(fighter, fighter.inventory.itemsInInvetory[0].name, 20, fighter.inventory.itemsInInvetory[0].remainingNumberOfUses, testAddItemToInventory.name);
 
 	//fill inventory so that only 1 slot left (-2 as 1 slot already used and want 1 left free) 
-	for(var j = 0; (_MaxNumberOfInventoryItems - 2) > j; j++)
+	for(let i = 0; (_MaxNumberOfInventoryItems - 2) > i; i++)
 	{
 		fighter.inventory.addItemToInventory(sword);
 	}
@@ -1020,7 +1020,7 @@ function testAddItemToInventory()
 	var anotherSword = new Sword(swordParams);
 
 	//add items to inventory to fill first 10 spaces
-	for(var k = 0; 10 > k; k++)
+	for(let i = 0; 10 > i; i++)
 	{
 		anotherFighter.inventory.addItemToInventory(anotherSword);
 	}
@@ -1031,7 +1031,7 @@ function testAddItemToInventory()
 	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[10].name, 8, anotherFighter.inventory.itemsInInvetory[10].remainingNumberOfUses, testAddItemToInventory.name);	
 
 	//add items to inventory to fill up to space 27
-	for(var l = 0; 15 > l; l++)
+	for(let i = 0; 15 > i; i++)
 	{
 		anotherFighter.inventory.addItemToInventory(anotherSword);
 	}
@@ -1043,7 +1043,7 @@ function testAddItemToInventory()
 	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[26].name, 7, anotherFighter.inventory.itemsInInvetory[26].remainingNumberOfUses, testAddItemToInventory.name);		
 
 	//add items to inventory to fill up to space 39
-	for(var m = 0; 11 > m; m++)
+	for(let i = 0; 11 > i; i++)
 	{
 		anotherFighter.inventory.addItemToInventory(anotherSword);
 	}
@@ -1056,7 +1056,7 @@ function testAddItemToInventory()
 	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[38].name, 18, anotherFighter.inventory.itemsInInvetory[38].remainingNumberOfUses, testAddItemToInventory.name);		
 
 	//add items to inventory to fill up to space 45
-	for(var n = 0; 5 > n; n++)
+	for(let i = 0; 5 > i; i++)
 	{
 		anotherFighter.inventory.addItemToInventory(anotherSword);
 	}
@@ -1070,7 +1070,7 @@ function testAddItemToInventory()
 	tests.checkNumberOfUses(anotherFighter, anotherFighter.inventory.itemsInInvetory[44].name, 11, anotherFighter.inventory.itemsInInvetory[44].remainingNumberOfUses, testAddItemToInventory.name);	
 
 	//fill the rest of the inventory 
-	for(var a = 0; 6 > a; a++)
+	for(let i = 0; 6 > i; i++)
 	{
 		anotherFighter.inventory.addItemToInventory(anotherSword);
 	}
@@ -1118,7 +1118,7 @@ function testindexOfItemInInventroy()
 	tests.checkIndexOfItemInInventory(MagicUser, sword.name, 0, magicUser.inventory.indexOfItemInInventroy(sword.id), testindexOfItemInInventroy.name);	
 
 	//add items to inventory till inventory is 1 away from full (start loop at 1 as 1 item already in inventory)
-	for(var i = 1; (_MaxNumberOfInventoryItems - 1) > i; i++)
+	for(let i = 1; (_MaxNumberOfInventoryItems - 1) > i; i++)
 	{
 		magicUser.inventory.addItemToInventory(sword);
 	}
@@ -2115,44 +2115,44 @@ function testRequiredSavingThrow()
 	var thief = new Thief(thiefTestParams);	
 
 	//save vs poison 
-	tests.checkRequiredSavingThrow(ape, "DeathRayPoison", 12, toSave.getSavingThrow(ape.saveAs, "DeathRayPoison"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(acolyte, "DeathRayPoison", 11, toSave.getSavingThrow(acolyte.saveAs, "DeathRayPoison"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(magicUser, "DeathRayPoison", 13, toSave.getSavingThrow(magicUser.saveAs, "DeathRayPoison"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(fighter, "DeathRayPoison", 12, toSave.getSavingThrow(fighter.saveAs, "DeathRayPoison"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(cleric, "DeathRayPoison", 11, toSave.getSavingThrow(cleric.saveAs, "DeathRayPoison"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(thief, "DeathRayPoison", 13, toSave.getSavingThrow(thief.saveAs, "DeathRayPoison"), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(ape, "DeathRayPoison", 12, savingThrow.getSavingThrow(ape.saveAs, savingThrow.typeOfSave.DeathRayPoison), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(acolyte, "DeathRayPoison", 11, savingThrow.getSavingThrow(acolyte.saveAs, savingThrow.typeOfSave.DeathRayPoison), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(magicUser, "DeathRayPoison", 13, savingThrow.getSavingThrow(magicUser.saveAs, savingThrow.typeOfSave.DeathRayPoison), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(fighter, "DeathRayPoison", 12, savingThrow.getSavingThrow(fighter.saveAs, savingThrow.typeOfSave.DeathRayPoison), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(cleric, "DeathRayPoison", 11, savingThrow.getSavingThrow(cleric.saveAs, savingThrow.typeOfSave.DeathRayPoison), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(thief, "DeathRayPoison", 13, savingThrow.getSavingThrow(thief.saveAs, savingThrow.typeOfSave.DeathRayPoison), testRequiredSavingThrow.name);
 
 	//save vs magic wands 
-	tests.checkRequiredSavingThrow(ape, "MagicWands", 13, toSave.getSavingThrow(ape.saveAs, "MagicWands"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(acolyte, "MagicWands", 12, toSave.getSavingThrow(acolyte.saveAs, "MagicWands"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(magicUser, "MagicWands", 14, toSave.getSavingThrow(magicUser.saveAs, "MagicWands"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(fighter, "MagicWands", 13, toSave.getSavingThrow(fighter.saveAs, "MagicWands"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(cleric, "MagicWands", 12, toSave.getSavingThrow(cleric.saveAs, "MagicWands"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(thief, "MagicWands", 14, toSave.getSavingThrow(thief.saveAs, "MagicWands"), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(ape, "MagicWands", 13, savingThrow.getSavingThrow(ape.saveAs, savingThrow.typeOfSave.MagicWands), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(acolyte, "MagicWands", 12, savingThrow.getSavingThrow(acolyte.saveAs, savingThrow.typeOfSave.MagicWands), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(magicUser, "MagicWands", 14, savingThrow.getSavingThrow(magicUser.saveAs, savingThrow.typeOfSave.MagicWands), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(fighter, "MagicWands", 13, savingThrow.getSavingThrow(fighter.saveAs, savingThrow.typeOfSave.MagicWands), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(cleric, "MagicWands", 12, savingThrow.getSavingThrow(cleric.saveAs, savingThrow.typeOfSave.MagicWands), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(thief, "MagicWands", 14, savingThrow.getSavingThrow(thief.saveAs, savingThrow.typeOfSave.MagicWands), testRequiredSavingThrow.name);
 
 	//save vs paralysis
-	tests.checkRequiredSavingThrow(ape, "ParalysisTurnToStone", 14, toSave.getSavingThrow(ape.saveAs, "ParalysisTurnToStone"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(acolyte, "ParalysisTurnToStone", 14, toSave.getSavingThrow(acolyte.saveAs, "ParalysisTurnToStone"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(magicUser, "ParalysisTurnToStone", 13, toSave.getSavingThrow(magicUser.saveAs, "ParalysisTurnToStone"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(fighter, "ParalysisTurnToStone", 14, toSave.getSavingThrow(fighter.saveAs, "ParalysisTurnToStone"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(cleric, "ParalysisTurnToStone", 14, toSave.getSavingThrow(cleric.saveAs, "ParalysisTurnToStone"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(thief, "ParalysisTurnToStone", 13, toSave.getSavingThrow(thief.saveAs, "ParalysisTurnToStone"), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(ape, "ParalysisTurnToStone", 14, savingThrow.getSavingThrow(ape.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(acolyte, "ParalysisTurnToStone", 14, savingThrow.getSavingThrow(acolyte.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(magicUser, "ParalysisTurnToStone", 13, savingThrow.getSavingThrow(magicUser.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(fighter, "ParalysisTurnToStone", 14, savingThrow.getSavingThrow(fighter.saveAs,savingThrow.typeOfSave.ParalysisTurnToStone), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(cleric, "ParalysisTurnToStone", 14, savingThrow.getSavingThrow(cleric.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(thief, "ParalysisTurnToStone", 13, savingThrow.getSavingThrow(thief.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone), testRequiredSavingThrow.name);
 
 	//save vs dragon breathe
-	tests.checkRequiredSavingThrow(ape, "DragonBreath", 15, toSave.getSavingThrow(ape.saveAs, "DragonBreath"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(acolyte, "DragonBreath", 16, toSave.getSavingThrow(acolyte.saveAs, "DragonBreath"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(magicUser, "DragonBreath", 16, toSave.getSavingThrow(magicUser.saveAs, "DragonBreath"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(fighter, "DragonBreath", 15, toSave.getSavingThrow(fighter.saveAs, "DragonBreath"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(cleric, "DragonBreath", 16, toSave.getSavingThrow(cleric.saveAs, "DragonBreath"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(thief, "DragonBreath", 16, toSave.getSavingThrow(thief.saveAs, "DragonBreath"), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(ape, "DragonBreath", 15, savingThrow.getSavingThrow(ape.saveAs, savingThrow.typeOfSave.DragonBreath), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(acolyte, "DragonBreath", 16, savingThrow.getSavingThrow(acolyte.saveAs, savingThrow.typeOfSave.DragonBreath), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(magicUser, "DragonBreath", 16, savingThrow.getSavingThrow(magicUser.saveAs, savingThrow.typeOfSave.DragonBreath), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(fighter, "DragonBreath", 15, savingThrow.getSavingThrow(fighter.saveAs, savingThrow.typeOfSave.DragonBreath), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(cleric, "DragonBreath", 16, savingThrow.getSavingThrow(cleric.saveAs, savingThrow.typeOfSave.DragonBreath), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(thief, "DragonBreath", 16, savingThrow.getSavingThrow(thief.saveAs, savingThrow.typeOfSave.DragonBreath), testRequiredSavingThrow.name);
 
 	//save vs Rods & staves
-	tests.checkRequiredSavingThrow(ape, "RodsStavesSpells", 16, toSave.getSavingThrow(ape.saveAs, "RodsStavesSpells"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(acolyte, "RodsStavesSpells", 15, toSave.getSavingThrow(acolyte.saveAs, "RodsStavesSpells"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(magicUser, "RodsStavesSpells", 15, toSave.getSavingThrow(magicUser.saveAs, "RodsStavesSpells"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(fighter, "RodsStavesSpells", 16, toSave.getSavingThrow(fighter.saveAs, "RodsStavesSpells"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(cleric, "RodsStavesSpells", 15, toSave.getSavingThrow(cleric.saveAs, "RodsStavesSpells"), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(thief, "RodsStavesSpells", 15, toSave.getSavingThrow(thief.saveAs, "RodsStavesSpells"), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(ape, "RodsStavesSpells", 16, savingThrow.getSavingThrow(ape.saveAs, savingThrow.typeOfSave.RodsStavesSpells), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(acolyte, "RodsStavesSpells", 15, savingThrow.getSavingThrow(acolyte.saveAs, savingThrow.typeOfSave.RodsStavesSpells), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(magicUser, "RodsStavesSpells", 15, savingThrow.getSavingThrow(magicUser.saveAs, savingThrow.typeOfSave.RodsStavesSpells), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(fighter, "RodsStavesSpells", 16, savingThrow.getSavingThrow(fighter.saveAs, savingThrow.typeOfSave.RodsStavesSpells), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(cleric, "RodsStavesSpells", 15, savingThrow.getSavingThrow(cleric.saveAs, savingThrow.typeOfSave.RodsStavesSpells), testRequiredSavingThrow.name);
+	tests.checkRequiredSavingThrow(thief, "RodsStavesSpells", 15, savingThrow.getSavingThrow(thief.saveAs, savingThrow.typeOfSave.RodsStavesSpells), testRequiredSavingThrow.name);
 }
 
 
@@ -2238,9 +2238,9 @@ function runTestCombatvMonsters()
 	var characters = [fighter1, fighter2, fighter3];
 
 	console.log("you encounter " + monsters.length + " " + monsters[0].name + "s");
-	for(var j = 0; monsters.length > j; j++)
+	for(let i = 0; monsters.length > i; i++)
 	{
-		console.log(monsters[j].name + " " + j + " has " + monsters[j].currentHitPoints + " hit points");
+		console.log(monsters[i].name + " " + i + " has " + monsters[j].currentHitPoints + " hit points");
 	}
 
 	console.log("----------------------------");
@@ -2248,7 +2248,7 @@ function runTestCombatvMonsters()
 
 	while(characters.length > 0 && monsters.length > 0)
 	{
-		for(var i=0; characters.length > i; i++)
+		for(let i=0; characters.length > i; i++)
 		{
 			var monsterIndex = getRandomMonster() - 1;
 			console.log("fighter " + i + " attacks bandit " + monsterIndex);
@@ -2256,12 +2256,12 @@ function runTestCombatvMonsters()
 			console.log("bandit " + monsterIndex + "'s hit points are " + monsters[monsterIndex].currentHitPoints);			
 		}
 
-		for(var i1=0; monsters.length > i1; i1++)
+		for(let i=0; monsters.length > i; i++)
 		{
-			if(monsters[i1].isDead)
+			if(monsters[i].isDead)
 			{
-				monsters.splice(i1, 1);
-				i1 = i1 -1;
+				monsters.splice(i, 1);
+				i = i -1;
 			}
 		}
 
@@ -2269,19 +2269,19 @@ function runTestCombatvMonsters()
 
 		console.log("----------------------------");
 
-		for(var i2=0; monsters.length > i2; i2++)
+		for(let i=0; monsters.length > i; i++)
 		{
 			var characterIndex = getRandomCharacter() - 1;
-			console.log("bandit " + i2 + " attacks fighter " + characterIndex);
-			monsters[i2].attack(characters[characterIndex]);
+			console.log("bandit " + i + " attacks fighter " + characterIndex);
+			monsters[i].attack(characters[characterIndex]);
 			console.log("fighter " + characterIndex + "'s hit points are " + characters[characterIndex].currentHitPoints);			
 		}
 
-		for(var i3=0; characters.length > i3; i3++)
+		for(let i=0; characters.length > i; i++)
 		{
-			if(characters[i3].isDead)
+			if(characters[i].isDead)
 			{
-				characters.splice(i3, 1);
+				characters.splice(i, 1);
 				i = i -1;
 			}
 		}
@@ -2317,7 +2317,7 @@ function checkDice(params)
 
 	var resultOutsideRange = false;
 
-	for(var i =0; noOfTests > i; i++)
+	for(let i =0; noOfTests > i; i++)
 	{
 		var result = dice.rollDice(params.diceRollAsString);
 		if(result > params.max || result < params.min)

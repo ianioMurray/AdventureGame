@@ -66,7 +66,7 @@ function Acolyte()
     this.isDead = false;
     this.movement = 60;
     this.attacks = [{ attackType: "WeaponAttack", damage: "1d6" }];
-    this.saveAs = { class: "Cleric", level: 1};
+    this.saveAs = { class: characterType.Cleric, level: 1};
     this.morale = 7;
     this.treasureType = "U";
     //this.Alignment = [{ alignment: Lawful, probability: 33 }, { alignment: Chaotic, probability: 33 }, { alignment: Neutral, probability: 34 }];
@@ -91,7 +91,7 @@ function Ape()
     this.isDead = false;
     this.movement = 120;
     this.attacks = [{ attackType: "Claw", damage: "1d4" }, { attackType: "Claw", damage: "1d4" }];
-    this.saveAs = { class: "Fighter", level: 2};
+    this.saveAs = { class: characterType.Fighter, level: 2};
     this.morale = 7;
     this.treasureType = "Nil";
     //this.Alignment = [{ alignment: Neutral, probability: 100 }];
@@ -120,7 +120,7 @@ function Bandit()
     this.isDead = false;
     this.movement = 120;
     this.attacks = [{ attackType: "WeaponAttack", damage: "1d6" }];
-    this.saveAs = { class: "Thief", level: 1};  
+    this.saveAs = { class: characterType.Thief, level: 1};  
     this.morale = 8;
     this.treasureType = "U";
     //this.Alignment = [{ alignment: Chaotic, probability: 50 }, { alignment: Neutral, probability: 50 }];
@@ -147,7 +147,7 @@ function Bat()
     this.isDead = false;
     this.movement = 120;
     this.attacks = [{ attackType: "Confusion", damage: "0D4" }]; //does no damage
-    this.saveAs = { class: "Human", level: 0};  
+    this.saveAs = { class: characterType.NormalMan, level: 0};  
     this.morale = 6;
     this.treasureType = "Nil";
     //this.Alignment = [{ alignment: Neutral, probability: 100 }];
@@ -173,7 +173,7 @@ function BatGiant()
     this.isDead = false;
     this.movement = 180;
     this.attacks = [{ attackType: "Bite", damage: "1D4" }]; 
-    this.saveAs = { class: "Fighter", level: 1};  
+    this.saveAs = { class: characterType.Fighter, level: 1};  
     this.morale = 8;
     this.treasureType = "Nil";
     //this.Alignment = [{ alignment: Neutral, probability: 100 }];
@@ -199,7 +199,7 @@ function BearBlack()
     this.isDead = false;
     this.movement = 120;
     this.attacks = [{ attackType: "Claw", damage: "1D3" }, { attackType: "Claw", damage: "1D3" }, { attackType: "Bite", damage: "1D6"}]; 
-    this.saveAs = { class: "Fighter", level: 2};  
+    this.saveAs = { class: characterType.Fighter, level: 2};  
     this.morale = 7;
     this.treasureType = "U";
    // this.Alignment = [{ alignment: Neutral, probability: 100 }];
@@ -224,7 +224,7 @@ function BearGrizzly()
     this.isDead = false;
     this.movement = 120;
     this.attacks = [{ attackType: "Claw", damage: "1D4" }, { attackType: "Claw", damage: "1D4" }, { attackType: "Bite", damage: "1D8"}]; 
-    this.saveAs = { class: "Fighter", level: 2};  
+    this.saveAs = { class: characterType.Fighter, level: 2};  
     this.morale = 8;
     this.treasureType = "U";
    //this.Alignment = [{ alignment: Neutral, probability: 100 }];
