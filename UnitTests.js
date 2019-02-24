@@ -312,14 +312,14 @@ runCharacterUnitTests();
 runInventoryUnitTests();
 runWeaponUnitTests();
 runMonsterUnitTests();
-runsavingThrowTests();
+runSavingThrowTests();
 //runAmmoTests();
 const noOfTests = 200;
 runDiceUnitTests();
 tests.testResults();
 
 //runTestCombatvCharacter();
-//runTestCombatvMonsters();
+runTestCombatvMonsters();
 
 
 function Tests()
@@ -681,7 +681,7 @@ function runMonsterUnitTests()
 
 //-----------------------------------------------
 
-function runsavingThrowTests()
+function runSavingThrowTests()
 {
 	testRequiredSavingThrow();
 }
@@ -2240,7 +2240,7 @@ function runTestCombatvMonsters()
 	console.log("you encounter " + monsters.length + " " + monsters[0].name + "s");
 	for(let i = 0; monsters.length > i; i++)
 	{
-		console.log(monsters[i].name + " " + i + " has " + monsters[j].currentHitPoints + " hit points");
+		console.log(monsters[i].name + " " + i + " has " + monsters[i].currentHitPoints + " hit points");
 	}
 
 	console.log("----------------------------");
