@@ -15,6 +15,8 @@ function Character()
 	this.canUseShield = true;
 	this.noOfHands = 2;
 	this.useableWeapon = [];
+	this.isParalysised = false;
+	this.isParalysisedDuration = 0;
 
 	this.getStrength = function() { return this.strength; };
 	this.getIntelligence = function() { return this.intelligence; };

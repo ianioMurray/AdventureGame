@@ -14,7 +14,6 @@ var dice = (function()
         modifier: 0 
     };
 
-
    var rollDice = function(params) 
    {
         var result = 0;

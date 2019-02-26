@@ -262,7 +262,7 @@ var requiredToHit = (function()
     {
         var toHitScores;
 
-        switch(attacker.hitDice)
+        switch(attacker.parseHitDiceWithoutModifier())
         {
             case "1":
                 toHitScores = monsterHitDice1ScoresToHit;

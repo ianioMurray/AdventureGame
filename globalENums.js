@@ -16,3 +16,5 @@ var charactersPrimeRequisite = {
     Wisdom: "Wisdom",
     Dexterity: "Dexterity"
 };
+
+

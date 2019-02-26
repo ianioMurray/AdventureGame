@@ -4,9 +4,15 @@
 //--------------------------------------------
 //             MONSTERS
 //--------------------------------------------
+const specialDamage = "Special";
 
 function Monster()
 {
+    var hitDice = {
+        numberOfDice: 0,
+        modifier: ""
+    };
+
     this.attack = function(opponent)
     {
         for(var i=0; this.attacks.length > i; i++ )
@@ -15,8 +21,17 @@ function Monster()
 
             if(dice.rollDice("1D20") >= ToHit)
             {
-                //all attacks will be against an opponent even if they die. 
-                opponent.takeDamage(dice.rollDice(this.attacks[i].damage));
+                var damage = this.attacks[i].damage;
+
+                //all attacks will be against one opponent even if they die. 
+                if(damage !== specialDamage)
+                {
+                    opponent.takeDamage(dice.rollDice(damage));
+                }
+                else
+                {
+                    this.specialDamage(opponent);
+                }
             }
         }
     };
@@ -30,9 +45,35 @@ function Monster()
         }
     };
 
+    this.parseHitDice = function()
+    {
+        var match = /^([0-9]+)/.exec(this.hitDice);
+        var match2 = /[+-][0-9]+/.exec(this.hitDice);
+
+        if(match2 === null)
+        {
+            match2 = ["0"];
+        }
+
+        return {
+            hitDice: match[0],
+            modifier: match2[0]
+        };
+    };
+
+    this.parseHitDiceWithoutModifier = function()
+    {
+        var match = /^([0-9]+)[+-]?/.exec(this.hitDice);
+
+        return match[0];
+    };
+
     this.GetHPs = function()
     {
-        return dice.rollDice(this.hitDice + "D8");
+        var parsedHitDice = this.parseHitDice();
+        var hitPoints = dice.rollDice( parsedHitDice.hitDice + "D8");
+        hitPoints = hitDice + parsedHitDice.modifier;
+        return hitPoints;
     };
 }
 
@@ -239,10 +280,60 @@ BearGrizzly.getNumberAppearing = function() { return 1; };
 
 
 
+
+//--------------------------------------------
+//---------------Carrion Crawler--------------
+//--------------------------------------------
+
+//description = "Can walk on walls and ceilings" },
+function CarrionCrawler()
+ {
+    this.name = "Carrion Crawler";
+    this.race = "animal";
+    this.armourClass = 7;
+    this.hitDice = "3+1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 120;
+    this.attacks = [{ attackType: "Tentacle", damage: specialDamage },
+                    { attackType: "Tentacle", damage: specialDamage }, 
+                    { attackType: "Tentacle", damage: specialDamage },
+                    { attackType: "Tentacle", damage: specialDamage }, 
+                    { attackType: "Tentacle", damage: specialDamage },
+                    { attackType: "Tentacle", damage: specialDamage }, 
+                    { attackType: "Tentacle", damage: specialDamage },
+                    { attackType: "Tentacle", damage: specialDamage } ]; 
+    this.saveAs = { class: characterType.Fighter, level: 2};  
+    this.morale = 9;
+    this.treasureType = "B";
+   //this.Alignment = [{ alignment: Neutral, probability: 100 }];
+}
+
+CarrionCrawler.prototype = new Monster();
+CarrionCrawler.prototype.Constructor = CarrionCrawler;
+CarrionCrawler.getNumberAppearing = function() { return dice.rollDice("1D3"); };
+CarrionCrawler.specialDamage = function(opponent) {
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs, typeOfSave.ParalysisTurnToStone, dice.rollDice("1D20")))
+    {
+        opponent.isParalysised = true;
+        opponent.isParalysisedDuration = dice.rollDice("2D4");
+    }
+
+    //TODO - if all party members present are paralysised the crawler will starting eating them
+};
+
+
+
+
+
+
+
+
+
+
+
 /*
-
-
-
 
 function Basilisk(params) {
     this.name = "Basilisk";
@@ -294,16 +385,7 @@ function Bugbear(params) {
     this.attacks = { attackType = WeaponAttack, damageAmount = "2d4" };
     this.specialAbilities = [{ description = "surprise 50% due to their stealth" }];
 }
-function CarrionCrawler(params) {
-    this.name = "Carrion Crawler";
-    this.movement = 120;
-    this.hitDice = "3d8+1";
-    this.armourClass = 7;
-    this.treasureType = "B";
-    this.Alignment = Neutral;
-    this.attacks = { attackType = TentacleAttack, Quantity = 8 };		// Needs work
-    this.specialAbilities = [{ description = "Can walk on walls and ceilings" }, { description = "Paralysing touch" }];
-}
+
 function Chimera(params) {
     this.name = "Chimera";
     this.movement = [{ movementType = Ground, movementRate = 120 }, { movementType = Flying, movementRate = 180 }];

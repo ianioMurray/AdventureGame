@@ -596,12 +596,23 @@ function Tests()
 		this.validate(expected, actual, message);	
 	};
 
-	this.checkRequiredSavingThrow = function(individual, typeOfSave, expected, actual, testName)
+	this.checkIsSavingThrowMade = function(individual, typeOfSave, expected, actual, testName)
 	{
 		var message = " FAIL " + testName + ": " + individual.name + "'s saving throw against " + typeOfSave + " was " + actual + " but the expected was " + expected;
 		this.validate(expected, actual, message);
 	};
-	
+
+	this.parseHitDiceHd = function(monster, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + monster.name + "'s hit dice are " + actual + " but the expected was " + expected;
+		this.validate(expected, actual, message);
+	};
+
+	this.parseHitDiceModifier = function(monster, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + monster.name + "'s hit dice modifier is " + actual + " but the expected was " + expected;
+		this.validate(expected, actual, message);
+	};
 
 	this.testResults = function()
 	{
@@ -708,13 +719,14 @@ function runMonsterUnitTests()
 {
 	testMonsterToHit();
 	testMonsterTakeDamage();
+	testParseHitDice();
 }
 
 //-----------------------------------------------
 
 function runSavingThrowTests()
 {
-	testRequiredSavingThrow();
+	testIsSavingThrowMade();
 }
 
 
@@ -2164,7 +2176,7 @@ function testMonsterTakeDamage()
 	tests.checkIsDead(acolyte, true, acolyte.isDead, testMonsterTakeDamage.name);	
 }
 
-function testRequiredSavingThrow()
+function testIsSavingThrowMade()
 {
 	var ape = new Ape();
 	var acolyte = new Acolyte(); 
@@ -2174,46 +2186,142 @@ function testRequiredSavingThrow()
 	var thief = new Thief(thiefTestParams);	
 
 	//save vs poison 
-	tests.checkRequiredSavingThrow(ape, "DeathRayPoison", 12, savingThrow.getSavingThrow(ape.saveAs, savingThrow.typeOfSave.DeathRayPoison), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(acolyte, "DeathRayPoison", 11, savingThrow.getSavingThrow(acolyte.saveAs, savingThrow.typeOfSave.DeathRayPoison), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(magicUser, "DeathRayPoison", 13, savingThrow.getSavingThrow(magicUser.saveAs, savingThrow.typeOfSave.DeathRayPoison), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(fighter, "DeathRayPoison", 12, savingThrow.getSavingThrow(fighter.saveAs, savingThrow.typeOfSave.DeathRayPoison), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(cleric, "DeathRayPoison", 11, savingThrow.getSavingThrow(cleric.saveAs, savingThrow.typeOfSave.DeathRayPoison), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(thief, "DeathRayPoison", 13, savingThrow.getSavingThrow(thief.saveAs, savingThrow.typeOfSave.DeathRayPoison), testRequiredSavingThrow.name);
+	tests.checkIsSavingThrowMade(ape, "DeathRayPoison", false, savingThrow.isSavingThrowMade(ape.saveAs, savingThrow.typeOfSave.DeathRayPoison, 11), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(ape, "DeathRayPoison", true, savingThrow.isSavingThrowMade(ape.saveAs, savingThrow.typeOfSave.DeathRayPoison, 12), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(ape, "DeathRayPoison", true, savingThrow.isSavingThrowMade(ape.saveAs, savingThrow.typeOfSave.DeathRayPoison, 13), testIsSavingThrowMade.name);
+	
+	tests.checkIsSavingThrowMade(acolyte, "DeathRayPoison", false, savingThrow.isSavingThrowMade(acolyte.saveAs, savingThrow.typeOfSave.DeathRayPoison, 10), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(acolyte, "DeathRayPoison", true, savingThrow.isSavingThrowMade(acolyte.saveAs, savingThrow.typeOfSave.DeathRayPoison, 11), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(acolyte, "DeathRayPoison", true, savingThrow.isSavingThrowMade(acolyte.saveAs, savingThrow.typeOfSave.DeathRayPoison, 12), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(magicUser, "DeathRayPoison", false, savingThrow.isSavingThrowMade(magicUser.saveAs, savingThrow.typeOfSave.DeathRayPoison, 12), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(magicUser, "DeathRayPoison", true, savingThrow.isSavingThrowMade(magicUser.saveAs, savingThrow.typeOfSave.DeathRayPoison, 13), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(magicUser, "DeathRayPoison", true, savingThrow.isSavingThrowMade(magicUser.saveAs, savingThrow.typeOfSave.DeathRayPoison, 14), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(fighter, "DeathRayPoison", false, savingThrow.isSavingThrowMade(fighter.saveAs, savingThrow.typeOfSave.DeathRayPoison, 11), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(fighter, "DeathRayPoison", true, savingThrow.isSavingThrowMade(fighter.saveAs, savingThrow.typeOfSave.DeathRayPoison, 12), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(fighter, "DeathRayPoison", true, savingThrow.isSavingThrowMade(fighter.saveAs, savingThrow.typeOfSave.DeathRayPoison, 13), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(cleric, "DeathRayPoison", false, savingThrow.isSavingThrowMade(cleric.saveAs, savingThrow.typeOfSave.DeathRayPoison, 10), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(cleric, "DeathRayPoison", true, savingThrow.isSavingThrowMade(cleric.saveAs, savingThrow.typeOfSave.DeathRayPoison, 11), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(cleric, "DeathRayPoison", true, savingThrow.isSavingThrowMade(cleric.saveAs, savingThrow.typeOfSave.DeathRayPoison, 12), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(thief, "DeathRayPoison", false, savingThrow.isSavingThrowMade(thief.saveAs, savingThrow.typeOfSave.DeathRayPoison, 12), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(thief, "DeathRayPoison", true, savingThrow.isSavingThrowMade(thief.saveAs, savingThrow.typeOfSave.DeathRayPoison, 13), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(thief, "DeathRayPoison", true, savingThrow.isSavingThrowMade(thief.saveAs, savingThrow.typeOfSave.DeathRayPoison, 14), testIsSavingThrowMade.name);
 
 	//save vs magic wands 
-	tests.checkRequiredSavingThrow(ape, "MagicWands", 13, savingThrow.getSavingThrow(ape.saveAs, savingThrow.typeOfSave.MagicWands), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(acolyte, "MagicWands", 12, savingThrow.getSavingThrow(acolyte.saveAs, savingThrow.typeOfSave.MagicWands), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(magicUser, "MagicWands", 14, savingThrow.getSavingThrow(magicUser.saveAs, savingThrow.typeOfSave.MagicWands), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(fighter, "MagicWands", 13, savingThrow.getSavingThrow(fighter.saveAs, savingThrow.typeOfSave.MagicWands), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(cleric, "MagicWands", 12, savingThrow.getSavingThrow(cleric.saveAs, savingThrow.typeOfSave.MagicWands), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(thief, "MagicWands", 14, savingThrow.getSavingThrow(thief.saveAs, savingThrow.typeOfSave.MagicWands), testRequiredSavingThrow.name);
+	tests.checkIsSavingThrowMade(ape, "MagicWands", false, savingThrow.isSavingThrowMade(ape.saveAs, savingThrow.typeOfSave.MagicWands, 12), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(ape, "MagicWands", true, savingThrow.isSavingThrowMade(ape.saveAs, savingThrow.typeOfSave.MagicWands, 13), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(ape, "MagicWands", true, savingThrow.isSavingThrowMade(ape.saveAs, savingThrow.typeOfSave.MagicWands, 14), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(acolyte, "MagicWands", false, savingThrow.isSavingThrowMade(acolyte.saveAs, savingThrow.typeOfSave.MagicWands, 11), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(acolyte, "MagicWands", true, savingThrow.isSavingThrowMade(acolyte.saveAs, savingThrow.typeOfSave.MagicWands, 12), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(acolyte, "MagicWands", true, savingThrow.isSavingThrowMade(acolyte.saveAs, savingThrow.typeOfSave.MagicWands, 13), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(magicUser, "MagicWands", false, savingThrow.isSavingThrowMade(magicUser.saveAs, savingThrow.typeOfSave.MagicWands, 13), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(magicUser, "MagicWands", true, savingThrow.isSavingThrowMade(magicUser.saveAs, savingThrow.typeOfSave.MagicWands, 14), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(magicUser, "MagicWands", true, savingThrow.isSavingThrowMade(magicUser.saveAs, savingThrow.typeOfSave.MagicWands, 15), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(fighter, "MagicWands", false, savingThrow.isSavingThrowMade(fighter.saveAs, savingThrow.typeOfSave.MagicWands, 12), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(fighter, "MagicWands", true, savingThrow.isSavingThrowMade(fighter.saveAs, savingThrow.typeOfSave.MagicWands, 13), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(fighter, "MagicWands", true, savingThrow.isSavingThrowMade(fighter.saveAs, savingThrow.typeOfSave.MagicWands, 14), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(cleric, "MagicWands", false, savingThrow.isSavingThrowMade(cleric.saveAs, savingThrow.typeOfSave.MagicWands, 11), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(cleric, "MagicWands", true, savingThrow.isSavingThrowMade(cleric.saveAs, savingThrow.typeOfSave.MagicWands, 12), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(cleric, "MagicWands", true, savingThrow.isSavingThrowMade(cleric.saveAs, savingThrow.typeOfSave.MagicWands, 13), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(thief, "MagicWands", false, savingThrow.isSavingThrowMade(thief.saveAs, savingThrow.typeOfSave.MagicWands, 13), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(thief, "MagicWands", true, savingThrow.isSavingThrowMade(thief.saveAs, savingThrow.typeOfSave.MagicWands, 14), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(thief, "MagicWands", true, savingThrow.isSavingThrowMade(thief.saveAs, savingThrow.typeOfSave.MagicWands, 15), testIsSavingThrowMade.name);
 
 	//save vs paralysis
-	tests.checkRequiredSavingThrow(ape, "ParalysisTurnToStone", 14, savingThrow.getSavingThrow(ape.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(acolyte, "ParalysisTurnToStone", 14, savingThrow.getSavingThrow(acolyte.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(magicUser, "ParalysisTurnToStone", 13, savingThrow.getSavingThrow(magicUser.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(fighter, "ParalysisTurnToStone", 14, savingThrow.getSavingThrow(fighter.saveAs,savingThrow.typeOfSave.ParalysisTurnToStone), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(cleric, "ParalysisTurnToStone", 14, savingThrow.getSavingThrow(cleric.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(thief, "ParalysisTurnToStone", 13, savingThrow.getSavingThrow(thief.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone), testRequiredSavingThrow.name);
+	tests.checkIsSavingThrowMade(ape, "ParalysisTurnToStone", false, savingThrow.isSavingThrowMade(ape.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, 13), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(ape, "ParalysisTurnToStone", true, savingThrow.isSavingThrowMade(ape.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, 14), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(ape, "ParalysisTurnToStone", true, savingThrow.isSavingThrowMade(ape.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, 15), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(acolyte, "ParalysisTurnToStone", false, savingThrow.isSavingThrowMade(acolyte.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, 13), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(acolyte, "ParalysisTurnToStone", true, savingThrow.isSavingThrowMade(acolyte.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, 14), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(acolyte, "ParalysisTurnToStone", true, savingThrow.isSavingThrowMade(acolyte.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, 15), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(magicUser, "ParalysisTurnToStone", false, savingThrow.isSavingThrowMade(magicUser.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, 12), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(magicUser, "ParalysisTurnToStone", true, savingThrow.isSavingThrowMade(magicUser.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, 13), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(magicUser, "ParalysisTurnToStone", true, savingThrow.isSavingThrowMade(magicUser.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, 14), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(fighter, "ParalysisTurnToStone", false, savingThrow.isSavingThrowMade(fighter.saveAs,savingThrow.typeOfSave.ParalysisTurnToStone, 13), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(fighter, "ParalysisTurnToStone", true, savingThrow.isSavingThrowMade(fighter.saveAs,savingThrow.typeOfSave.ParalysisTurnToStone, 14), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(fighter, "ParalysisTurnToStone", true, savingThrow.isSavingThrowMade(fighter.saveAs,savingThrow.typeOfSave.ParalysisTurnToStone, 15), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(cleric, "ParalysisTurnToStone", false, savingThrow.isSavingThrowMade(cleric.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, 13), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(cleric, "ParalysisTurnToStone", true, savingThrow.isSavingThrowMade(cleric.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, 14), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(cleric, "ParalysisTurnToStone", true, savingThrow.isSavingThrowMade(cleric.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, 15), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(thief, "ParalysisTurnToStone", false, savingThrow.isSavingThrowMade(thief.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone), 12, testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(thief, "ParalysisTurnToStone", true, savingThrow.isSavingThrowMade(thief.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, 13), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(thief, "ParalysisTurnToStone", true, savingThrow.isSavingThrowMade(thief.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, 14), testIsSavingThrowMade.name);
 
 	//save vs dragon breathe
-	tests.checkRequiredSavingThrow(ape, "DragonBreath", 15, savingThrow.getSavingThrow(ape.saveAs, savingThrow.typeOfSave.DragonBreath), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(acolyte, "DragonBreath", 16, savingThrow.getSavingThrow(acolyte.saveAs, savingThrow.typeOfSave.DragonBreath), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(magicUser, "DragonBreath", 16, savingThrow.getSavingThrow(magicUser.saveAs, savingThrow.typeOfSave.DragonBreath), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(fighter, "DragonBreath", 15, savingThrow.getSavingThrow(fighter.saveAs, savingThrow.typeOfSave.DragonBreath), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(cleric, "DragonBreath", 16, savingThrow.getSavingThrow(cleric.saveAs, savingThrow.typeOfSave.DragonBreath), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(thief, "DragonBreath", 16, savingThrow.getSavingThrow(thief.saveAs, savingThrow.typeOfSave.DragonBreath), testRequiredSavingThrow.name);
+	tests.checkIsSavingThrowMade(ape, "DragonBreath", false, savingThrow.isSavingThrowMade(ape.saveAs, savingThrow.typeOfSave.DragonBreath, 14), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(ape, "DragonBreath", true, savingThrow.isSavingThrowMade(ape.saveAs, savingThrow.typeOfSave.DragonBreath, 15), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(ape, "DragonBreath", true, savingThrow.isSavingThrowMade(ape.saveAs, savingThrow.typeOfSave.DragonBreath, 16), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(acolyte, "DragonBreath", false, savingThrow.isSavingThrowMade(acolyte.saveAs, savingThrow.typeOfSave.DragonBreath, 15), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(acolyte, "DragonBreath", true, savingThrow.isSavingThrowMade(acolyte.saveAs, savingThrow.typeOfSave.DragonBreath, 16), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(acolyte, "DragonBreath", true, savingThrow.isSavingThrowMade(acolyte.saveAs, savingThrow.typeOfSave.DragonBreath, 17), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(magicUser, "DragonBreath", false, savingThrow.isSavingThrowMade(magicUser.saveAs, savingThrow.typeOfSave.DragonBreath, 15), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(magicUser, "DragonBreath", true, savingThrow.isSavingThrowMade(magicUser.saveAs, savingThrow.typeOfSave.DragonBreath, 16), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(magicUser, "DragonBreath", true, savingThrow.isSavingThrowMade(magicUser.saveAs, savingThrow.typeOfSave.DragonBreath, 17), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(fighter, "DragonBreath", false, savingThrow.isSavingThrowMade(fighter.saveAs, savingThrow.typeOfSave.DragonBreath, 14), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(fighter, "DragonBreath", true, savingThrow.isSavingThrowMade(fighter.saveAs, savingThrow.typeOfSave.DragonBreath, 15), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(fighter, "DragonBreath", true, savingThrow.isSavingThrowMade(fighter.saveAs, savingThrow.typeOfSave.DragonBreath, 16), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(cleric, "DragonBreath", false, savingThrow.isSavingThrowMade(cleric.saveAs, savingThrow.typeOfSave.DragonBreath, 15), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(cleric, "DragonBreath", true, savingThrow.isSavingThrowMade(cleric.saveAs, savingThrow.typeOfSave.DragonBreath, 16), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(cleric, "DragonBreath", true, savingThrow.isSavingThrowMade(cleric.saveAs, savingThrow.typeOfSave.DragonBreath, 17), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(thief, "DragonBreath", false, savingThrow.isSavingThrowMade(thief.saveAs, savingThrow.typeOfSave.DragonBreath, 15), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(thief, "DragonBreath", true, savingThrow.isSavingThrowMade(thief.saveAs, savingThrow.typeOfSave.DragonBreath, 16), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(thief, "DragonBreath", true, savingThrow.isSavingThrowMade(thief.saveAs, savingThrow.typeOfSave.DragonBreath, 17), testIsSavingThrowMade.name);
 
 	//save vs Rods & staves
-	tests.checkRequiredSavingThrow(ape, "RodsStavesSpells", 16, savingThrow.getSavingThrow(ape.saveAs, savingThrow.typeOfSave.RodsStavesSpells), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(acolyte, "RodsStavesSpells", 15, savingThrow.getSavingThrow(acolyte.saveAs, savingThrow.typeOfSave.RodsStavesSpells), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(magicUser, "RodsStavesSpells", 15, savingThrow.getSavingThrow(magicUser.saveAs, savingThrow.typeOfSave.RodsStavesSpells), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(fighter, "RodsStavesSpells", 16, savingThrow.getSavingThrow(fighter.saveAs, savingThrow.typeOfSave.RodsStavesSpells), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(cleric, "RodsStavesSpells", 15, savingThrow.getSavingThrow(cleric.saveAs, savingThrow.typeOfSave.RodsStavesSpells), testRequiredSavingThrow.name);
-	tests.checkRequiredSavingThrow(thief, "RodsStavesSpells", 15, savingThrow.getSavingThrow(thief.saveAs, savingThrow.typeOfSave.RodsStavesSpells), testRequiredSavingThrow.name);
+	tests.checkIsSavingThrowMade(ape, "RodsStavesSpells", false, savingThrow.isSavingThrowMade(ape.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 15), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(ape, "RodsStavesSpells", true, savingThrow.isSavingThrowMade(ape.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 16), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(ape, "RodsStavesSpells", true, savingThrow.isSavingThrowMade(ape.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 17), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(acolyte, "RodsStavesSpells", false, savingThrow.isSavingThrowMade(acolyte.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 14), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(acolyte, "RodsStavesSpells", true, savingThrow.isSavingThrowMade(acolyte.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 15), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(acolyte, "RodsStavesSpells", true, savingThrow.isSavingThrowMade(acolyte.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 16), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(magicUser, "RodsStavesSpells", false, savingThrow.isSavingThrowMade(magicUser.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 14), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(magicUser, "RodsStavesSpells", true, savingThrow.isSavingThrowMade(magicUser.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 15), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(magicUser, "RodsStavesSpells", true, savingThrow.isSavingThrowMade(magicUser.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 16), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(fighter, "RodsStavesSpells", false, savingThrow.isSavingThrowMade(fighter.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 15), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(fighter, "RodsStavesSpells", true, savingThrow.isSavingThrowMade(fighter.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 16), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(fighter, "RodsStavesSpells", true, savingThrow.isSavingThrowMade(fighter.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 17), testIsSavingThrowMade.name);
+
+	tests.checkIsSavingThrowMade(cleric, "RodsStavesSpells", false, savingThrow.isSavingThrowMade(cleric.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 14), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(cleric, "RodsStavesSpells", true, savingThrow.isSavingThrowMade(cleric.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 15), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(cleric, "RodsStavesSpells", true, savingThrow.isSavingThrowMade(cleric.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 16), testIsSavingThrowMade.name);
+	
+	tests.checkIsSavingThrowMade(thief, "RodsStavesSpells", false, savingThrow.isSavingThrowMade(thief.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 14), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(thief, "RodsStavesSpells", true, savingThrow.isSavingThrowMade(thief.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 15), testIsSavingThrowMade.name);
+	tests.checkIsSavingThrowMade(thief, "RodsStavesSpells", true, savingThrow.isSavingThrowMade(thief.saveAs, savingThrow.typeOfSave.RodsStavesSpells, 16), testIsSavingThrowMade.name);
 }
 
+function testParseHitDice()
+{
+	var carrionCrawler = new CarrionCrawler();
+	var ape = new Ape();
+
+	tests.parseHitDiceHd(carrionCrawler, "3", carrionCrawler.parseHitDice().hitDice, testParseHitDice.name);
+	tests.parseHitDiceModifier(carrionCrawler, "+1", carrionCrawler.parseHitDice().modifier, testParseHitDice.name);	
+
+	tests.parseHitDiceHd(ape, "4", ape.parseHitDice().hitDice, testParseHitDice.name);
+	tests.parseHitDiceModifier(ape, "0", ape.parseHitDice().modifier, testParseHitDice.name);	
+}
 
 
 //----------------------------------------------------------

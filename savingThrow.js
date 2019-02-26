@@ -84,8 +84,20 @@ var savingThrow = (function(classLevel, saveAgainst)
         throw "unknown saving throw type";
     };
 
+    var isSavingThrowMade = function(classLevel, typeOfSavingThrow, roll)
+    {
+        if(getSavingThrow(classLevel, typeOfSavingThrow) <= roll)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    };
+
     return {
-        getSavingThrow: getSavingThrow,
-        typeOfSave: typeOfSave
+        typeOfSave: typeOfSave,
+        isSavingThrowMade: isSavingThrowMade
     };
 })();
