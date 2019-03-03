@@ -49,7 +49,7 @@ function Monster()
     {
         var match = /^([0-9]+)/.exec(this.hitDice);
         var match2 = /[+-][0-9]+/.exec(this.hitDice);
-
+        
         if(match2 === null)
         {
             match2 = ["0"];
@@ -57,7 +57,7 @@ function Monster()
 
         return {
             hitDice: match[0],
-            modifier: match2[0]
+            modifier: parseInt(match2[0])   
         };
     };
 
@@ -71,9 +71,9 @@ function Monster()
     this.GetHPs = function()
     {
         var parsedHitDice = this.parseHitDice();
-        var hitPoints = dice.rollDice( parsedHitDice.hitDice + "D8");
-        hitPoints = hitDice + parsedHitDice.modifier;
-        return hitPoints;
+        var hitPoints = 0;  
+        hitPoints = dice.rollDice( parsedHitDice.hitDice + "D8");
+        return hitPoints + parsedHitDice.modifier;
     };
 }
 
@@ -313,11 +313,11 @@ function CarrionCrawler()
 CarrionCrawler.prototype = new Monster();
 CarrionCrawler.prototype.Constructor = CarrionCrawler;
 CarrionCrawler.getNumberAppearing = function() { return dice.rollDice("1D3"); };
-CarrionCrawler.specialDamage = function(opponent) {
-    if(!savingThrow.isSavingThrowMade(opponent.saveAs, typeOfSave.ParalysisTurnToStone, dice.rollDice("1D20")))
+CarrionCrawler.prototype.specialDamage = function(opponent) {
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, dice.rollDice("1D20")))
     {
         opponent.isParalysised = true;
-        opponent.isParalysisedDuration = dice.rollDice("2D4");
+        opponent.paralysisedDuration = dice.rollDice("2D4");
     }
 
     //TODO - if all party members present are paralysised the crawler will starting eating them

@@ -349,8 +349,11 @@ const noOfTests = 200;
 runDiceUnitTests();
 tests.testResults();
 
-//runTestCombatvCharacter();
-runTestCombatvMonsters();
+runTestCombatvCharacter();
+runTestCombatvMonsterBandits();
+runTestCombatvMonsterCarrionCrawler();
+
+
 
 
 function Tests()
@@ -2317,10 +2320,12 @@ function testParseHitDice()
 	var ape = new Ape();
 
 	tests.parseHitDiceHd(carrionCrawler, "3", carrionCrawler.parseHitDice().hitDice, testParseHitDice.name);
-	tests.parseHitDiceModifier(carrionCrawler, "+1", carrionCrawler.parseHitDice().modifier, testParseHitDice.name);	
+	tests.parseHitDiceModifier(carrionCrawler, 1, carrionCrawler.parseHitDice().modifier, testParseHitDice.name);	
 
 	tests.parseHitDiceHd(ape, "4", ape.parseHitDice().hitDice, testParseHitDice.name);
-	tests.parseHitDiceModifier(ape, "0", ape.parseHitDice().modifier, testParseHitDice.name);	
+	tests.parseHitDiceModifier(ape, 0, ape.parseHitDice().modifier, testParseHitDice.name);	
+
+	//TODO a test is required for a monster with -ve modifier to ensure the the parse Modifier works correctly
 }
 
 
@@ -2386,10 +2391,12 @@ function runTestCombatvCharacter()
 }
 
 
-function runTestCombatvMonsters()
+function runTestCombatvMonsterBandits()
 {
 	function getRandomMonster() { return dice.rollDice("1D" + monsters.length); }
 	function getRandomCharacter()  { return dice.rollDice("1D" + characters.length); }
+	console.log("----------------------------------");
+	console.log("Party vs Bandits");
 	
 	var fighter1 = new Fighter(fighterTestParams);
 	var fighter2 = new Fighter(fighterTestParams);
@@ -2458,6 +2465,105 @@ function runTestCombatvMonsters()
 		console.log("----------------------------");
 	}
 }
+
+function runTestCombatvMonsterCarrionCrawler()
+{
+	function getRandomMonster() { return dice.rollDice("1D" + monsters.length); }
+	function getRandomCharacter()  { return dice.rollDice("1D" + party.length); }
+	console.log("----------------------------------");
+	console.log("Party vs Carrion Crawler");
+
+	var fighter1 = new Fighter(fighterTestParams);
+	var fighter2 = new Fighter(fighterTestParams);
+	var fighter3 = new Fighter(fighterTestParams);
+	var cleric1 = new Cleric(clericTestParams);
+	var cleric2 = new Cleric(clericTestParams);
+	var cleric3 = new Cleric(clericTestParams);
+	var sword1 = new Sword(swordParams);
+	var sword2 = new Sword(swordParams);
+	var sword3 = new Sword(swordParams);
+	var mace1 = new Mace(maceParams);
+	var mace2 = new Mace(maceParams);
+	var mace3 = new Mace(maceParams);
+	var plateMail1 = new PlateMail(plateArmourParams);
+	var plateMail2 = new PlateMail(plateArmourParams);
+	var plateMail3 = new PlateMail(plateArmourParams);
+	var plateMail4 = new PlateMail(plateArmourParams);
+	var plateMail5 = new PlateMail(plateArmourParams);
+	var plateMail6 = new PlateMail(plateArmourParams);
+
+	fighter1.name = "Albert";
+	fighter2.name = "Bob";
+	fighter3.name = "Charley";
+	cleric1.name = "Dave";
+	cleric2.name = "Eric";
+	cleric3.name = "Fred";
+
+	fighter1.equip(sword1);
+	fighter1.equip(plateMail1);
+	fighter2.equip(sword2);
+	fighter2.equip(plateMail2);
+	fighter3.equip(sword3);
+	fighter3.equip(plateMail3);
+
+	cleric1.equip(mace1);
+	cleric1.equip(plateMail4);
+	cleric2.equip(mace2);
+	cleric2.equip(plateMail5);
+	cleric3.equip(mace3);
+	cleric3.equip(plateMail6);
+	
+	var monsters = Monster.createMonsters(CarrionCrawler);
+	var party = [fighter1, fighter2, fighter3, cleric1, cleric2, cleric3];
+
+	console.log("you encounter " + monsters.length + " " + monsters[0].name + "s");
+	for(let i = 0; monsters.length > i; i++)
+	{
+		console.log(monsters[i].name + " " + i + " has " + monsters[i].currentHitPoints + " hit points");
+	}
+
+	while(party.length > 0 && monsters.length > 0)
+	{
+		for(let i=0; party.length > i; i++)
+		{
+			if(party[i].isParalysised)
+			{
+				console.log(party[i].name + " is paralysised for " + party[i].paralysisedDuration + " more turns");
+				party[i].paralysisedDuration--;
+			}
+			else
+			{
+				var monsterIndex = getRandomMonster() - 1;
+				console.log(party[i].name + " attacks the Carrion Crawler " + monsterIndex);
+				party[i].attack(monsters[monsterIndex]);
+				console.log("The carrion Crawler's hit points are " + monsters[monsterIndex].currentHitPoints);	
+			}		
+		}
+
+		for(let i=0; monsters.length > i; i++)
+		{
+			if(monsters[i].isDead)
+			{
+				monsters.splice(i, 1);
+				i = i -1;
+			}
+		}
+		
+		for(let i=0; monsters.length > i; i++)
+		{
+			var characterIndex = getRandomCharacter() - 1;
+			console.log("Carrion Crawler attacks " + party[characterIndex].name);
+			monsters[i].attack(party[characterIndex]);
+			console.log(party[characterIndex].name + "'s hit points are " + party[characterIndex].currentHitPoints);	
+			console.log(party[characterIndex].name + " is paralysis " + party[characterIndex].isParalysised);	
+		}
+	}
+}
+
+
+
+
+
 
 
 //--------------------------------------------------------------------------------------------------------------
