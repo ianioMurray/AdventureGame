@@ -443,9 +443,82 @@ BeetleTiger.prototype = new BeetleGiant();
 BeetleTiger.prototype.Constructor = BeetleTiger;
 BeetleTiger.getNumberAppearing = function() { return dice.rollDice("1D6"); };
 
+//--------------------------------------------
+//---------------Berserker--------------------
+//--------------------------------------------
 
+//this.specialAbilities = [{ AttackRollBonus, value=+2, against =[Men, Kobolds, Goblins, Orcs] }, { NoRetreatOrSurrender }];
+function Berserker() 
+{
+    this.name = "Berserker";
+    this.race = "human";
+    this.armourClass = 7;
+    this.hitDice = "1+1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 120;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" }];
+    this.saveAs = { class: characterType.Fighter, level: 1 }; 
+    this.morale = 12;                   //set to 12 for the moment to reflect that they never run or surrender
+    this.treasureType = "P";
+    //this.Alignment = Neutral;
+}
 
+Berserker.prototype = new Monster();
+Berserker.prototype.Constructor = Berserker;
+Berserker.getNumberAppearing = function() { return dice.rollDice("1D6"); };
 
+//--------------------------------------------
+//-------------------Boar---------------------
+//--------------------------------------------
+
+function Boar() 
+{
+    this.name = "Boar";
+    this.race = "animal";
+    this.armourClass = 7;
+    this.hitDice = "3";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 150;
+    this.attacks = [{ attackType: "Tusk", damageAmount: "2D4" }];
+    this.saveAs = { class: characterType.Fighter, level: 2 }; 
+    this.morale = 9;
+    this.treasureType = "Nil";
+    //this.Alignment = Neutral;
+}
+
+Boar.prototype = new Monster();
+Boar.prototype.Constructor = Boar;
+Boar.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+
+//--------------------------------------------
+//-------------------Bugbear------------------
+//--------------------------------------------
+
+//surprise on a 1 to 3 on 1D6.  if using weapon they get weapon damage +1
+function Bugbear() 
+{
+    this.name = "Bugbear";
+    this.race = "humaniod";
+    this.armourClass = 5;
+    this.hitDice = "3+1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 90;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "2D4" }];  //if weapon they get +1
+    this.saveAs = { class: characterType.Fighter, level: 3 }; 
+    this.morale = 9;
+    this.treasureType = "B";
+    //this.Alignment = Chaotic;
+}
+
+Bugbear.prototype = new Monster();
+Bugbear.prototype.Constructor = Bugbear;
+Bugbear.getNumberAppearing = function() { return dice.rollDice("2D4"); };
 
 //--------------------------------------------
 //---------------Carrion Crawler--------------
@@ -489,13 +562,218 @@ CarrionCrawler.prototype.specialDamage = function(opponent) {
     //TODO - if all party members present are paralysised the crawler will starting eating them
 };
 
+//------------------------------------------
+//---       Giant Cat Prototype          ---
+//------------------------------------------
+function CatGiant() 
+{  }
 
+CatGiant.prototype = new Monster();
+CatGiant.prototype.Constructor = CatGiant;
 
+//--------------------------------------------
+//---------------Mountian Lion----------------
+//--------------------------------------------
 
+function MountainLion() 
+{
+    this.name = "Mountain Lion";
+    this.race = "animal";
+    this.armourClass = 6;
+    this.hitDice = "3+2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 150;
+    this.attacks = [{ attackType: "Claw", damageAmount: "1D3" }, 
+                    { attackType: "Claw", damageAmount: "1D3" }, 
+                    { attackType: "Bite", damageAmount: "1D6" } ]; 
+    this.saveAs = { class: characterType.Fighter, level: 2 }; 
+    this.morale = 8;
+    this.treasureType = "U";
+    //this.Alignment = Neutral;
+}
 
+MountainLion.prototype = new CatGiant();
+MountainLion.prototype.Constructor = MountainLion;
+MountainLion.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 
+//--------------------------------------------
+//-----------------Panther--------------------
+//--------------------------------------------
 
+function Panther() 
+{
+    this.name = "Panther";
+    this.race = "animal";
+    this.armourClass = 4;
+    this.hitDice = "4";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 210;
+    this.attacks = [{ attackType: "Claw", damageAmount: "1D4" }, 
+                    { attackType: "Claw", damageAmount: "1D4" }, 
+                    { attackType: "Bite", damageAmount: "1D8" } ]; 
+    this.saveAs = { class: characterType.Fighter, level: 2 }; 
+    this.morale = 8;
+    this.treasureType = "U";
+    //this.Alignment = Neutral;
+}
 
+Panther.prototype = new CatGiant();
+Panther.prototype.Constructor = Panther;
+Panther.getNumberAppearing = function() { return dice.rollDice("1D2"); };
+
+//--------------------------------------------
+//-------------------Lion---------------------
+//--------------------------------------------
+
+function Lion() 
+{
+    this.name = "Lion";
+    this.race = "animal";
+    this.armourClass = 6;
+    this.hitDice = "5";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 150;
+    this.attacks = [{ attackType: "Claw", damageAmount: "1D4+1" },      
+                    { attackType: "Claw", damageAmount: "1D4+1" }, 
+                    { attackType: "Bite", damageAmount: "1D10" } ]; 
+    this.saveAs = { class: characterType.Fighter, level: 3 }; 
+    this.morale = 9;
+    this.treasureType = "U";
+    //this.Alignment = Neutral;
+}
+
+Lion.prototype = new CatGiant();
+Lion.prototype.Constructor = Lion;
+Lion.getNumberAppearing = function() { return dice.rollDice("1D4"); };
+
+//--------------------------------------------
+//-------------------Tiger--------------------
+//--------------------------------------------
+
+function Tiger() 
+{
+    this.name = "Tiger";
+    this.race = "animal";
+    this.armourClass = 6;
+    this.hitDice = "6";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 150;
+    this.attacks = [{ attackType: "Claw", damageAmount: "1D6" },      
+                    { attackType: "Claw", damageAmount: "1D6" }, 
+                    { attackType: "Bite", damageAmount: "2D6" } ]; 
+    this.saveAs = { class: characterType.Fighter, level: 3 }; 
+    this.morale = 9;
+    this.treasureType = "U";
+    //this.Alignment = Neutral;
+}
+
+Tiger.prototype = new CatGiant();
+Tiger.prototype.Constructor = Tiger;
+Tiger.getNumberAppearing = function() { return 1; };
+
+//--------------------------------------------
+//--------------Sabre-tooth Tiger-------------
+//--------------------------------------------
+
+function SabreToothTiger() 
+{
+    this.name = "Sabre-tooth Tiger";
+    this.race = "animal";
+    this.armourClass = 6;
+    this.hitDice = "8";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 150;
+    this.attacks = [{ attackType: "Claw", damageAmount: "1D8" },      
+                    { attackType: "Claw", damageAmount: "1D8" }, 
+                    { attackType: "Bite", damageAmount: "2D8" } ]; 
+    this.saveAs = { class: characterType.Fighter, level: 4 }; 
+    this.morale = 10;
+    this.treasureType = "V";
+    //this.Alignment = Neutral;
+}
+
+SabreToothTiger.prototype = new CatGiant();
+SabreToothTiger.prototype.Constructor = SabreToothTiger;
+SabreToothTiger.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
+
+//--------------------------------------------
+//----------------Cave Locust-----------------
+//--------------------------------------------
+
+//they will try and flee most of the time.  When fleeing they will jump but 50% of the time they 
+//will bump into a party member (Bump attack).  If cornered they will spit, the spit should be against AC9 
+//it will paralysis for a turn.  Anyone going near the character will save vs poison or be sick till the character washes
+//locusts shout warnings which 20% of the time will cause wandering monsters to appear
+function CaveLocust() 
+{
+    this.name = "Cave Locust";
+    this.race = "animal";
+    this.armourClass = 4;
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 60;
+    this.attacks = [{ attackType: "Bite", damageAmount: "1D2" },      
+                    { attackType: "Bump", damageAmount: "1D4" }, 
+                    { attackType: "Spit", damageAmount: specialDamage } ]; 
+    this.saveAs = { class: characterType.Fighter, level: 2 }; 
+    this.morale = 5;
+    this.treasureType = "Nil";
+    //this.Alignment = Neutral;
+}
+
+CaveLocust.prototype = new Monster();
+CaveLocust.prototype.Constructor = CaveLocust;
+CaveLocust.getNumberAppearing = function() {  return dice.rollDice("2D10"); };
+CaveLocust.prototype.specialDamage = function(opponent) {
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
+    {
+        opponent.isParalysised = true;
+        opponent.paralysisedDuration = 1;
+    }
+};
+
+//--------------------------------------------
+//--------------Centipede, Giant--------------
+//--------------------------------------------
+
+function CentipedeGiant() 
+{
+    this.name = "Giant Centipede";
+    this.race = "animal";
+    this.armourClass = 9;
+    this.hitDice = "0.5";        //TODO - work out how to deal with this (1-4 hps)
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 60;
+    this.attacks = [{ attackType: "Bite", damageAmount: specialDamage } ]; 
+    this.saveAs = { class: characterType.NormalMan, level: 0 }; 
+    this.morale = 7;
+    this.treasureType = "Nil";
+    //this.Alignment = Neutral;
+}
+
+CentipedeGiant.prototype = new Monster();
+CentipedeGiant.prototype.Constructor = CentipedeGiant;
+CentipedeGiant.getNumberAppearing = function() {  return dice.rollDice("2D4"); };
+CentipedeGiant.prototype.specialDamage = function(opponent) {
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
+    {
+        //TODO - this does no damage but movement is halved and character is unable to do physical activities for 10 days
+    }
+};
 
 
 
@@ -511,16 +789,7 @@ function Basilisk(params) {
     this.attacks = { attackType = BiteAttack, damageAmount = "1d10" };
     this.specialAbilities = [{ PetrifyingGaze }];
 }
-function Berserker(params) {
-    this.name = "Berserker";
-    this.movement = 120;
-    this.hitDice = "1d8+1";
-    this.armourClass = 7;
-    this.treasureType = "J";
-    this.Alignment = Neutral;
-    this.attacks = { attackType = WeaponAttack, damageAmount = "1d8" };
-    this.specialAbilities = [{ AttackRollBonus, value=+2, against =[Men, Kobolds, Goblins, Orcs] }, { NoRetreatOrSurrender }];
-}
+
 function BlackPudding(params) {
     this.name = "Black Pudding";
     this.movement = 60;
