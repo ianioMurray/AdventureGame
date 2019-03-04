@@ -776,6 +776,537 @@ CentipedeGiant.prototype.specialDamage = function(opponent) {
 };
 
 
+//--------------------------------------------
+//----------------Doppleganger----------------
+//--------------------------------------------
+
+//this.specialAbilities = [{ description = "able to shape itself into the double of any humanoid creature (up to seven or so feet tall) it observes" },
+//{ description = "Save Vs Spells bonus", modifierAmount = + 10 },
+//{ description = "Save vs Wands bonus", modifierAmount = +7 }];
+// unaffected by charm and sleep spells
+
+function Doppleganger() {
+    this.name = "Doppleganger";
+    this.race = "???";                 //not sure what this should be
+    this.armourClass = 5;
+    this.hitDice = "4";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 90;
+    this.attacks = [{ attackType: "UnspecifiedAttack", damageAmount: "1D12" }];
+    this.saveAs = { class: characterType.Fighter, level: 10 }; 
+    this.morale = 10;
+    this.treasureType = "E";    
+    //this.Alignment = [{ alignment = ChaoticEvil, probability = 50 }, { alignment = Neutral, probability = 50 }];
+}
+
+Doppleganger.prototype = new Monster();
+Doppleganger.prototype.Constructor = Doppleganger;
+Doppleganger.getNumberAppearing = function() {  return dice.rollDice("1D6"); };
+
+//------------------------------------------
+//---       Dragon Prototype          ---
+//------------------------------------------
+
+//dragons attack with claws and bite (1-3) OR breath (4-6) but not both at the same time
+//dragons get 3 breath attacks per day
+
+function Dragon()
+{
+}
+
+Dragon.prototype = new Monster();
+Dragon.prototype.Constructor = Dragon;
+Dragon.prototype.specialDamage = function(opponent) {
+    var damage = this.currentHitPoints;
+    if(savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DragonBreath, dice.rollDice("1D20")))
+    {
+        damage = damage / 2;
+    }
+    opponent.takeDamage(damage);
+};
+
+//--------------------------------------------
+//----------------White Dragon----------------
+//--------------------------------------------
+
+// this.specialAbilities = [{ description = "BreathWeapon: Cold", area= "80 foot X 30 foot cone" }];
+// not affected by cold attacks
+
+function WhiteDragon() {
+    this.name = "White Dragon";
+    this.race = "dragon";                 
+    this.armourClass = 3;
+    this.hitDice = "6";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 90;
+    this.attacks = [{ attackType: "Claw", damageAmount: "1D4" }, 
+                    { attackType: "Claw", damageAmount: "1D4" }, 
+                    { attackType: "Bite", damageAmount: "2D8" },
+                    { attackType: "Breath", damageAmount: specialDamage } ];
+    this.saveAs = { class: characterType.Fighter, level: 6 }; 
+    this.morale = 8;
+    this.treasureType = "H";    
+    //this.Alignment = [{ alignment = Neutral, probability = 100 }];
+    this.canTalk = 10;
+    this.isSleep = 50;
+    this.firstLevelSpells = 3;
+    this.secondLevelSpells = 0;
+    this.thirdLevelSpells = 0;
+}
+
+WhiteDragon.prototype = new Dragon();
+WhiteDragon.prototype.Constructor = WhiteDragon;
+WhiteDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
+
+//--------------------------------------------
+//----------------Black Dragon----------------
+//--------------------------------------------
+
+// this.specialAbilities = [{ description = "BreathWeapon: acid", area= "60 foot X 5 foot line" }];
+// not affected by acid attacks
+
+function BlackDragon() {
+    this.name = "Black Dragon";
+    this.race = "dragon";                 
+    this.armourClass = 2;
+    this.hitDice = "7";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 90;
+    this.attacks = [{ attackType: "Claw", damageAmount: "1D4+1" }, 
+                    { attackType: "Claw", damageAmount: "1D4+1" }, 
+                    { attackType: "Bite", damageAmount: "2D10" },
+                    { attackType: "Breath", damageAmount: specialDamage } ];
+    this.saveAs = { class: characterType.Fighter, level: 7 }; 
+    this.morale = 8;
+    this.treasureType = "H";    
+    //this.Alignment = [{ alignment = Chaotic, probability = 100 }];
+    this.canTalk = 20;
+    this.isSleep = 40;
+    this.firstLevelSpells = 4;
+    this.secondLevelSpells = 0;
+    this.thirdLevelSpells = 0;
+}
+
+BlackDragon.prototype = new Dragon();
+BlackDragon.prototype.Constructor = BlackDragon;
+BlackDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
+
+//--------------------------------------------
+//----------------Green Dragon----------------
+//--------------------------------------------
+
+// this.specialAbilities = [{ description = "BreathWeapon: Chlorine Gas", area= "50 foot X 40 foot cloud" }];
+// not affected by Chlorine Gas attacks
+
+function GreenDragon() {
+    this.name = "Green Dragon";
+    this.race = "dragon";                 
+    this.armourClass = 1;
+    this.hitDice = "8";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 90;
+    this.attacks = [{ attackType: "Claw", damageAmount: "1D6" }, 
+                    { attackType: "Claw", damageAmount: "1D6" }, 
+                    { attackType: "Bite", damageAmount: "3D8" },
+                    { attackType: "Breath", damageAmount: specialDamage } ];
+    this.saveAs = { class: characterType.Fighter, level: 8 }; 
+    this.morale = 9;
+    this.treasureType = "H";    
+    //this.Alignment = [{ alignment = Chaotic, probability = 100 }];
+    this.canTalk = 30;
+    this.isSleep = 30;
+    this.firstLevelSpells = 3;
+    this.secondLevelSpells = 3;
+    this.thirdLevelSpells = 0;
+}
+
+GreenDragon.prototype = new Dragon();
+GreenDragon.prototype.Constructor = GreenDragon;
+GreenDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
+
+//--------------------------------------------
+//----------------Blue Dragon----------------
+//--------------------------------------------
+
+// this.specialAbilities = [{ description = "BreathWeapon: Lightening", area= "100 foot X 5 foot line" }];
+// not affected by Lightening attacks
+
+function BlueDragon() {
+    this.name = "Blue Dragon";
+    this.race = "dragon";                 
+    this.armourClass = 0;
+    this.hitDice = "9";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 90;
+    this.attacks = [{ attackType: "Claw", damageAmount: "1D6+1" }, 
+                    { attackType: "Claw", damageAmount: "1D6+1" }, 
+                    { attackType: "Bite", damageAmount: "3D10" },
+                    { attackType: "Breath", damageAmount: specialDamage } ];
+    this.saveAs = { class: characterType.Fighter, level: 9 }; 
+    this.morale = 9;
+    this.treasureType = "H";    
+    //this.Alignment = [{ alignment = Neutral, probability = 100 }];
+    this.canTalk = 40;
+    this.isSleep = 20;
+    this.firstLevelSpells = 4;
+    this.secondLevelSpells = 4;
+    this.thirdLevelSpells = 0;
+}
+
+BlueDragon.prototype = new Dragon();
+BlueDragon.prototype.Constructor = BlueDragon;
+BlueDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
+
+//--------------------------------------------
+//----------------Red Dragon----------------
+//--------------------------------------------
+
+// this.specialAbilities = [{ description = "BreathWeapon: Fire", area= "90 foot X 30 foot cone" }];
+// not affected by Fire attacks
+
+function RedDragon() {
+    this.name = "Red Dragon";
+    this.race = "dragon";                 
+    this.armourClass = -1;
+    this.hitDice = "10";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 90;
+    this.attacks = [{ attackType: "Claw", damageAmount: "1D8" }, 
+                    { attackType: "Claw", damageAmount: "1D8" }, 
+                    { attackType: "Bite", damageAmount: "4D8" },
+                    { attackType: "Breath", damageAmount: specialDamage } ];
+    this.saveAs = { class: characterType.Fighter, level: 10 }; 
+    this.morale = 10;
+    this.treasureType = "H";    
+    //this.Alignment = [{ alignment = Chaotic, probability = 100 }];
+    this.canTalk = 50;
+    this.isSleep = 10;
+    this.firstLevelSpells = 3;
+    this.secondLevelSpells = 3;
+    this.thirdLevelSpells = 3;
+}
+
+RedDragon.prototype = new Dragon();
+RedDragon.prototype.Constructor = RedDragon;
+RedDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
+
+//--------------------------------------------
+//----------------Gold Dragon----------------
+//--------------------------------------------
+
+// this.specialAbilities = [{ description = "BreathWeapon: Fire", area= "90 foot X 30 foot cone" },
+//                          { description = "BreathWeapon: Gas", area= "50 foot X 40 foot cloud" }];
+// not affected by Fire or gas attacks
+
+function GoldDragon() {
+    this.name = "Gold Dragon";
+    this.race = "dragon";                 
+    this.armourClass = -2;
+    this.hitDice = "11";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 90;
+    this.attacks = [{ attackType: "Claw", damageAmount: "2D4" }, 
+                    { attackType: "Claw", damageAmount: "2D4" }, 
+                    { attackType: "Bite", damageAmount: "6D6" },
+                    { attackType: "Breath", damageAmount: specialDamage } ];
+    this.saveAs = { class: characterType.Fighter, level: 11 }; 
+    this.morale = 10;
+    this.treasureType = "H";    
+    //this.Alignment = [{ alignment = Lawful, probability = 100 }];
+    this.canTalk = 100;
+    this.isSleep = 5;
+    this.firstLevelSpells = 4;
+    this.secondLevelSpells = 4;
+    this.thirdLevelSpells = 4;
+}
+
+GoldDragon.prototype = new Dragon();
+GoldDragon.prototype.Constructor = GoldDragon;
+GoldDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
+
+//--------------------------------------------
+//----------------Driver Ant------------------
+//--------------------------------------------
+
+//once engaged in combat they will cross fire to get at an opponent
+//30% chance a nest will have gold nuggets worth 1D10 thousand gold pieces 
+
+function DriverAnt() {
+    this.name = "Driver Ant";
+    this.race = "animal";                 
+    this.armourClass = 3;
+    this.hitDice = "4";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 180;
+    this.attacks = [{ attackType: "Bite", damageAmount: "2D6" } ];
+    this.saveAs = { class: characterType.Fighter, level: 2 }; 
+    this.morale = 7;
+    this.treasureType = "U";    
+    //this.Alignment = [{ alignment = Neutral, probability = 100 }];
+}
+
+DriverAnt.prototype = new Monster();
+DriverAnt.prototype.Constructor = DriverAnt;
+DriverAnt.getNumberAppearing = function() {  return dice.rollDice("2D4"); };
+
+//--------------------------------------------
+//-------------------Dwarf--------------------
+//--------------------------------------------
+
+//there will be a leader if more than 20 dwarves Level 3-8 usually with a magic item
+
+function Dwarf() {
+    this.name = "Dwarf";
+    this.race = "humanoid";                 
+    this.armourClass = 4;
+    this.hitDice = "1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 60;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" } ];
+    this.saveAs = { class: characterType.Fighter, level: 1 }; 
+    this.morale = 8;
+    this.treasureType = "G";    
+    //this.Alignment = [{ alignment = Neutral/Lawful, probability = 100 }];
+}
+
+Dwarf.prototype = new Monster();
+Dwarf.prototype.Constructor = Dwarf;
+Dwarf.getNumberAppearing = function() {  return dice.rollDice("1D6"); };
+
+//--------------------------------------------
+//-------------------Elf----------------------
+//--------------------------------------------
+
+//there will be a leader if more than 15 elves Level 2-7 usually with a magic item
+
+function Elf() {
+    this.name = "Elf";
+    this.race = "humanoid";                 
+    this.armourClass = 5;
+    this.hitDice = "1+1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 120;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" } ];
+    this.saveAs = { class: characterType.Elf, level: 1 }; 
+    this.morale = 8;
+    this.treasureType = "E";    
+    //this.Alignment = [{ alignment = Neutral, probability = 100 }];
+    this.firstLevelSpells = 1;
+}
+
+Elf.prototype = new Monster();
+Elf.prototype.Constructor = Elf;
+Elf.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
+
+//--------------------------------------------
+//--------------Ferret, Giant-----------------
+//--------------------------------------------
+
+function FerretGiant() {
+    this.name = "Giant Ferret";
+    this.race = "animal";                 
+    this.armourClass = 5;
+    this.hitDice = "1+1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 150;
+    this.attacks = [{ attackType: "Bite", damageAmount: "1D8" } ];
+    this.saveAs = { class: characterType.Fighter, level: 1 }; 
+    this.morale = 8;
+    this.treasureType = "Nil";    
+    //this.Alignment = [{ alignment = Neutral, probability = 100 }];
+    this.firstLevelSpells = 1;
+}
+
+FerretGiant.prototype = new Monster();
+FerretGiant.prototype.Constructor = FerretGiant;
+FerretGiant.getNumberAppearing = function() {  return dice.rollDice("1D8"); };
+
+//--------------------------------------------
+//-----------------Gargoyle-------------------
+//--------------------------------------------
+
+//    this.specialAbilities[{ description = "semi-intelligent and cunning" }, { description = "can only be hit with magic weapons" }];
+// not affected by sleep or charm spells
+
+function Gargoyle() 
+{
+    this.name = "Gargoyle";
+    this.race = "???";                 //not sure what this should be
+    this.armourClass = 5;
+    this.hitDice = "4";   
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 90;
+    //this.movement = [{ movementType = Gound, movementRate = 90 }, { movementType = Flying, movementRate = 150 }];
+    this.attacks = [
+        { attackType: "Claw", damageAmount: "1D3" },
+        { attackType: "Claw", damageAmount: "1D3" },
+        { attackType: "Bite", damageAmount: "1D6" },
+        { attackType: "Horn", damageAmount: "1D4" } ];
+    this.saveAs = { class: characterType.Fighter, level: 8 }; 
+    this.morale = 11;
+    this.treasureType = "C"; 
+    //this.Alignment = LawfulEvil;
+}
+
+Gargoyle.prototype = new Monster();
+Gargoyle.prototype.Constructor = Gargoyle;
+Gargoyle.getNumberAppearing = function() {  return dice.rollDice("1D6"); };
+
+//--------------------------------------------
+//---------------Gelatinous Cube--------------
+//--------------------------------------------
+
+//surprise on 1-4 (of 1D6)
+// immune to cold and lightening 
+
+function GelatinousCube()
+ {
+    this.name = "Gelatinous Cube";
+    this.race = "slime";  
+    this.armourClass = 8; 
+    this.hitDice = "4";  
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 60;
+    this.attacks = [
+        { attackType: "Disolve", damageAmount: specialDamage } ];
+    this.saveAs = { class: characterType.Fighter, level: 2 }; 
+    this.morale = 12;
+    this.treasureType = "V"; 
+    //this.Alignment = Neutral;
+}
+
+GelatinousCube.prototype = new Monster();
+GelatinousCube.prototype.Constructor = GelatinousCube;
+GelatinousCube.getNumberAppearing = function() {  return 1; };
+GelatinousCube.prototype.specialDamage = function(opponent)
+{
+    //if opponent hit before they must make a save vs paralysis. If they fail all following attacks are always hits 
+    //first hit does 2D4 damage
+    opponent.takeDamage(dice.rollDice("2D4"));
+};
+
+//--------------------------------------------
+//--------------------Ghoul-------------------
+//--------------------------------------------
+
+function Ghoul()
+ {
+    this.name = "Ghoul";
+    this.race = "undead";   
+    this.armourClass = 6;
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 90;
+    this.attacks = [ { attackType: "Claw", damageAmount: specialDamage }, 
+                     { attackType: "Claw", damageAmount: specialDamage }, 
+                     { attackType: "Bite", damageAmount: specialDamage } ];
+    this.saveAs = { class: characterType.Fighter, level: 2 }; 
+    this.morale = 9;
+    this.treasureType = "B"; 
+    //this.Alignment = Chaotic;
+ }
+
+ Ghoul.prototype = new Monster();
+ Ghoul.prototype.Constructor = Ghoul;
+ Ghoul.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+ Ghoul.prototype.specialDamage = function(opponent)
+ {
+    opponent.takeDamage(dice.rollDice("2D4"));
+    //elves are not affected by paralysis
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, dice.rollDice("1D20")))
+    {
+        opponent.isParalysised = true;
+        opponent.paralysisedDuration = dice.rollDice("2D4");
+    }
+    //if opponent is paralysised ghoul will attack another party member
+ };
+
+//--------------------------------------------
+//--------------------Gnoll-------------------
+//--------------------------------------------
+
+//if more than 20 gnolls they will have a leader with 16hps, who attacks as hitdice 3 monster
+
+function Gnoll()
+ {
+    this.name = "Gnoll";
+    this.race = "humaniod";   
+    this.armourClass = 5;
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 90;
+    this.attacks = [ { attackType: "WeaponAttack", damageAmount: "2D4" } ];
+    this.saveAs = { class: characterType.Fighter, level: 2 }; 
+    this.morale = 8;
+    this.treasureType = "D"; 
+    //this.Alignment = Chaotic;
+ }
+
+ Gnoll.prototype = new Monster();
+ Gnoll.prototype.Constructor = Gnoll;
+ Gnoll.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+
+//--------------------------------------------
+//--------------------Gnome-------------------
+//--------------------------------------------
+
+//if more than 20 gnomes they will have a leader with 11hps, who attacks as hitdice 2 monster
+
+function Gnome()
+ {
+    this.name = "Gnome";
+    this.race = "humaniod";   
+    this.armourClass = 5;
+    this.hitDice = "1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.movement = 60;
+    this.attacks = [ { attackType: "WeaponAttack", damageAmount: "1D6" } ];
+    this.saveAs = { class: characterType.Dwarf, level: 1 }; 
+    this.morale = 8;
+    this.treasureType = "C"; 
+    //this.Alignment = Lawful/Neutral;
+ }
+
+ Gnome.prototype = new Monster();
+ Gnome.prototype.Constructor = Gnome;
+ Gnome.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+ 
+
+
+
+
 
 /*
 
@@ -789,7 +1320,6 @@ function Basilisk(params) {
     this.attacks = { attackType = BiteAttack, damageAmount = "1d10" };
     this.specialAbilities = [{ PetrifyingGaze }];
 }
-
 function BlackPudding(params) {
     this.name = "Black Pudding";
     this.movement = 60;
@@ -810,17 +1340,6 @@ function BlinkDog(params) {
     this.attacks = { attackType = BiteAttack, damageAmount = "1d6" };
     this.SpecialAbilities = [{ description = "highly intelligent" }, { description = "When attacking they teleport close to the enemy and then reappear 1 ' to 4' away and attack in the same melee round" }, { description = "will blink out and not reappear if seriously threatened" }, { description = "They will always attack a displacer beast" }];
 }
-function Bugbear(params) {
-    this.name = "Bugbear";
-    this.movement = 90;
-    this.hitDice = "3d8+1";
-    this.armourClass = 5;
-    this.treasureType = "B";
-    this.Alignment = ChaoticEvil;
-    this.attacks = { attackType = WeaponAttack, damageAmount = "2d4" };
-    this.specialAbilities = [{ description = "surprise 50% due to their stealth" }];
-}
-
 function Chimera(params) {
     this.name = "Chimera";
     this.movement = [{ movementType = Ground, movementRate = 120 }, { movementType = Flying, movementRate = 180 }];
@@ -867,78 +1386,15 @@ function Djinni(params) {
     this.damage = [{ attackType = UnspecifiedAttack, damageAmount = "2d8" }];
     this.specialAbilities = [{ description = "Can conjure food that is nutritionally sound, create drinkable beverages, magic soft goods and even wooden objects which have permanence into being, conjure metallic objects which will last for a short time (the harder the metal, the shorter the life, i.e. djinni gold lasts one day, but djinni steel lasts but one turn), create illusions with both visual and audial components which will remain until touched or dispelled magically (the djinni does not need to concentrate upon the illusion to maintain it in existence)" }, { form = invisibility }, { form = gaseous }, { form = whirlwind, description = "cone with a 10 foot base diameter, a 20 foot diameter at the top,and a height of 30 feet. It takes the djinni 1 full turn to go into this state � or come out of it. A djinni whirl-wind will sweep aside and kill all creatures with fewer than two hit dice which it encounters, and it causes 2-12 hit points of damage to all other creatures caught in its path." }, { description = "can carry up to 6,000 gold pieces in weight without tiring, walking or flying. It is able to carry a double load for a short time � 3 turns walking or 1 turn flying � but must then rest for a turn" }];
 }
-function Doppleganger(params) {
-    this.name = "Doppleganger";
-    this.movement = 90;
-    this.hitDice = "4d8";
-    this.armourClass = 5;
-    this.treasureType = "E";
-    this.Alignment = [{ alignment = ChaoticEvil, probability = 50 }, { alignment = Neutral, probability = 50 }];
-    this.attacks = [{ attackType = UnspecifiedAttack, damageAmount = "1d12" }];
-    this.specialAbilities = [{ description = "able to shape itself into the double of any humanoid creature (up to seven or so feet tall) it observes" },
-        { description = "Save Vs Spells bonus", modifierAmount = + 10 },
-        { description = "Save vs Wands bonus", modifierAmount = +7 }];
-}
-function Dragon(params) {
-    this.name = "Dragon";
-    this.movement = [{ movementType = Ground, movementRate = 90 }, { movementRate = 240, movementType = Flying }];
-    this.armourClass = "2";
-    this.treasureType = "H";
-    this.attacks = [{ attackType = ClawAttack, damageAmount = "1d6" }, { attackType = ClawAttack, damageAmount = "1d6" }, { attackType = BiteAttack, damageAmount = "3d8" }];
-}
-function WhiteDragon(params) {
-    Dragon.Call();
-    this.specialAbilities = [{ description = "BreathWeapon: Cold", area= "80 foot X 30 foot cone" }];
-    this.hitDice = { Min = "5d8", Max = "7d8" };
-    this.Alignment = [{ alignment = Neutral, probability = 50 }, { alignment = ChaoticEvil, probability =  50 }];
-}
-function BlackDragon(params) {
-    Dragon.Call();
-    this.specialAbilities = [{ description = "BreathWeapon: acid", area= "60 foot X 5 foot line" }];
-    this.hitDice = { Min = "6d8", Max = "8d8" };
-    this.Alignment = [{ alignment = ChaoticEvil, probability = 50 }, { alignment = Neutral, probability = 50 }];
-}
-function RedDragon(params) {
-    Dragon.Call();
-    this.specialAbilities = [{ description = "BreathWeapon: fire", area= "90 foot X 30 foot cone" }];
-    this.hitDice = { Min = "9d8", Max = "11d8" };
-    this.Alignment = ChaoticEvil;
-}
+
 function BrassDragon(params) {
     Dragon.Call();
     this.specialAbilities = [{ description = "BreathWeapon: Sleep/Fear", area= "70 foot X 20 foot cone/50 foot X 40 foot cloud" }];
     this.hitDice = { Min= "6d8", Max= "8d8" };
     this.Alignment = [{ alignment = Neutral, probability = 50 }, { alignment = ChaoticGood, probability = 50 }];
 }
-function Gargoyle(params) {
-    this.name = "Gargoyle";
-    this.movement = [{ movementType = Gound, movementRate = 90 }, { movementType = Flying, movementRate = 150 }];
-    this.hitDice = "4d8";
-    this.armourClass = 5;
-    this.treasureType = "C";
-    this.Alignment = LawfulEvil;
-    this.attacks = [{ attackType = ClawAttack, damageAmount = "1d4" }, { attackType = ClawAttack, damageAmount = "1d4" }, { attackType = ClawAttack, damageAmount = "1d4" }, { attackType = ClawAttack, damageAmount = "1d4" }];
-    this.specialAbilities[{ description = "semi-intelligent and cunning" }, { description = "can only be hit with magic weapons" }];
-}
-function GelatinousCube(params) {
-    this.name = "Gelatinous Cube";
-    this.movement = 60;
-    this.hitDice = "4d8";
-    this.armourClass = 8;
-    this.treasureType = variable;
-    this.attacks = [{ attackType = DissolveAttack, damageAmount = "2d4" }];
-    this.specialAbilities = [{ description = "Flesh that comes into contact with the cube is anesthetized unless a saving throw a-gainst paralysis is made." }, { description = "Immune to cold, lightning or most spells" }];
-}
-function Ghoul(params) {
-    this.name = "Ghoul";
-    this.movement = 90;
-    this.hitDice = "2d8";
-    this.armourClass = 6;
-    this.treasureType = "B";
-    this.Alignment = ChaoticEvil;
-    this.attacks = [{ attackType = ClawAttack, damageAmount = "1d3" }, { attackType = ClawAttack, damageAmount = "1d3" }, { attackType = BiteAttack, damageAmount = "1d3" }];
-    this.specialAbilities = [{ description = "Paralyze any human/humanoid figure they touch except elves who are immune" }];
-}
+
+
 function Giant(params) {
     this.name = "Giant";
     this.hitDice = "8d-12";

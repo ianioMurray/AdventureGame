@@ -6,7 +6,10 @@ var characterType = {
     Cleric: "Cleric",
     MagicUser: "MagicUser",
     Thief: "Thief",
-    NormalMan: "NormalMan"
+    NormalMan: "NormalMan",
+    Dwarf: "Dwarf",
+    Halfling: "Halfling",
+    Elf: "Elf"
 };
 
 //used for working out experience bonus

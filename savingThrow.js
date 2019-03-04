@@ -50,6 +50,22 @@ var savingThrow = (function(classLevel, saveAgainst)
         {type: typeOfSave.RodsStavesSpells, requiredRoll:  17}       
     ];
 
+    var dwarfHalflingSaves = [
+        {type: typeOfSave.DeathRayPoison, requiredRoll: 10},
+        {type: typeOfSave.MagicWands, requiredRoll: 11},
+        {type: typeOfSave.ParalysisTurnToStone, requiredRoll: 12},
+        {type: typeOfSave.DragonBreath, requiredRoll:  13},
+        {type: typeOfSave.RodsStavesSpells, requiredRoll: 14}       
+    ];
+
+    var elfSaves = [
+        {type: typeOfSave.DeathRayPoison, requiredRoll: 12},
+        {type: typeOfSave.MagicWands, requiredRoll: 13},
+        {type: typeOfSave.ParalysisTurnToStone, requiredRoll: 13},
+        {type: typeOfSave.DragonBreath, requiredRoll:  15},
+        {type: typeOfSave.RodsStavesSpells, requiredRoll: 15}   
+    ];
+
     var getSavingThrow = function(classLevel, typeOfSavingThrow)
     {
         var saveCollection;
@@ -69,6 +85,13 @@ var savingThrow = (function(classLevel, saveAgainst)
                 break;  
             case characterType.NormalMan:
                 saveCollection = normalManSaves;
+                break;
+            case characterType.Elf:
+                saveCollection = elfSaves;
+                break;
+            case characterType.Dwarf:
+            case characterType.Halfling:
+                saveCollection = dwarfHalflingSaves;
                 break;
             default:
                 throw "Unknown character class";
