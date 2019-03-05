@@ -1499,8 +1499,99 @@ Hobgoblin.prototype = new Monster();
 Hobgoblin.prototype.Constructor = Hobgoblin;
 Hobgoblin.getNumberAppearing = function() { return dice.rollDice("1D6"); };
 
+//--------------------------------------------
+//-------------------Insect Swarm-------------
+//--------------------------------------------
 
+//no damaged by weapons but waving them may ward off the swarm
+//touchs waved do 1-4 damage to the swarm
+//sleep will affect the full swarm
 
+function InsectSwarm()
+ {
+    this.name = "Insect Swarm";
+    this.race = "animal";
+    this.armourClass = 7;
+    this.hitDice = "3";                //can be anything from 2-4
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 30;
+    this.attacks = [{ attackType: "Swarm", damageAmount: "2" }];  //exact damage and always hits
+    this.saveAs = { class: characterType.NormalMan, level: 0 };
+    this.morale = 11;
+    this.treasureType = "Nil";
+    //  this.Alignment = Neutral; 
+}
+
+InsectSwarm.prototype = new Monster();
+InsectSwarm.prototype.Constructor = InsectSwarm;
+InsectSwarm.getNumberAppearing = function() { return 1; };
+
+//--------------------------------------------
+//-------------------Killer Bee--------------
+//--------------------------------------------
+
+function KillerBee()
+ {
+    this.name = "Killer Bee";
+    this.race = "animal";
+    this.armourClass = 7;
+    this.hitDice = "0.5";                //half a hit dice - 1D4 hps
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 150;
+    this.attacks = [{ attackType: "String", damageAmount: SpecialDamage }];  
+    this.saveAs = { class: characterType.Fighter, level: 1 };
+    this.morale = 9;
+    this.treasureType = "Nil";
+    //  this.Alignment = Neutral; 
+}
+
+KillerBee.prototype = new Monster();
+KillerBee.prototype.Constructor = KillerBee;
+KillerBee.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+KillerBee.prototype.specialDamage = function(opponent)
+{
+    opponent.takeDamage(dice.rollDice("1D3"));
+    this.isDead = true;   //bee dies when it stings 
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
+    {
+        //oppoent dies 
+    }
+    //Once strung the opponent will take 1 damage until the sting is removed which takes 1 turn
+};
+
+//--------------------------------------------
+//---------------------Kobold-----------------
+//--------------------------------------------
+
+//    this.specialAbilities = [{ Name = "infravision" }];
+// cheiftain has 9hps and 2hitdice
+// he has 1D6 bodyGuards with 6hps and hitdice 1+1
+//moral is 8 with a cheiftain 
+
+function Kobold()
+{
+    this.name = "Kobold";
+    this.race = "humanoid";
+    this.armourClass = 7;
+    this.hitDice = "0.5";            //half hit dice - hps 1D4
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;   
+    this.movement = 60;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D4" }];
+    this.saveAs = { class: characterType.NormalMan, level: 0 };
+    this.morale = 6;
+    this.treasureType = "P";
+    //this.Alignment = Chaotic;
+}
+
+Kobold.prototype = new Monster();
+Kobold.prototype.Constructor = Kobold;
+Kobold.getNumberAppearing = function() { return dice.rollDice("4D4"); };
 
 
 
@@ -1699,9 +1790,6 @@ function Hippogriff(params) {
     this.attacks = [{ attackType = ClawAttack, damageAmount = "1d6" }, { attackType = ClawAttack, damageAmount = "1d6" }, { attackType = BiteAttack, damageAmount = "1d10" }];
     this.specialAbilities = [{ Name= "Hatred", Target= "Pegasi" }];
     }
-
-
-
 function Horse(params) {
     this.name = "Horse";
     this.armourClass = 7;
@@ -1746,16 +1834,9 @@ function Hydra(params) {
     this.Alignment = Neutral;
     this.attacks = [{ Name = "BiteAttack", damageAmount = "1d6", quantity= "1 per head" }];
     }
-function Kobold(params) {
-    this.name = "Kobold";
-    this.movement = 120;
-    this.hitDice = "1d4";
-    this.armourClass = 7;
-    this.treasureType = "J";
-    this.Alignment = LawfulEvil;
-    this.attacks = [{ attackType = WeaponAttack, damageAmount = "1d4" }];
-    this.specialAbilities = [{ Name = "infravision" }];
-    }
+
+
+
 function LizardMan(params) {
     this.name = "Lizard Man";
     this.movement = [{ movementType=Ground, movementRate = 60 }, { movementType=Water, movementRate = 120 }];
