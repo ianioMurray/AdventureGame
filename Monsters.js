@@ -1303,13 +1303,210 @@ function Gnome()
  Gnome.prototype.Constructor = Gnome;
  Gnome.getNumberAppearing = function() { return dice.rollDice("1D8"); };
  
+//--------------------------------------------
+//--------------------Goblin------------------
+//--------------------------------------------
+
+//   this.specialAbilities = [{ description = "-1 off attack die roll in daylight" },
+// { description = "can see in the dark" }, 
+//{ description = "Always attack dwarves on sight" }];
+// 1 of every 4 will ride a dire wolf 
+//in their lair there will be a king with 15hps, 3 hitdice and +1 damage
+//the king  will have 2-12 body guards - fight as 2 hitdice and have 2-12hps
+
+ function Goblin() 
+ {
+    this.name = "Goblin";
+    this.race = "humaniod";  
+    this.armourClass = 6;
+    this.hitDice = "1D-1";    
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;    
+    this.movement = 60;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D6" } ];
+    this.saveAs = { class: characterType.NormalMan, level: 0 };
+    this.morale = 7;
+    this.treasureType = "R";
+  //  this.Alignment = Chaotic;
+}
+
+Goblin.prototype = new Monster();
+Goblin.prototype.Constructor = Goblin;
+Goblin.getNumberAppearing = function() { return dice.rollDice("2D4"); };
+
+//--------------------------------------------
+//--------------------Gray Ooze---------------
+//--------------------------------------------
+
+//this.specialAbilities = [{ description = "resembles wet stone and difficult to detect" }, 
+//{ description = "Can corrode metal in one turn" }, 
+//{ description = "Immune to cold and fire" }];
+
+function GrayOoze() 
+{
+    this.name = "Gray Ooze";
+    this.race = "slime";
+    this.armourClass = 8;
+    this.hitDice = "3";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;   
+    this.movement = 10;
+    this.attacks = [{ attackType: "disolve", damageAmount: specialDamage }];
+    this.saveAs = { class: characterType.Fighter, level: 2 };
+    this.morale = 12;
+    this.treasureType = "Nil";
+    //  this.Alignment = Neutral;  
+}
+
+GrayOoze.prototype = new Monster();
+GrayOoze.prototype.Constructor = GrayOoze;
+GrayOoze.getNumberAppearing = function() { return 1; };
+GrayOoze.prototype.specialDamage = function(opponent)
+{
+    //the first hits does 2D8 damage after than all hits are automatic
+    //attack disolves armour in 1 turn
+    opponent.takeDamage(dice.rollDice("2D8"));
+};
+
+//--------------------------------------------
+//---------------Green Slime------------------
+//--------------------------------------------
+
+//{ description: "Immune to all damage except fire and cold" },
+// burning the slime will do half damage to it and half to anyone being disolved by it 
+//{ description: "Eats everything but stone" },
+//{ description: "Sticks to flesh , turning the flesh into green slime. Can only be remeved by Cure Disease spell" }];
+
+function GreenSlime()
+ {
+    this.name = "Green Slime";
+    this.race = "slime";
+    this.armourClass = "?????"; // "can always be hit";
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;   
+    this.movement = 3;
+    this.attacks =  [{ attackType: "disolve", damageAmount: specialDamage }];
+    this.saveAs = { class: characterType.Fighter, level: 1 };
+    this.morale = 12;
+    this.treasureType = "Nil";
+    //  this.Alignment = Neutral;  
+ }
+
+GreenSlime.prototype = new Monster();
+GreenSlime.prototype.Constructor = GreenSlime;
+GreenSlime.getNumberAppearing = function() { return 1; };
+GreenSlime.prototype.specialDamage = function(opponent)
+{
+    //disolves wood and metal in 6 rounds 
+    //after armour disolved the oppoent will be absorbed in 1 to 4 rounds
+};
+
+//--------------------------------------------
+//-----------------Halfling-------------------
+//--------------------------------------------
+
+//in a village there will be a leader level 2-7 - 2hitDice
+//a leader will have a militia 5-20 halflings all 2 hitdice
+
+function Halfling()
+ {
+    this.name = "Halfling";
+    this.race = "humanoid";
+    this.armourClass = 7; 
+    this.hitDice = "1-1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;   
+    this.movement = 90;
+    this.attacks =  [{ attackType: "WeaponAttack", damageAmount: "1D6" }];
+    this.saveAs = { class: characterType.Halfling, level: 1 };
+    this.morale = 7;
+    this.treasureType = "V";
+    //  this.Alignment = Lawful;  
+ }
+
+Halfling.prototype = new Monster();
+Halfling.prototype.Constructor = Halfling;
+Halfling.getNumberAppearing = function() { return dice.rollDice("3D6"); };
+
+//--------------------------------------------
+//-------------------Harpy--------------------
+//--------------------------------------------
+
+//+2 to all saves
+
+function Harpy()
+ {
+    this.name = "Harpy";
+    this.race = "?????";   //not sure 
+    this.armourClass = 7; 
+    this.hitDice = "3";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;   
+    this.movement = 60;
+    this.attacks =  [{ attackType: "Claw", damageAmount: "1D4" },
+                     { attackType: "Claw", damageAmount: "1D4" },
+                     { attackType: "WeaponAttack", damageAmount: "1D6" },
+                     { attackType: "Song", damageAmount: specialDamage } ];
+    this.saveAs = { class: characterType.Halfling, level: 3 };
+    this.morale = 7;
+    this.treasureType = "C";
+    //  this.Alignment = Chaotic;  
+ }
+
+Harpy.prototype = new Monster();
+Harpy.prototype.Constructor = Harpy;
+Harpy.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+Harpy.prototype.specialDamage = function(opponent)
+{
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.RodsStavesSpells, dice.rollDice("1D20")))
+    {
+        //oppoent is charmed 
+    }
+};
+
+//--------------------------------------------
+//-------------------Hobgoblin----------------
+//--------------------------------------------
+
+// in their lair will be a king with 22hps 5hitdice +2 damage
+// he will have 1-4 body guards 4hitdice 3-18hps
+//with the king moral is 10
+
+function Hobgoblin()
+ {
+    this.name = "Hobgoblin";
+    this.race = "humanoid";
+    this.armourClass = 6;
+    this.hitDice = "1+1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 90;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" }];
+    this.saveAs = { class: characterType.Fighter, level: 1 };
+    this.morale = 8;
+    this.treasureType = "D";
+    //  this.Alignment = Chaotic; 
+}
+
+Hobgoblin.prototype = new Monster();
+Hobgoblin.prototype.Constructor = Hobgoblin;
+Hobgoblin.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+
+
+
 
 
 
 
 
 /*
-
 function Basilisk(params) {
     this.name = "Basilisk";
     this.movement = 60;
@@ -1393,8 +1590,6 @@ function BrassDragon(params) {
     this.hitDice = { Min= "6d8", Max= "8d8" };
     this.Alignment = [{ alignment = Neutral, probability = 50 }, { alignment = ChaoticGood, probability = 50 }];
 }
-
-
 function Giant(params) {
     this.name = "Giant";
     this.hitDice = "8d-12";
@@ -1464,46 +1659,6 @@ function GiantTick(params) {
     this.attacks = [{ attackType = BiteAttack, damageAmount = "1D4" }];
     this.specialAbilties = [{ description = "A hit indicates that they have attached themselves and will draw 4 hit points worth of blood per melee round until killed or burned. Fire makes them detach themselves." }, { description = "After a hit by a giant tick it is necessary to Cure Disease because the creature's bite carried a disease fatal in 2-8 days" }];
 }
-function Gnome(params) {
-    this.name = "Gnome";
-    this.movement = 60;
-    this.hitDice = "1d8";
-    this.armourClass = 5;
-    this.treasureType = "C";
-    this.Alignment = [{ alignment = ChaoticGood, probability =  75 }, { alignment = Neutral, probability =  25 }];
-    this.attacks = [{ attackType = WeaponAttack, damageAmount = "1d6" }];
-}
-function Goblin(params) {
-    this.name = "Goblin";
-    this.movement = 60;
-    this.hitDice = "1d8-1"; // Minimum 1
-    this.armourClass = 6;
-    this.treasureType = "L";
-    this.Alignment = LawfulEvil;
-    this.attacks = [{ attackType = WeaponAttack, damageAmount = "1d6" }];
-    this.specialAbilities = [{ description = "-1 off attack die roll in daylight" }, { description = "can see in the dark" }, { description = "Always attack dwarves on sight" }];
-};
-function GrayOoze(params) {
-    this.name = "Gray Ooze";
-    this.movement = 10;
-    this.hitDice = "3d8";
-    this.armourClass = 8;
-    this.treasureType = null;
-    this.attacks = [{ attackType = DissolveAttack, damageAmount = "2d8" }];
-    this.specialAbilities = [{ description = "resembles wet stone and difficult to detect" }, { description = "Can corrode metal in one turn" }, { description = "Immune to cold and fire" }];
-}
-function GreenSlime(params) {
-    this.name = "Green Slime";
-    this.movement = 0;
-    this.hitDice = "2d8";
-    this.armourClass = "can always be hit";
-    this.treasureType = null;
-    this.attacks = [{ attackType = DissolveAttack }];
-    this.specialAbilities = [{ description = "Non-mobile" },
-    { description = "Immune to all damage except fire and cold" },
-    { description = "Eats everything but stone" },
-    { description = "Sticks to flesh , turning the flesh into green slime. Can only be remeved by Cure Disease spell" }];
-}
 function Griffon(params) {
     this.name = "Griffon";
     this.movement = [{ movementType=Ground, movementRate = 120 }, { movementType=Flying, movementRate = 300 }];
@@ -1544,16 +1699,9 @@ function Hippogriff(params) {
     this.attacks = [{ attackType = ClawAttack, damageAmount = "1d6" }, { attackType = ClawAttack, damageAmount = "1d6" }, { attackType = BiteAttack, damageAmount = "1d10" }];
     this.specialAbilities = [{ Name= "Hatred", Target= "Pegasi" }];
     }
-function Hobgoblin(params) {
-    this.name = "Hobgoblin";
-    this.movement = 90;
-    this.hitDice = "1d8+1";
-    this.armourClass = 6;
-    this.treasureType = "D";
-    this.Alignment = LawfulEvil;
-    this.attacks = [{ attackType = WeaponAttack.damageAmount = "1d8" }];
-    this.specialAbilities = [{ Name= "MoraleModifier", Value= +1 }];
-}
+
+
+
 function Horse(params) {
     this.name = "Horse";
     this.armourClass = 7;
