@@ -2326,6 +2326,135 @@ OwlBear.prototype.clawDamage = function(opponent)
     }
 };
 
+//--------------------------------------------
+//--------------------Pixie-------------------
+//--------------------------------------------
+
+// invisible unless they want to be seen
+//if they attack when invisible they stay invisible .  they will always surprise when attacking 
+//when they are invisible they cannot be attacked in round 1 but after that they can be at -2 toHit 
+//they can only fly for 3 turns
+
+function Pixie()
+{
+    this.name = "Pixie";
+    this.race = "humanoid";
+    this.armourClass = 3;
+    this.hitDice = "1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 90;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D4" }];
+    this.saveAs = { class: characterType.Elf, level: 1 };
+    this.morale = 8;
+    this.treasureType = "R"; //and S  
+    //  this.Alignment = Neutral;
+}
+
+Pixie.prototype = new Monster();
+Pixie.prototype.Constructor = Pixie;
+Pixie.getNumberAppearing = function() { return dice.rollDice("2D4"); };
+
+//------------------------------------------
+//---      Rat Prototype      ---
+//------------------------------------------
+
+function Rat()
+{   
+}
+
+Rat.prototype = new Monster();
+Rat.prototype.Constructor = Rat;
+Rat.prototype.diseaseAttack = function()
+{
+    //is the rat carrying a disease
+    if(dice.rollDice("1D20" === 1))
+    {
+        //save to avoid catching disease
+        if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
+        {
+            //the character gets a disease 
+
+            if(dice.rollDice("1D4" === 1))
+            {
+                //opponent will die in 1D6 days
+            }
+            else
+            {
+                //opponent will be bed ridden for a month
+            }
+        }
+    }
+};
+
+//--------------------------------------------
+//----------------Normal Rat------------------
+//--------------------------------------------
+
+//more than 10 rats they will attack as packs of 10 or less --  the outlined attack
+//rats will climb all over a character so they must save vs Death or be knocked down - while down a character cannot fight
+
+function RatNormal()
+{
+    this.name = "Normal Rat";
+    this.race = "animal";
+    this.armourClass = 9;
+    this.hitDice = "1";                        //1 hitpoint
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 60;
+    this.attacks = [{ attackType: "PackBite", damageAmount: specialDamage }];  //is for the pack not individual
+    this.saveAs = { class: characterType.NormalMan, level: 0 };
+    this.morale = 5;
+    this.treasureType = "L"; 
+    //  this.Alignment = Neutral;
+}
+
+RatNormal.prototype = new Rat();
+RatNormal.prototype.Constructor = RatNormal;
+RatNormal.getNumberAppearing = function() { return dice.rollDice("5D10"); };
+RatNormal.prototype.specialDamage = function(opponent)
+{
+    opponent.takeDamage(dice.rollDice("1D6"));
+    this.diseaseAttack();
+};
+
+//--------------------------------------------
+//----------------Giant Rat------------------
+//--------------------------------------------
+
+function RatGiant()
+{
+    this.name = "Giant Rat";
+    this.race = "animal";
+    this.armourClass = 7;
+    this.hitDice = "0.5";                          //half a hit dice
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 60;
+    this.attacks = [{ attackType: "Bite", damageAmount: specialDamage }];
+    this.saveAs = { class: characterType.Fighter, level: 1 };
+    this.morale = 8;
+    this.treasureType = "C"; 
+    //  this.Alignment = Neutral;
+}
+
+RatGiant.prototype = new Rat();
+RatGiant.prototype.Constructor = RatGiant;
+RatGiant.getNumberAppearing = function() { return dice.rollDice("3D6"); };
+RatGiant.prototype.specialDamage = function(opponent)
+{
+    opponent.takeDamage(dice.rollDice("1D3"));
+    this.diseaseAttack();
+};
+
+
+
+
+
 
 
 
@@ -2589,12 +2718,6 @@ function Nixie(params) {
     this.Alignment = Neutral;
     this.attacks = [{ attackType = WeaponAttack, damageAmount = "1d4" }];
     }
-
-
-
-
-
-
 function Pegasi(params) {
     this.name = "Pegasi";
     this.movement = [{ movementType=Ground, movementRate = 240 }, { movementType=Flying, movementRate = 480 }];
@@ -2603,16 +2726,6 @@ function Pegasi(params) {
     this.treasureType = null;
     this.Alignment = LawfulGood;
     this.attacks = [{ attackType = HoofAttack, damageAmount = "1d8" }, { attackType = HoofAttack, damageAmount = "1d8" }];
-}
-function Pixie(params) {
-    this.name = "Pixie";
-    this.movement = [{ movementType=Ground, movementRate = 90 }, { movementType=Flying, movementRate = 180 }];
-    this.hitDice = "1d8";
-    this.armourClass = 3;
-    this.treasureType = "R + S";
-    this.Alignment = [{ alignment = Neutral, probability = 50 } / { alignment = ChaoticGood, probability = 50 }];
-    this.attacks = [{ attackType = WeaponAttack, damageAmount = "1d4", note = "possibly ranged" }];
-    this.SpecialAbilities = [{ description = "Invisible" }, { description = "Can AttackWhile Invisible" }, { description = "Fly for 3 turns then rest a turn" }];
 }
 function PurpleWorm(params) {
     this.name = "Purple Worm";
@@ -2623,6 +2736,10 @@ function PurpleWorm(params) {
     this.Alignment = Neutral;
     this.attacks = [{ attackType = BiteAttack, damageAmount = "2d6", special = "Hit + 2 Swallows, 6 turns to death, 12 turns to unrecoverable" }, { attackType = StingerAttack, damageAmount = "2d6", special = "Poisonous" }];
 }
+
+
+
+
 function RustMonster(params) {
     this.name = "Rust Monster";
     this.movement = 120;
