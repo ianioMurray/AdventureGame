@@ -2451,6 +2451,213 @@ RatGiant.prototype.specialDamage = function(opponent)
     this.diseaseAttack();
 };
 
+//--------------------------------------------
+//--------------------Robber Fly--------------
+//--------------------------------------------
+
+//unhurt by killer bees
+//surpirse on 1-4 of 1D6
+
+function RobberFly()
+{
+    this.name = "Robber Fly";
+    this.race = "?????";             //not sure 
+    this.armourClass = 6;
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 90;
+    this.attacks = [{ attackType: "Bite", damageAmount: "1D8" }];
+    this.saveAs = { class: characterType.Fighter, level: 1 };
+    this.morale = 8;
+    this.treasureType = "U"; 
+    //  this.Alignment = Neutral;
+}
+
+RobberFly.prototype = new Monster();
+RobberFly.prototype.Constructor = RobberFly;
+RobberFly.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+
+//--------------------------------------------
+//--------------------Rock Baboon-------------
+//--------------------------------------------
+
+function RockBaboon()
+{
+    this.name = "Rock Baboon";
+    this.race = "animal";            
+    this.armourClass = 6;
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 90;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D6" },
+                    { attackType: "Bite", damageAmount: "1D3" }];
+    this.saveAs = { class: characterType.Fighter, level: 2 };
+    this.morale = 8;
+    this.treasureType = "U"; 
+    //  this.Alignment = Neutral;
+}
+
+RockBaboon.prototype = new Monster();
+RockBaboon.prototype.Constructor = RockBaboon;
+RockBaboon.getNumberAppearing = function() { return dice.rollDice("2D6"); };
+
+//--------------------------------------------
+//--------------------Rust Monster------------
+//--------------------------------------------
+
+function RustMonster()
+{
+    this.name = "Rust Monster";
+    this.race = "?????";        //not sure 
+    this.armourClass = 2;
+    this.hitDice = "5";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 120;
+    this.attacks = [{ attackType: UnspecifiedAttck, damageAmount: specialDamage }];
+    this.saveAs = { class: characterType.Fighter, level: 3 };
+    this.morale = 7;
+    this.treasureType = "U"; 
+    //  this.Alignment = Neutral;
+}
+
+RustMonster.prototype = new Monster();
+RustMonster.prototype.Constructor = RustMonster;
+RustMonster.getNumberAppearing = function() { return dice.rollDice("1D4"); };
+RustMonster.prototype.specialDamage = function()
+{
+    //any time a rust monster is hit or hits -- the weapon or armour will rust and become useless
+    //if the weapon/armour is magical they have 10% for each +1 of not being affected - if hit the item loses +1
+};
+
+//--------------------------------------------
+//--------------------Shadow------------------
+//--------------------------------------------
+
+//only harmed by magical weapons 
+//surprise on 1-5 of 1D6
+//immune to charm and sleep
+
+function Shadow()
+{
+    this.name = "Shadow";
+    this.race = "????";      //not sure 
+    this.armourClass = 7;
+    this.hitDice = "2+2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 90;
+    this.attacks = [{ attackType: "TouchAttack", damageAmount: specialDamage }];
+    this.saveAs = { class: characterType.Fighter, level: 2 };
+    this.morale = 12;
+    this.treasureType = "F"; 
+    //  this.Alignment = Chaotic;
+}
+
+Shadow.prototype = new Monster();
+Shadow.prototype.Constructor = Shadow;
+Shadow.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+Shadow.prototype.specialDamage = function()
+{
+    oppoent.takeDamage(dice.rollDice("1D4"));
+    //if hit an opponent loses 1 strenght for 8 turns
+    //if a characters strength reaches 0 they become a shadow
+    //opponent.strength = oppoent.strength - 1;  
+    //opponent.strenthReductionNoTurns = 8;
+};
+
+//--------------------------------------------
+//---------------Shrew Giant------------------
+//--------------------------------------------
+
+//see by echo location so a silence spell will blind them - if blind it will have AC8 and -4toHit
+//due to their speed they will always have initative in the first attack and get +1 for the second attack
+//any creaturing fight 1 that is level 3 or less needs to make a save vs death or run away
+
+function ShrewGiant()
+{
+    this.name = "Giant Shrew";
+    this.race = "animal";  
+    this.armourClass = 4;
+    this.hitDice = "1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 180;
+    this.attacks = [{ attackType: "Bite", damageAmount: "1D6" },
+                    { attackType: "Bite", damageAmount: "1D6" } ];
+    this.saveAs = { class: characterType.Fighter, level: 1 };
+    this.morale = 10;
+    this.treasureType = "Nil"; 
+    //  this.Alignment = Neutral;
+}
+
+ShrewGiant.prototype = new Monster();
+ShrewGiant.prototype.Constructor = ShrewGiant;
+ShrewGiant.getNumberAppearing = function() { return dice.rollDice("1D4"); };
+
+//--------------------------------------------
+//---------------Shrieker---------------------
+//--------------------------------------------
+
+//look like giant mushrooms
+//if they detect light or movement they shreik for 1D3 rounds - -50% chance it will attack a wandering monster in 2-12 turns
+
+function Shrieker()
+{
+    this.name = "Shrieker";
+    this.race = "?????";        //not sure  
+    this.armourClass = 7;
+    this.hitDice = "3";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 9;
+    this.attacks = [];
+    this.saveAs = { class: characterType.Fighter, level: 1 };
+    this.morale = 12;
+    this.treasureType = "Nil"; 
+    //  this.Alignment = Neutral;
+}
+
+Shrieker.prototype = new Monster();
+Shrieker.prototype.Constructor = Shrieker;
+Shrieker.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+
+//--------------------------------------------
+//---------------Skeleton---------------------
+//--------------------------------------------
+
+//Immune to sleep, charm and mind reading
+
+function Skeleton() 
+{
+    this.name = "Skeleton";
+    this.race = "undead";
+    this.armourClass = 8;
+    this.hitDice = "1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 60;
+    this.damage = [{ attackType: "WeaponAttack", damageAmount: "1d6" } ];
+    this.saveAs = { class: characterType.Fighter, level: 1 };
+    this.morale = 12;
+    this.treasureType = "Nil"; 
+    //  this.Alignment = Chaotic;
+}
+
+Skeleton.prototype = new Monster();
+Skeleton.prototype.Constructor = Skeleton;
+Skeleton.getNumberAppearing = function() { return dice.rollDice("3D4"); };
+
+
 
 
 
@@ -2740,36 +2947,9 @@ function PurpleWorm(params) {
 
 
 
-function RustMonster(params) {
-    this.name = "Rust Monster";
-    this.movement = 120;
-    this.hitDice = "5d8";
-    this.armourClass = 2;
-    this.treasureType = null;
-    this.Alignment = Neutral;
-    this.attacks = [{ attackType = UnspecifiedAttck, damageAmount = null, special = " Rusts metal" }];
-}
-function Shadow(params) {
-    this.name = "Shadow";
-    this.movement = 90;
-    this.hitDice = "2D+2";
-    this.armourClass = 7;
-    this.treasureType = "F";
-    this.Alignment = LawfulEvil;
-    this.attacks = [{ attackType = TouchAttack, damageAmount = "1d4", special = "Drains 1 point of Strength - at 0 points you become a shadow" }];
-    this.specialAbilities = [{ description = "Non-corporeal" }, { description = "Intelligent" }, { description = "Immune to Non-Magical Weapons" }, { description = "Immune to sleep and charm spells" }];
-}
-function Skeleton(params) {
-    this.name = "Skeleton";
-    this.movement = 60;
-    this.hitDice = "1d4";
-    this.armourClass = 8;
-    this.treasureType = null;
-    this.Alignment = Neutral;
-    this.attacks = 1;
-    this.damage = [{ attackType = WeaponAttack, damageAmount = "1d6" }];
-    this.specialAbilities = [{ description = "Immune to sleep, charm and mind reading" }];
-}
+
+
+
 
 function Spectre(params) {
     this.name = "Spectre";
