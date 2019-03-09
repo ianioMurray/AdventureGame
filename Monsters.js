@@ -1558,7 +1558,7 @@ KillerBee.prototype.specialDamage = function(opponent)
     this.isDead = true;   //bee dies when it stings 
     if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
     {
-        //oppoent dies 
+        oppoent.isDead= true; 
     }
     //Once strung the opponent will take 1 damage until the sting is removed which takes 1 turn
 };
@@ -1993,20 +1993,338 @@ Werebear.prototype.clawDamage = function(opponent)
 {
     opponent.takeDamage(dice.rollDice("2D4"));
 
-        //check if previous claw attack hit
-        if(noOfPreviousClawHits > 0)
-        {
-            opponent.takeDamage(dice.rollDice("2D8"));
-        }
+    //check if previous claw attack hit
+    if(noOfPreviousClawHits > 0)
+    {
+        opponent.takeDamage(dice.rollDice("2D8"));
+    }
 };
 
+//--------------------------------------------
+//-----------------Medium---------------------
+//--------------------------------------------
+
+//50% that they will have a master 3rd level magic user  - spells 2 first level and 1 end level
+
+function Medium()
+ {
+    this.name = "Medium";
+    this.race = "humanoid";
+    this.armourClass = 9;
+    this.hitDice = "1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 120;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1d4" }]; //or spells
+    this.saveAs = { class: characterType.MagicUser, level: 1 };
+    this.morale = 7;
+    this.treasureType = "V";
+    //  this.Alignment = Neutral / Lawful / Chaotic; 
+    this.firstLevelSpells = 1;
+ }
+
+ Medium.prototype = new Monster();
+ Medium.prototype.Constructor = Medium;
+ Medium.getNumberAppearing = function() { return dice.rollDice("1D4"); };
+
+//--------------------------------------------
+//-----------------Medusa---------------------
+//--------------------------------------------
+
+//  PetrifyingGaze - will turn viewer into stone unless save vs turn to stone
+
+function Medusa()
+{
+this.name = "Medusa";
+this.race = "????";   // to decide 
+this.armourClass = 8;
+this.hitDice = "4";
+this.hitPoints = this.GetHPs();
+this.currentHitPoints = this.hitPoints;
+this.isDead = false; 
+this.movement = 90;
+this.attacks = [{ attackType: "Snakebite", damageAmount: specialDamage }];  
+this.saveAs = { class: characterType.Fighter, level: 4 };
+this.morale = 8;
+this.treasureType = "F";
+//  this.Alignment = Chaotic; 
+}
+
+  Medusa.prototype = new Monster();
+  Medusa.prototype.Constructor = Medusa;
+  Medusa.getNumberAppearing = function() { return dice.rollDice("1D3"); };
+  Medusa.prototype.specialDamage = function(opponent)
+  {
+      opponent.takeDamage(dice.rollDice("1D6"));
+
+      if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
+      {
+          oppoent.isDead= true; 
+      }
+  };
+
+//--------------------------------------------
+//-----------------Minotaur---------------------
+//--------------------------------------------
+
+function Minotaur()
+{
+    this.name = "Minotaur";
+    this.race = "????";  //to be decided
+    this.armourClass = 6;
+    this.hitDice = "6";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 120;
+    this.attacks = [{ attackType: "Gore", damageAmount: "1d6" }, 
+                    { attackType: "Bite", damageAmount: "1d6" } ];   //instead of the Gore and bite they can use use a weapon 
+                                                                    // - damage by weapon is +2 
+    this.saveAs = { class: characterType.Fighter, level: 6 };
+    this.morale = 12;
+    this.treasureType = "C";
+    //  this.Alignment = Chaotic; 
+}
+
+Minotaur.prototype = new Monster();
+Minotaur.prototype.Constructor = Minotaur;
+Minotaur.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+
+//--------------------------------------------
+//-----------------Mule-----------------------
+//--------------------------------------------
+
+// Can Carry 2000gp - 4000gp with a movement of 60 
+
+function Mule() 
+{
+    this.name = "Mule";
+    this.race = "horse";
+    this.armourClass = 7;
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 120;
+    this.attacks = [{ attackType: "Bite", damageAmount: "1d3" } ]; //or they can kick - 1D4 
+    this.saveAs = { class: characterType.NormalMan, level: 0 };
+    this.morale = 8;
+    this.treasureType = "Nil";
+    //  this.Alignment = Neutral; 
+}
+
+Mule.prototype = new Monster();
+Mule.prototype.Constructor = Mule;
+Mule.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+
+//--------------------------------------------
+//-----------Neaderthal (Caveman)-------------
+//--------------------------------------------
+
+function Neaderthal() 
+{
+    this.name = "Neaderthal";
+    this.race = "humanoid";
+    this.armourClass = 8;
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 120;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "2d4" } ];  
+    this.saveAs = { class: characterType.Fighter, level: 2 };
+    this.morale = 7;
+    this.treasureType = "C";
+    //  this.Alignment = Lawful; 
+}
+
+Neaderthal.prototype = new Monster();
+Neaderthal.prototype.Constructor = Neaderthal;
+Neaderthal.getNumberAppearing = function() { return dice.rollDice("1D10"); };
+
+//--------------------------------------------
+//-----------------Noble----------------------
+//--------------------------------------------
+
+//3rd level fighter
+//will be accompanied by a squire 2nd level
+//usually also 10 retainers of level 1 fighters
+
+function Noble() 
+{
+    this.name = "Noble";
+    this.race = "human";
+    this.armourClass = 2;
+    this.hitDice = "3";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 60;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1d8" } ];  
+    this.saveAs = "";//  variable     { class: characterType.Fighter, level: 2 };
+    this.morale = 8;
+    this.treasureType = "V";  // 3 lots of V
+    //  this.Alignment = Lawful / Neutral / Chaotic; 
+}
+
+Noble.prototype = new Monster();
+Noble.prototype.Constructor = Noble;
+Noble.getNumberAppearing = function() { return dice.rollDice("2D6"); };
+
+//--------------------------------------------
+//-----------------Normal Human---------------
+//--------------------------------------------
+
+function NormalHuman() 
+{
+    this.name = "Normal Human";
+    this.race = "human";
+    this.armourClass = 9;
+    this.hitDice = "0.5";      //1 to 4 hps
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 120;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1d6" } ];  //damage depends on weapon  
+    this.saveAs = { class: characterType.NormalMan, level: 0 };
+    this.morale = 6;
+    this.treasureType = "U"; 
+    //  this.Alignment = usually Lawful; 
+}
+
+NormalHuman.prototype = new Monster();
+NormalHuman.prototype.Constructor = NormalHuman;
+NormalHuman.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 
 
+//--------------------------------------------
+//-----------------NPC party members----------
+//--------------------------------------------
 
 
+//   NPC parties //
 
 
+//--------------------------------------------
+//-----------------OchreJelly----------------
+//--------------------------------------------
 
+//disolves wood, leather and cloth in a round but it cannot dissolve metal or stone 
+//it can Seeps Through Cracks
+//only damaged by heat and cold 
+//attackes with weapons make 1D4 smaller ochreJellys 2hitDice -- damage 1D6
+
+function OchreJelly() 
+{
+    this.name = "Ochre Jelly";
+    this.race = "slime";
+    this.armourClass = 8;
+    this.hitDice = "5";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 30;
+    this.attacks = [{ attackType: "Disolve", damageAmount: "2d6" } ];  
+    this.saveAs = { class: characterType.Fighter, level: 3 };
+    this.morale = 12;
+    this.treasureType = "Nil"; 
+    //  this.Alignment = Neutral; 
+}
+
+OchreJelly.prototype = new Monster();
+OchreJelly.prototype.Constructor = OchreJelly;
+OchreJelly.getNumberAppearing = function() { return 1; };
+
+//--------------------------------------------
+//--------------------Ogre--------------------
+//--------------------------------------------
+
+function Ogre() 
+{
+    this.name = "Ogre";
+    this.race = "humanoid";
+    this.armourClass = 5;
+    this.hitDice = "4+1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 90;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1d10" }];
+    this.saveAs = { class: characterType.Fighter, level: 4 };
+    this.morale = 10;
+    this.treasureType = "C"; // plus 1000gp 
+    //  this.Alignment = Chaotic; 
+}
+
+Ogre.prototype = new Monster();
+Ogre.prototype.Constructor = Ogre;
+Ogre.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+
+//--------------------------------------------
+//--------------------Orc---------------------
+//--------------------------------------------
+
+// hate sunlight - 1 Attack in Daylight
+// 1 will be a leader with 8Hps and +1 damage -- if killed moral of the rest will be 6
+
+function Orc()
+{
+    this.name = "Orc";
+    this.race = "humanoid";
+    this.armourClass = 6;
+    this.hitDice = "1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 120;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D6" }];
+    this.saveAs = { class: characterType.Fighter, level: 1 };
+    this.morale = 8;
+    this.treasureType = "D";  
+    //  this.Alignment = Chaotic;
+}
+
+Orc.prototype = new Monster();
+Orc.prototype.Constructor = Orc;
+Orc.getNumberAppearing = function() { return dice.rollDice("2D8"); };
+
+//--------------------------------------------
+//--------------------OwlBear-----------------
+//--------------------------------------------
+
+function OwlBear()
+{
+    this.name = "Owl Bear";
+    this.race = "?????"; //to be decided 
+    this.armourClass = 5;
+    this.hitDice = "5";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 120;
+    this.attacks = [{ attackType: "Claw", damageAmount: specialDamage }, 
+                    { attackType: "Claw", damageAmount: specialDamage },
+                    { attackType: "Bite", damageAmount: "1D8" }];
+    this.saveAs = { class: characterType.Fighter, level: 3 };
+    this.morale = 9;
+    this.treasureType = "C";  
+    //  this.Alignment = Neutral;
+}
+
+OwlBear.prototype = new Monster();
+OwlBear.prototype.Constructor = OwlBear;
+OwlBear.getNumberAppearing = function() { return dice.rollDice("1D4"); };
+OwlBear.prototype.clawDamage = function(opponent)
+{
+    opponent.takeDamage(dice.rollDice("1D8"));
+
+    //check if previous claw attack hit
+    if(noOfPreviousClawHits > 0)
+    {
+        opponent.takeDamage(dice.rollDice("2D8"));
+    }
+};
 
 
 
@@ -2233,13 +2551,6 @@ function DraftHorse(params) {
     this.movement = 120;
     this.hitDice = "2d8+1";
     }
-function Mule(params) {
-    Horse.Call(params);
-    this.name = "Mule";
-    this.movement = 120;
-    this.hitDice = "2d8+1";
-    this.specialAbilities = [{ description = "Carry 3500gp" }];
-    }
 function Hydra(params) {
     this.name = "Hydra";
     this.movement = 120;
@@ -2248,52 +2559,6 @@ function Hydra(params) {
     this.treasureType = "B";
     this.Alignment = Neutral;
     this.attacks = [{ Name = "BiteAttack", damageAmount = "1d6", quantity= "1 per head" }];
-    }
-
-
-
-function Lycanthrope(params) {
-    this.name = "Lycanthrope";
-    this.treasureType = "C";
-    this.attacks = 1;
-    this.specialAbilities = [{ description = "Immune to NormalWeapons in were - form" }, { description = "Repelled by Wolfsbane" }, { description = "TransmitLycanthropy if inflict 50% of health transform in 2 - 24 days" }];
-    }
-function Wereboar(params) {
-    this.Name = "Wereboar";
-    this.movement = 120;
-    this.hitDice = "4d8+1";
-        this.armourClass = 4
-    this.Alignment = Neutral / ChaoticGood;   // not sure if this varies as the form taken, or is a random probability
-    }
-function Wererat(params) {
-    this.Name = "Wererat";
-    this.movement = 120;
-    this.hitDice = "3d8";
-    this.armourClass = 7;
-    this.Alignment = Neutral / LawfulEvil;   // not sure if this varies as the form taken, or is a random probability
-    this.specialAbillities.add({ description = "Move Silently" });
-    this.specialAbillities.add({ description = "Summon Rats 1-100" });
-    }
-function Werebear(params) {
-    this.Name = "Werebear";
-    this.movement = 90;
-    this.hitDice = "6d8";
-    this.armourClass = 2;
-    this.Alignment = Neutral / ChaoticGood;   // not sure if this varies as the form taken, or is a random probability
-    }
-function Weretiger(params) {
-    this.Name = "Weretiger";
-    this.movement = 120;
-    this.hitDice = "5d8";
-    this.armourClass = 3;
-    this.Alignment = Neutral / ChaoticEvil;   // not sure if this varies as the form taken, or is a random probability
-    }
-function Werewolf(params) {
-    this.Name = "Werewolf";
-    this.movement = 150;
-    this.hitDice = "4d8";
-    this.armourClass = 5;
-    this.Alignment = Neutral / LawfulEvil;   // not sure if this varies as the form taken, or is a random probability
     }
 function Manticore(params) {
     this.name = "Manticore";
@@ -2305,25 +2570,6 @@ function Manticore(params) {
     this.attacks = [{ attackType = ClawAttack, damageAmount = "1d6" }, { attackType = ClawAttack, damageAmount = "1d6" }, { attackType = BiteAttack, damageAmount = "1d6" }];
     this.specialAbilities = [{ TailSpikes, RangedAttack, Quantity = 24, rateOfFire = 6, Range = 180, AsCrossbowBolts }];
 }
-function Medusa(params) {
-    this.name = "Medusa";
-    this.movement = 90;
-    this.hitDice = "4d8";
-    this.armourClass = 8;
-    this.treasureType = "F";
-    this.Alignment = LawfulEvil;
-    this.attacks = [{ attackType = UnspecifiedAttack, damageAmount = "1d6" }];
-    this.specialAbilities = [{ PetrifyingGaze }];
-        }
-function Minotaur(params) {
-    this.name = "Minotaur";
-    this.movement = 120;
-    this.hitDice = "6d8";
-    this.armourClass = 6;
-    this.treasureType = "C";
-    this.Alignment = LawfulEvil;
-    this.attacks = [{ attackType = HornAttack, damageAmount = "1d6" }, { attackType = HornAttack, damageAmount = "1d6" }, { attackType = BiteAttack, damageAmount = "1d6" }];
-        }
 function Mummy(params) {
     this.name = "Mummy";
     this.movement = 60;
@@ -2343,43 +2589,12 @@ function Nixie(params) {
     this.Alignment = Neutral;
     this.attacks = [{ attackType = WeaponAttack, damageAmount = "1d4" }];
     }
-function OchreJelly(params) {
-    this.name = "Ochre Jelly";
-    this.movement = 30;
-    this.hitDice = "5d8";
-    this.armourClass = 8;
-    this.treasureType = null;
-    this.attacks = [{ attackType = DisolveAttack, damageAmount = "2d6" }];
-    this.specialAbiities = [{ description = "disolves organic material" }, { description = "Seeps Through Cracks" }];
-    }
-function Ogre(params) {
-    this.name = "Ogre";
-    this.movement = 90;
-    this.hitDice = "4d8+1";
-    this.armourClass = 6;
-    this.treasureType = "C" + "1000gp / 1d6 * 100gp outside lair";
-    this.Alignment = ChaoticEvil;
-    this.attacks = [{ attackType = WeaponAttack, damageAmount = "1d10" }];
-    }
-function Orc(params) {
-    this.name = "Orc";
-    this.movement = 90;
-    this.hitDice = "1d8";
-    this.armourClass = 7;
-    this.treasureType = "D";
-    this.Alignment = ChaoticEvil;
-    this.attacks = [{ attackType = WeaponAttack, damageAmount = "1d6" }];
-    this.specialAbilities = [{ description = "- 1 Attack in Daylight" }];
-}
-function OwlBear(params) {
-    this.name = "Owl Bear";
-    this.movement = 120;
-    this.hitDice = "5d8";
-    this.armourClass = 5;
-    this.treasureType = "C";
-    this.Alignment = Neutral;
-    this.attacks = [{ attackType = BeakAttack, damageAmount = "1d8" }, { attackType = ClawAttack, damageAmount = "1d8" }, { attackType = HugAttack, damageAmount = "1d8" }];
-}
+
+
+
+
+
+
 function Pegasi(params) {
     this.name = "Pegasi";
     this.movement = [{ movementType=Ground, movementRate = 240 }, { movementType=Flying, movementRate = 480 }];
