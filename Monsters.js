@@ -1402,7 +1402,7 @@ GreenSlime.getNumberAppearing = function() { return 1; };
 GreenSlime.prototype.specialDamage = function(opponent)
 {
     //disolves wood and metal in 6 rounds 
-    //after armour disolved the oppoent will be absorbed in 1 to 4 rounds
+    //after armour disolved the opponent will be absorbed in 1 to 4 rounds
 };
 
 //--------------------------------------------
@@ -1466,7 +1466,7 @@ Harpy.prototype.specialDamage = function(opponent)
 {
     if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.RodsStavesSpells, dice.rollDice("1D20")))
     {
-        //oppoent is charmed 
+        //opponent is charmed 
     }
 };
 
@@ -1558,7 +1558,7 @@ KillerBee.prototype.specialDamage = function(opponent)
     this.isDead = true;   //bee dies when it stings 
     if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
     {
-        oppoent.isDead= true; 
+        opponent.isDead= true; 
     }
     //Once strung the opponent will take 1 damage until the sting is removed which takes 1 turn
 };
@@ -2060,7 +2060,7 @@ this.treasureType = "F";
 
       if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
       {
-          oppoent.isDead= true; 
+          opponent.isDead= true; 
       }
   };
 
@@ -2565,10 +2565,10 @@ Shadow.prototype.Constructor = Shadow;
 Shadow.getNumberAppearing = function() { return dice.rollDice("1D8"); };
 Shadow.prototype.specialDamage = function()
 {
-    oppoent.takeDamage(dice.rollDice("1D4"));
+    opponent.takeDamage(dice.rollDice("1D4"));
     //if hit an opponent loses 1 strenght for 8 turns
     //if a characters strength reaches 0 they become a shadow
-    //opponent.strength = oppoent.strength - 1;  
+    //opponent.strength = opponent.strength - 1;  
     //opponent.strenthReductionNoTurns = 8;
 };
 
@@ -2657,9 +2657,314 @@ Skeleton.prototype = new Monster();
 Skeleton.prototype.Constructor = Skeleton;
 Skeleton.getNumberAppearing = function() { return dice.rollDice("3D4"); };
 
+//------------------------------------------
+//---      Snake Prototype      ---
+//------------------------------------------
 
+function Snake()
+{   
+}
 
+Snake.prototype = new Monster();
+Snake.prototype.Constructor = Snake;
 
+//--------------------------------------------
+//---------------Spitting Cobra---------------
+//--------------------------------------------
+
+function SpittingCobra() 
+{
+    this.name = "Spitting Cobra";
+    this.race = "animal";
+    this.armourClass = 7;
+    this.hitDice = "1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 90;
+    this.damage = [ { attackType: "Bite", damageAmount: SpecialDamage }, 
+                    { attackType: "Spit", damageAmount: SpecialDamage } ]; //this needs work as snake can only spit or bite - current bite is implemented
+                                                                           //if hit be spit opponent is blinded - cure by cure blindness
+    this.saveAs = { class: characterType.Fighter, level: 1 };
+    this.morale = 7;
+    this.treasureType = "Nil"; 
+    //  this.Alignment = Neutral;
+}
+
+SpittingCobra.prototype = new Snake();
+SpittingCobra.prototype.Constructor = SpittingCobra;
+SpittingCobra.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+SpittingCobra.prototype.specialDamage = function()
+{
+    opponent.takeDamage(dice.rollDice("1D3"));
+
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
+    {
+        opponent.isDead = true;
+        //dies in 1 to 10 turns
+    }
+};
+
+//--------------------------------------------
+//---------------Pit Viper--------------------
+//--------------------------------------------
+
+//they always get initative due to how quick they are 
+
+function PitViper() 
+{
+    this.name = "Pit Viper";
+    this.race = "animal";
+    this.armourClass = 6;
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 90;
+    this.damage = [ { attackType: "Bite", damageAmount: SpecialDamage } ]; 
+    this.saveAs = { class: characterType.Fighter, level: 1 };
+    this.morale = 7;
+    this.treasureType = "Nil"; 
+    //  this.Alignment = Neutral;
+}
+
+PitViper.prototype = new Snake();
+PitViper.prototype.Constructor = PitViper;
+PitViper.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+PitViper.prototype.specialDamage = function()
+{
+    opponent.takeDamage(dice.rollDice("1D4"));
+
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
+    {
+        opponent.isDead = true;
+    }
+};
+
+//--------------------------------------------
+//---------------Sea Snake--------------------
+//--------------------------------------------
+
+function SeaSnake() 
+{
+    this.name = "Sea Snake";
+    this.race = "animal";
+    this.armourClass = 6;
+    this.hitDice = "3";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 90;
+    this.damage = [ { attackType: "Bite", damageAmount: SpecialDamage } ]; 
+    this.saveAs = { class: characterType.Fighter, level: 2 };
+    this.morale = 7;
+    this.treasureType = "Nil"; 
+    //  this.Alignment = Neutral;
+}
+
+SeaSnake.prototype = new Snake();
+SeaSnake.prototype.Constructor = SeaSnake;
+SeaSnake.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+SeaSnake.prototype.specialDamage = function()
+{
+    opponent.takeDamage(1);
+    //bite can go unnoticed 50% of the time 
+
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
+    {
+        opponent.isDead = true;
+        //in 3-6 turns to be felt 
+        // only 25% chance that even if treated after felt the opponent will survive
+    }
+};
+
+//--------------------------------------------
+//---------------Giant Rattler-----------------
+//--------------------------------------------
+
+//very fast and get a 2nd attack at the end of the round
+
+function GiantRattler() 
+{
+    this.name = "Giant Rattler";
+    this.race = "animal";
+    this.armourClass = 5;
+    this.hitDice = "4";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 120;
+    this.damage = [ { attackType: "Bite", damageAmount: SpecialDamage },
+                    { attackType: "Bite", damageAmount: SpecialDamage } ]; 
+    this.saveAs = { class: characterType.Fighter, level: 2 };
+    this.morale = 8;
+    this.treasureType = "U"; 
+    //  this.Alignment = Neutral;
+}
+
+GiantRattler.prototype = new Snake();
+GiantRattler.prototype.Constructor = GiantRattler;
+GiantRattler.getNumberAppearing = function() { return dice.rollDice("1D4"); };
+GiantRattler.prototype.specialDamage = function()
+{
+    opponent.takeDamage(dice.rollDice("1D4"));
+    //bite can go unnoticed 50% of the time 
+
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
+    {
+        opponent.isDead = true;
+        //in 1-6 turns to be felt 
+    }
+};
+
+//--------------------------------------------
+//---------------Rock Python------------------
+//--------------------------------------------
+
+function RockPython() 
+{
+    this.name = "Rock Python";
+    this.race = "animal";
+    this.armourClass = 6;
+    this.hitDice = "5";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 90;
+    this.damage = [ { attackType: "Bite", damageAmount: "1D4" },
+                    { attackType: "Squeeze", damageAmount: "2D4" } ]; // the second attack happens if the first was successful
+                                                                    //no roll to hit and is automatic every turn after that 
+    this.saveAs = { class: characterType.Fighter, level: 3 };
+    this.morale = 8;
+    this.treasureType = "U"; 
+    //  this.Alignment = Neutral;
+}
+
+RockPython.prototype = new Snake();
+RockPython.prototype.Constructor = RockPython;
+RockPython.getNumberAppearing = function() { return dice.rollDice("1D3"); };
+
+//------------------------------------------
+//---      Spider Giant Prototype      ---
+//------------------------------------------
+
+function SpiderGiant()
+{   
+}
+
+SpiderGiant.prototype = new Monster();
+SpiderGiant.prototype.Constructor = SpiderGiant;
+
+//--------------------------------------------
+//---------------CrabSpider-------------------
+//--------------------------------------------
+
+//surpirse on 1 to 4 of 1D6
+
+function CrabSpider() 
+{
+    this.name = "Crab Spider";
+    this.race = "animal";
+    this.armourClass = 7;
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 120;
+    this.damage = [ { attackType: "Bite", damageAmount: specialDamage } ];
+    this.saveAs = { class: characterType.Fighter, level: 1 };
+    this.morale = 7;
+    this.treasureType = "U"; 
+    //  this.Alignment = Neutral;
+}
+
+CrabSpider.prototype = new SpiderGiant();
+CrabSpider.prototype.Constructor = CrabSpider;
+CrabSpider.getNumberAppearing = function() { return dice.rollDice("1D4"); };
+CrabSpider.prototype.specialDamage = function()
+{
+    opponent.takeDamage(dice.rollDice("1D8"));
+
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs.DeathRayPoison), dice.rollDice("1D20")+2)
+    {
+        opponent.isDead = true;
+        //dies in 1 to 4 turns
+    }
+};
+
+//--------------------------------------------
+//---------------BlackWidow-------------------
+//--------------------------------------------
+
+//they have webs - to escape a web see magic user web spell 
+
+function BlackWidow() 
+{
+    this.name = "Black Widow";
+    this.race = "animal";
+    this.armourClass = 6;
+    this.hitDice = "3";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 60;
+    this.damage = [ { attackType: "Bite", damageAmount: specialDamage } ];
+    this.saveAs = { class: characterType.Fighter, level: 2 };
+    this.morale = 8;
+    this.treasureType = "U"; 
+    //  this.Alignment = Neutral;
+}
+
+BlackWidow.prototype = new SpiderGiant();
+BlackWidow.prototype.Constructor = BlackWidow;
+BlackWidow.getNumberAppearing = function() { return dice.rollDice("1D3"); };
+BlackWidow.prototype.specialDamage = function()
+{
+    opponent.takeDamage(dice.rollDice("2D6"));
+
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs.DeathRayPoison), dice.rollDice("1D20"))
+    {
+        opponent.isDead = true;
+        //dies in 1 turn
+    }
+};
+
+//--------------------------------------------
+//---------------Tarantella-------------------
+//--------------------------------------------
+
+function Tarantella() 
+{
+    this.name = "Tarantella";
+    this.race = "animal";
+    this.armourClass = 5;
+    this.hitDice = "4";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 120;
+    this.damage = [ { attackType: "Bite", damageAmount: specialDamage } ];
+    this.saveAs = { class: characterType.Fighter, level: 2 };
+    this.morale = 8;
+    this.treasureType = "U"; 
+    //  this.Alignment = Neutral;
+}
+
+Tarantella.prototype = new SpiderGiant();
+Tarantella.prototype.Constructor = Tarantella;
+Tarantella.getNumberAppearing = function() { return dice.rollDice("1D3"); };
+Tarantella.prototype.specialDamage = function()
+{
+    opponent.takeDamage(dice.rollDice("1D8"));
+
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs.DeathRayPoison), dice.rollDice("1D20"))
+    {
+        //opponent starts to dance 
+        //on lookers must save vs spells or dance too - for as long as the original dancer is dancing
+        //when dancing you have -4 toHit and attackers get +4 toHit
+        //lasts 2-12 turns but after 5 the opponent is exhausted and will be automatically hit and unable to attack
+    }
+};
 
 
 
@@ -2864,7 +3169,7 @@ function Horse(params) {
     this.armourClass = 7;
     }
 function LightHorse(params) {
-        Horse.Call(params);
+    Horse.Call(params);
     this.name = "Light Horse";
     this.movement = 240;
     this.hitDice = "2d8";
@@ -2992,53 +3297,53 @@ function Unicorn(params) {
     this.attacks = [{ attackType = HoofAttack, damageAmount = "1d8" }, { HoofAttack, damageAmount = "1d8" }, { HornAttack, damageAmount = "1d8" }];
     this.specialAbilities = [{ description = "ResistMagic 8 + 1d20" }];
 }
-    function Vampire(params) {
-        this.name = "Vampire";
-        this.movement = [{ movementType = Ground, movementRate = 120 }, { movementType = flying, movementRate = 180, note = "BatForm" }];
-        this.hitDice = { Min= "7d8", Max= "9d8" };
-        this.armourClass = 2;
-        this.treasureType = "F";
-        this.Alignment = LawfulEvil;
-        this.attacks = [{ attackType = UnspecifiedAttack, damageAmount = "1d10", special = "LevelDrain 2" }];
-        this.specialAbilities = [{ description = "Immune to Non-Magic weapons" }, { description = "RevertToGaseousForm on 0 Hits" },
-        { description = "Regenerate 3hp per turn in gaseous form" },
-        { description = "Can only be killed by being impaled through the heart with a wooden stick, exposed to direct sunlight or immersed in running water" },
-        { description = "No reflection, Repelled by garlic, a mirror, or a strongly presented holy symbol" },
-        { description = "Humnas killed by a vampire become vampires under the control of the one who made them." },
-        { description = "Can summon 10d * 10 rats or 3d6 wolves" },
-        { description = "polymorph self into gaseous form" },
-        { description = "polymorph self into bat" },
-        { description = "Gaze charms humans with -2 to save" }];
-    }
-    function Wight(params) {
-        this.name = "Wight";
-        this.movement = 90;
-        this.hitDice = "3d8";
-        this.armourClass = 5;
-        this.treasureType = "B";
-        this.Alignment = LawfulEvil;
-        this.attacks = [{ attackType = touchAttack, damageAmount = 0, special = "drain 1 level, SlaveResurrection" }];
-        this.specialAbilities[{ description = "Immune to Normal weapons" }];
-    }
-    function Wraith(params) {
-        this.name = "Wraith";
-        this.movement = [{ movementType = Ground, movementRate = 120 }, { movementType = Flying, movementRate = 240 }];
-        this.hitDice = "4d8";
-        this.armourClass; 3;
-        this.treasureType = "E";
-        this.Alignment = LawfulEvil;
-        this.attacks = [{ attackType = UnspecifieAttack, damageAmount = "1d6", special = "DrainsLevel 1" }];
-        this.specialAbilities = [{ description = "non-Corporeal" }, { description = "Immune to Normal Weapons" }, { description = "Silver wapons do half damge" }, { description = "Magic Weapons do normal Damage excluding magic bonus" }];
-    }
-    function YellowMold(params) {
-        this.name = "Yellow Mold";
-        this.movement = Immobile;
-        this.hitDice = "2d8";
-        this.armourClass = "always hit";
-        this.treasureType = null;
-        this.attacks = [{ attackType = UnspecifiedAttack, damageAmount = "1d6" }];
-        this.specialAbilities = [{ description = "Can Only Be killed by Fire" }, { description = "Disolves organic material" }, {description = " On rough contact releases spores - 10 area save vs poison or suffocting death"}, { description = "per 10 square feet of mold" }];
-    }
+function Vampire(params) {
+    this.name = "Vampire";
+    this.movement = [{ movementType = Ground, movementRate = 120 }, { movementType = flying, movementRate = 180, note = "BatForm" }];
+    this.hitDice = { Min= "7d8", Max= "9d8" };
+    this.armourClass = 2;
+    this.treasureType = "F";
+    this.Alignment = LawfulEvil;
+    this.attacks = [{ attackType = UnspecifiedAttack, damageAmount = "1d10", special = "LevelDrain 2" }];
+    this.specialAbilities = [{ description = "Immune to Non-Magic weapons" }, { description = "RevertToGaseousForm on 0 Hits" },
+    { description = "Regenerate 3hp per turn in gaseous form" },
+    { description = "Can only be killed by being impaled through the heart with a wooden stick, exposed to direct sunlight or immersed in running water" },
+    { description = "No reflection, Repelled by garlic, a mirror, or a strongly presented holy symbol" },
+    { description = "Humnas killed by a vampire become vampires under the control of the one who made them." },
+    { description = "Can summon 10d * 10 rats or 3d6 wolves" },
+    { description = "polymorph self into gaseous form" },
+    { description = "polymorph self into bat" },
+    { description = "Gaze charms humans with -2 to save" }];
+}
+function Wight(params) {
+    this.name = "Wight";
+    this.movement = 90;
+    this.hitDice = "3d8";
+    this.armourClass = 5;
+    this.treasureType = "B";
+    this.Alignment = LawfulEvil;
+    this.attacks = [{ attackType = touchAttack, damageAmount = 0, special = "drain 1 level, SlaveResurrection" }];
+    this.specialAbilities[{ description = "Immune to Normal weapons" }];
+}
+function Wraith(params) {
+    this.name = "Wraith";
+    this.movement = [{ movementType = Ground, movementRate = 120 }, { movementType = Flying, movementRate = 240 }];
+    this.hitDice = "4d8";
+    this.armourClass; 3;
+    this.treasureType = "E";
+    this.Alignment = LawfulEvil;
+    this.attacks = [{ attackType = UnspecifieAttack, damageAmount = "1d6", special = "DrainsLevel 1" }];
+    this.specialAbilities = [{ description = "non-Corporeal" }, { description = "Immune to Normal Weapons" }, { description = "Silver wapons do half damge" }, { description = "Magic Weapons do normal Damage excluding magic bonus" }];
+}
+function YellowMold(params) {
+    this.name = "Yellow Mold";
+    this.movement = Immobile;
+    this.hitDice = "2d8";
+    this.armourClass = "always hit";
+    this.treasureType = null;
+    this.attacks = [{ attackType = UnspecifiedAttack, damageAmount = "1d6" }];
+    this.specialAbilities = [{ description = "Can Only Be killed by Fire" }, { description = "Disolves organic material" }, {description = " On rough contact releases spores - 10 area save vs poison or suffocting death"}, { description = "per 10 square feet of mold" }];
+}
 function Zombie(params) {
     this.name = "Zombie";
     this.movement = 120;
