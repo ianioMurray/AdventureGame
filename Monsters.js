@@ -256,7 +256,9 @@ function BearBlack()
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
     this.movement = 120;
-    this.attacks = [{ attackType: "Claw", damage: specialDamage }, { attackType: "Claw", damage: specialDamage }, { attackType: "Bite", damage: "1D6"}]; 
+    this.attacks = [{ attackType: "Claw", damage: specialDamage }, 
+                    { attackType: "Claw", damage: specialDamage }, 
+                    { attackType: "Bite", damage: "1D6"} ]; 
     this.saveAs = { class: characterType.Fighter, level: 2};  
     this.morale = 7;
     this.treasureType = "U";
@@ -285,7 +287,9 @@ function BearGrizzly()
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
     this.movement = 120;
-    this.attacks = [{ attackType: "Claw", damage: specialDamage }, { attackType: "Claw", damage: specialDamage }, { attackType: "Bite", damage: "1D8"}]; 
+    this.attacks = [{ attackType: "Claw", damage: specialDamage }, 
+                    { attackType: "Claw", damage: specialDamage }, 
+                    { attackType: "Bite", damage: "1D8"}]; 
     this.saveAs = { class: characterType.Fighter, level: 2};  
     this.morale = 8;
     this.treasureType = "U";
@@ -314,7 +318,9 @@ function BearPolar()
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
     this.movement = 120;
-    this.attacks = [{ attackType: "Claw", damage: specialDamage }, { attackType: "Claw", damage: specialDamage }, { attackType: "Bite", damage: "1D10"}]; 
+    this.attacks = [{ attackType: "Claw", damage: specialDamage }, 
+                    { attackType: "Claw", damage: specialDamage }, 
+                    { attackType: "Bite", damage: "1D10"} ]; 
     this.saveAs = { class: characterType.Fighter, level: 3};  
     this.morale = 8;
     this.treasureType = "U";
@@ -343,7 +349,9 @@ function BearCave()
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
     this.movement = 120;
-    this.attacks = [{ attackType: "Claw", damage: specialDamage }, { attackType: "Claw", damage: specialDamage }, { attackType: "Bite", damage: "2D6"}]; 
+    this.attacks = [{ attackType: "Claw", damage: specialDamage }, 
+                    { attackType: "Claw", damage: specialDamage }, 
+                    { attackType: "Bite", damage: "2D6"} ]; 
     this.saveAs = { class: characterType.Fighter, level: 3};  
     this.morale = 9;
     this.treasureType = "V";
@@ -447,7 +455,9 @@ BeetleTiger.getNumberAppearing = function() { return dice.rollDice("1D6"); };
 //---------------Berserker--------------------
 //--------------------------------------------
 
-//this.specialAbilities = [{ AttackRollBonus, value=+2, against =[Men, Kobolds, Goblins, Orcs] }, { NoRetreatOrSurrender }];
+// they get +2 toHit against Men, Kobolds, Goblins, Orcs
+// they never Retreat Or Surrender 
+
 function Berserker() 
 {
     this.name = "Berserker";
@@ -498,7 +508,9 @@ Boar.getNumberAppearing = function() { return dice.rollDice("1D6"); };
 //-------------------Bugbear------------------
 //--------------------------------------------
 
-//surprise on a 1 to 3 on 1D6.  if using weapon they get weapon damage +1
+//surprise on a 1 to 3 on 1D6.  
+//if using weapon they get weapon damage +1
+
 function Bugbear() 
 {
     this.name = "Bugbear";
@@ -2529,7 +2541,7 @@ function RustMonster()
 RustMonster.prototype = new Monster();
 RustMonster.prototype.Constructor = RustMonster;
 RustMonster.getNumberAppearing = function() { return dice.rollDice("1D4"); };
-RustMonster.prototype.specialDamage = function()
+RustMonster.prototype.specialDamage = function(opponent)
 {
     //any time a rust monster is hit or hits -- the weapon or armour will rust and become useless
     //if the weapon/armour is magical they have 10% for each +1 of not being affected - if hit the item loses +1
@@ -2563,7 +2575,7 @@ function Shadow()
 Shadow.prototype = new Monster();
 Shadow.prototype.Constructor = Shadow;
 Shadow.getNumberAppearing = function() { return dice.rollDice("1D8"); };
-Shadow.prototype.specialDamage = function()
+Shadow.prototype.specialDamage = function(opponent)
 {
     opponent.takeDamage(dice.rollDice("1D4"));
     //if hit an opponent loses 1 strenght for 8 turns
@@ -2694,7 +2706,7 @@ function SpittingCobra()
 SpittingCobra.prototype = new Snake();
 SpittingCobra.prototype.Constructor = SpittingCobra;
 SpittingCobra.getNumberAppearing = function() { return dice.rollDice("1D6"); };
-SpittingCobra.prototype.specialDamage = function()
+SpittingCobra.prototype.specialDamage = function(opponent)
 {
     opponent.takeDamage(dice.rollDice("1D3"));
 
@@ -2731,7 +2743,7 @@ function PitViper()
 PitViper.prototype = new Snake();
 PitViper.prototype.Constructor = PitViper;
 PitViper.getNumberAppearing = function() { return dice.rollDice("1D8"); };
-PitViper.prototype.specialDamage = function()
+PitViper.prototype.specialDamage = function(opponent)
 {
     opponent.takeDamage(dice.rollDice("1D4"));
 
@@ -2765,7 +2777,7 @@ function SeaSnake()
 SeaSnake.prototype = new Snake();
 SeaSnake.prototype.Constructor = SeaSnake;
 SeaSnake.getNumberAppearing = function() { return dice.rollDice("1D8"); };
-SeaSnake.prototype.specialDamage = function()
+SeaSnake.prototype.specialDamage = function(opponent)
 {
     opponent.takeDamage(1);
     //bite can go unnoticed 50% of the time 
@@ -2805,7 +2817,7 @@ function GiantRattler()
 GiantRattler.prototype = new Snake();
 GiantRattler.prototype.Constructor = GiantRattler;
 GiantRattler.getNumberAppearing = function() { return dice.rollDice("1D4"); };
-GiantRattler.prototype.specialDamage = function()
+GiantRattler.prototype.specialDamage = function(opponent)
 {
     opponent.takeDamage(dice.rollDice("1D4"));
     //bite can go unnoticed 50% of the time 
@@ -2881,7 +2893,7 @@ function CrabSpider()
 CrabSpider.prototype = new SpiderGiant();
 CrabSpider.prototype.Constructor = CrabSpider;
 CrabSpider.getNumberAppearing = function() { return dice.rollDice("1D4"); };
-CrabSpider.prototype.specialDamage = function()
+CrabSpider.prototype.specialDamage = function(opponent)
 {
     opponent.takeDamage(dice.rollDice("1D8"));
 
@@ -2918,7 +2930,7 @@ function BlackWidow()
 BlackWidow.prototype = new SpiderGiant();
 BlackWidow.prototype.Constructor = BlackWidow;
 BlackWidow.getNumberAppearing = function() { return dice.rollDice("1D3"); };
-BlackWidow.prototype.specialDamage = function()
+BlackWidow.prototype.specialDamage = function(opponent)
 {
     opponent.takeDamage(dice.rollDice("2D6"));
 
@@ -2953,7 +2965,7 @@ function Tarantella()
 Tarantella.prototype = new SpiderGiant();
 Tarantella.prototype.Constructor = Tarantella;
 Tarantella.getNumberAppearing = function() { return dice.rollDice("1D3"); };
-Tarantella.prototype.specialDamage = function()
+Tarantella.prototype.specialDamage = function(opponent)
 {
     opponent.takeDamage(dice.rollDice("1D8"));
 
@@ -2965,6 +2977,345 @@ Tarantella.prototype.specialDamage = function()
         //lasts 2-12 turns but after 5 the opponent is exhausted and will be automatically hit and unable to attack
     }
 };
+
+//--------------------------------------------
+//---------------Sprite-----------------------
+//--------------------------------------------
+
+function Sprite() 
+{
+    this.name = "Sprite";
+    this.race = "humaniod";
+    this.armourClass = 5;
+    this.hitDice = "0.5";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 60;
+    this.damage = [ { attackType: "Spell", damageAmount: specialDamage } ];
+    this.saveAs = { class: characterType.Elf, level: 1 };
+    this.morale = 7;
+    this.treasureType = "S"; 
+    //  this.Alignment = Neutral;
+    this.firstLevelSpells = 1;
+}
+
+Sprite.prototype = new Monster();
+Sprite.prototype.Constructor = Sprite;
+Sprite.getNumberAppearing = function() { return dice.rollDice("3D6"); };
+Sprite.prototype.specialDamage = function(opponent)
+{
+    //if there are 5 sprites or more they will curse an opponent -- they dont try and cause death 
+    //they attempt to cause mischief like making your nose grow or nipping a character continously
+};
+
+//--------------------------------------------
+//---------------Stirge-----------------------
+//--------------------------------------------
+
+//a flying stirge gets +2 toHit on its first attack
+
+function Stirge() 
+{
+    this.name = "Stirge";
+    this.race = "animal";
+    this.armourClass = 7;
+    this.hitDice = "1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 30;
+    this.damage = [ { attackType: "Bite", damageAmount: specialDamage } ];
+    this.saveAs = { class: characterType.Fighter, level: 2 };
+    this.morale = 9;
+    this.treasureType = "L"; 
+    //  this.Alignment = Neutral;
+}
+
+Stirge.prototype = new Monster();
+Stirge.prototype.Constructor = Stirge;
+Stirge.getNumberAppearing = function() { return dice.rollDice("3D6"); };
+Stirge.prototype.specialDamage = function(opponent)
+{
+    opponent.takeDamage(dice.rollDice("1D3"));
+    //once hit they attach themselves to the opponent and will do 1D3 damage each round
+    //this will continue till it or the opponent is dead 
+};
+
+//--------------------------------------------
+//---------------Thoul-----------------------
+//--------------------------------------------
+
+//they regenerate 1 hp per round
+
+function Thoul() 
+{
+    this.name = "Thoul";
+    this.race = "?????";     /// to be decided 
+    this.armourClass = 6;
+    this.hitDice = "3";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 120;
+    this.damage = [ { attackType: "Claw", damageAmount: specialDamage },
+                    { attackType: "Claw", damageAmount: specialDamage } ];
+    this.saveAs = { class: characterType.Fighter, level: 3 };
+    this.morale = 10;
+    this.treasureType = "C"; 
+    //  this.Alignment = Chaotic;
+}
+
+Thoul.prototype = new Monster();
+Thoul.prototype.Constructor = Thoul;
+Thoul.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+Thoul.prototype.specialDamage = function(opponent)
+{
+    opponent.takeDamage(dice.rollDice("1D3"));
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs.ParalysisTurnToStone), dice.rollDice("1D20"))
+    {
+        opponent.isParalysised = true;
+        opponent.paralysisedDuration = dice.rollDice("2D4");
+    }
+};
+
+//--------------------------------------------
+//---------------Trader-----------------------
+//--------------------------------------------
+
+//usually have 1-4 pack mules with goods 
+
+function Trader() 
+{
+    this.name = "Trader";
+    this.race = "human";     
+    this.armourClass = 6;
+    this.hitDice = "1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 120;
+    this.damage = [ { attackType: "WeaponAttack", damageAmount: "1D6" } ];
+    this.saveAs = { class: characterType.Fighter, level: 1 };
+    this.morale = 7;
+    this.treasureType = "U";   // and V
+    //  this.Alignment = Chaotic/Neutral/Lawful;
+}
+
+Trader.prototype = new Monster();
+Trader.prototype.Constructor = Trader;
+Trader.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+
+//--------------------------------------------
+//---------------Troglodyte-------------------
+//--------------------------------------------
+
+//they surprise on a 1-4 of a 1D6
+//humans and demi-humans have -2 toHit them
+
+function Troglodyte() 
+{
+    this.name = "Troglodyte";
+    this.race = "humanoid";          
+    this.armourClass = 5;
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 120;
+    this.damage = [ { attackType: "Claw", damageAmount: "1D4" }, 
+                    { attackType: "Claw", damageAmount: "1D4" },
+                    { attackType: "Bite", damageAmount: "1D4" } ];
+    this.saveAs = { class: characterType.Fighter, level: 2 };
+    this.morale = 9;
+    this.treasureType = "A";   
+    //  this.Alignment = Chaotic;
+}
+
+Troglodyte.prototype = new Monster();
+Troglodyte.prototype.Constructor = Troglodyte;
+Troglodyte.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+
+//--------------------------------------------
+//---------------Veteran-----------------------
+//--------------------------------------------
+
+function Veteran() 
+{
+    this.name = "Veteran";
+    this.race = "human";     
+    this.armourClass = 2;
+    this.hitDice = "2";   //really 1-3 
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 60;
+    this.damage = [ { attackType: "WeaponAttack", damageAmount: "1D8" } ];
+    this.saveAs = { class: characterType.Fighter, level: 2 };   //really 1-3
+    this.morale = 9;
+    this.treasureType = "V";   
+    //  this.Alignment = Chaotic/Neutral/Lawful;
+}
+
+Veteran.prototype = new Monster();
+Veteran.prototype.Constructor = Veteran;
+Veteran.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+
+//--------------------------------------------
+//---------------Wight-----------------------
+//--------------------------------------------
+
+//can only be damaged by silver and magic weapons 
+
+function Wight() 
+{
+    this.name = "Wight";
+    this.race = "undead";
+    this.armourClass = 5;
+    this.hitDice = "3";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 90;
+    this.attacks = [{ attackType: "touchAttack", damageAmount: specialDamage} ];
+    this.saveAs = { class: characterType.Fighter, level: 3 };  
+    this.morale = 12;
+    this.treasureType = "B";   
+    //  this.Alignment = Chaotic
+}
+
+Wight.prototype = new Monster();
+Wight.prototype.Constructor = Wight;
+Wight.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+Wight.prototype.specialDamage = function(opponent)
+{
+    //drains a level from the opponent
+    //anyone who is killed in this way will become a wight in 1D4 days
+};
+
+//------------------------------------------
+//---             Wolf Prototype         ---
+//------------------------------------------
+
+function Wolf()
+{   
+}
+
+Wolf.prototype = new Monster();
+Wolf.prototype.Constructor = Wolf;
+
+//--------------------------------------------
+//---------------NormalWolf-------------------
+//--------------------------------------------
+
+//if 3 or less wolves or 50% killed their moral drops to 6
+
+function NormalWolf() 
+{
+    this.name = "Normal Wolf";
+    this.race = "animal";
+    this.armourClass = 7;
+    this.hitDice = "2+2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 180;
+    this.damage = [ { attackType: "Bite", damageAmount: "1D6" } ];
+    this.saveAs = { class: characterType.Fighter, level: 1 };
+    this.morale = 8;
+    this.treasureType = "Nil"; 
+    //  this.Alignment = Neutral;
+}
+
+NormalWolf.prototype = new Wolf();
+NormalWolf.prototype.Constructor = NormalWolf;
+NormalWolf.getNumberAppearing = function() { return dice.rollDice("2D6"); };
+
+//--------------------------------------------
+//-----------------DireWolf-------------------
+//--------------------------------------------
+
+function DireWolf() 
+{
+    this.name = "Dire Wolf";
+    this.race = "animal";
+    this.armourClass = 6;
+    this.hitDice = "4+1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 150;
+    this.damage = [ { attackType: "Bite", damageAmount: "2D4" } ];
+    this.saveAs = { class: characterType.Fighter, level: 2 };
+    this.morale = 8;
+    this.treasureType = "Nil"; 
+    //  this.Alignment = Neutral;
+}
+
+DireWolf.prototype = new Wolf();
+DireWolf.prototype.Constructor = DireWolf;
+DireWolf.getNumberAppearing = function() { return dice.rollDice("1D4"); };
+
+//--------------------------------------------
+//---------------Yellow Mold------------------
+//--------------------------------------------
+
+//Can Only Be damaged by Fire - torch does 1D4 damage
+//if touch by anything there is a 50% chance it will squirt spores in a 10x10x10 area 
+//- anyone in caught in the spores must save vs Death ray or choke to death in 6 rounds 
+
+function YellowMold()
+ {
+    this.name = "Yellow Mold";
+    this.race = "slime";
+    this.armourClass = "????";  //they are always hit 
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.movement = 0;
+    this.attacks = [{ attackType: "disolve", damageAmount: specialDamage }];
+    this.saveAs = { class: characterType.Fighter, level: 2 };
+    this.morale = 12;
+    this.treasureType = "Nil"; 
+    //  this.Alignment = Neutral;
+}
+
+YellowMold.prototype = new Monster();
+YellowMold.prototype.Constructor = YellowMold;
+YellowMold.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+YellowMold.prototype.specialDamage = function(opponent)
+{
+    //they eat through wood and leather but not metal or stone 
+};
+
+//--------------------------------------------
+//-----------------Zombie---------------------
+//--------------------------------------------
+
+//Immune to Sleep, Charm
+//they always attack last in a combat round 
+
+function Zombie() 
+{
+    this.name = "Zombie";
+    this.race = "undead";
+    this.armourClass = 8;
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;   
+    this.movement = 120;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1d8" }];
+    this.saveAs = { class: characterType.Fighter, level: 1 };
+    this.morale = 12;
+    this.treasureType = "Nil"; 
+    //  this.Alignment = Chaotic ;
+}
+
+Zombie.prototype = new Monster();
+Zombie.prototype.Constructor = Zombie;
+Zombie.getNumberAppearing = function() { return dice.rollDice("2D4"); };
 
 
 
@@ -3248,14 +3599,6 @@ function PurpleWorm(params) {
     this.Alignment = Neutral;
     this.attacks = [{ attackType = BiteAttack, damageAmount = "2d6", special = "Hit + 2 Swallows, 6 turns to death, 12 turns to unrecoverable" }, { attackType = StingerAttack, damageAmount = "2d6", special = "Poisonous" }];
 }
-
-
-
-
-
-
-
-
 function Spectre(params) {
     this.name = "Spectre";
     this.movement = [{ movementType = Ground, movementRate = 150 }, { movementType = Flying, movementRate = 300 }];
@@ -3265,17 +3608,6 @@ function Spectre(params) {
     this.Alignment = LawfulEvil;
     this.attacks = [{ attackType = UnspecifiedAttack, damageAmount = "1d8", special = "Drains 2 Levels" }];
     this.specialAbilities[{ description = "Humans killed by a spectre become low-strength spectres under the control of the one who made them" }];
-}
-function Stirge(params) {
-    this.name = "Stirge";
-    this.movement = 180;
-    this.hitDice = "1d8";
-    this.armourClass = 7;
-    this.treasureType = "Q";
-    this.Alignment = Neutral;
-    this.attacks = 1;
-    this.damage = [{ attackType = BeakAttack, damageAmount = "1d3" }];
-    this.specialAbiities = [{ description = "Sucks blood after successful attack", damageAmount = "1d4" }, { description = "+ 2 all attacks" }];
 }
 function Troll(params) {
     this.name = "Troll";
@@ -3315,16 +3647,6 @@ function Vampire(params) {
     { description = "polymorph self into bat" },
     { description = "Gaze charms humans with -2 to save" }];
 }
-function Wight(params) {
-    this.name = "Wight";
-    this.movement = 90;
-    this.hitDice = "3d8";
-    this.armourClass = 5;
-    this.treasureType = "B";
-    this.Alignment = LawfulEvil;
-    this.attacks = [{ attackType = touchAttack, damageAmount = 0, special = "drain 1 level, SlaveResurrection" }];
-    this.specialAbilities[{ description = "Immune to Normal weapons" }];
-}
 function Wraith(params) {
     this.name = "Wraith";
     this.movement = [{ movementType = Ground, movementRate = 120 }, { movementType = Flying, movementRate = 240 }];
@@ -3334,24 +3656,5 @@ function Wraith(params) {
     this.Alignment = LawfulEvil;
     this.attacks = [{ attackType = UnspecifieAttack, damageAmount = "1d6", special = "DrainsLevel 1" }];
     this.specialAbilities = [{ description = "non-Corporeal" }, { description = "Immune to Normal Weapons" }, { description = "Silver wapons do half damge" }, { description = "Magic Weapons do normal Damage excluding magic bonus" }];
-}
-function YellowMold(params) {
-    this.name = "Yellow Mold";
-    this.movement = Immobile;
-    this.hitDice = "2d8";
-    this.armourClass = "always hit";
-    this.treasureType = null;
-    this.attacks = [{ attackType = UnspecifiedAttack, damageAmount = "1d6" }];
-    this.specialAbilities = [{ description = "Can Only Be killed by Fire" }, { description = "Disolves organic material" }, {description = " On rough contact releases spores - 10 area save vs poison or suffocting death"}, { description = "per 10 square feet of mold" }];
-}
-function Zombie(params) {
-    this.name = "Zombie";
-    this.movement = 120;
-    this.hitDice = "2d8";
-    this.armourClass = 8;
-    this.treasureType = null;
-    this.Alignment = Neutral;
-    this.attacks = [{ attackType = UnspecifiedAttack, damageAmount = "1d8" }];
-    this.specialAbilities = [{ description = "Immune to Sleep, Charm, ESP" }, { description = "Slow, can only attack every other round" }];
 }
 */
