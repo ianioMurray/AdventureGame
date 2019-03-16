@@ -271,15 +271,21 @@ function Tests()
 		this.validate(expected, actual, message);
 	};
 
-	this.parseHitDiceHd = function(monster, expected, actual, testName)
+	this.checkParseHitDiceHd = function(monster, expected, actual, testName)
 	{
 		var message = " FAIL " + testName + ": " + monster.name + "'s hit dice are " + actual + " but the expected was " + expected;
 		this.validate(expected, actual, message);
 	};
 
-	this.parseHitDiceModifier = function(monster, expected, actual, testName)
+	this.checkParseHitDiceModifier = function(monster, expected, actual, testName)
 	{
 		var message = " FAIL " + testName + ": " + monster.name + "'s hit dice modifier is " + actual + " but the expected was " + expected;
+		this.validate(expected, actual, message);
+	};
+
+	this.checkCreateMonsters = function(monster, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + actual + " " + monster.name + "s were created in the group but " + expected + " were expected";
 		this.validate(expected, actual, message);
 	};
 
@@ -389,6 +395,7 @@ function runMonsterUnitTests()
 	testMonsterToHit();
 	testMonsterTakeDamage();
 	testParseHitDice();
+	testCreateMonsters();
 }
 
 //-----------------------------------------------
@@ -1986,13 +1993,27 @@ function testParseHitDice()
 	var carrionCrawler = new CarrionCrawler();
 	var ape = new Ape();
 
-	tests.parseHitDiceHd(carrionCrawler, "3", carrionCrawler.parseHitDice().hitDice, testParseHitDice.name);
-	tests.parseHitDiceModifier(carrionCrawler, 1, carrionCrawler.parseHitDice().modifier, testParseHitDice.name);	
+	tests.checkParseHitDiceHd(carrionCrawler, "3", carrionCrawler.parseHitDice().hitDice, testParseHitDice.name);
+	tests.checkParseHitDiceModifier(carrionCrawler, 1, carrionCrawler.parseHitDice().modifier, testParseHitDice.name);	
 
-	tests.parseHitDiceHd(ape, "4", ape.parseHitDice().hitDice, testParseHitDice.name);
-	tests.parseHitDiceModifier(ape, 0, ape.parseHitDice().modifier, testParseHitDice.name);	
+	tests.checkParseHitDiceHd(ape, "4", ape.parseHitDice().hitDice, testParseHitDice.name);
+	tests.checkParseHitDiceModifier(ape, 0, ape.parseHitDice().modifier, testParseHitDice.name);	
 
 	//TODO a test is required for a monster with -ve modifier to ensure the the parse Modifier works correctly
+}
+
+function testCreateMonsters()
+{
+	var carrionCrawler = new CarrionCrawler;
+	var acolyte = new Acolyte();
+
+	tests.checkCreateMonsters(carrionCrawler, 2, Monster.createMonsters(CarrionCrawler, 2).length, testCreateMonsters.name);
+	tests.checkCreateMonsters(acolyte, 2, Monster.createMonsters(Acolyte, 2).length, testCreateMonsters.name);
+
+	var acolytes = Monster.createMonsters(Acolyte, 4);
+	console.log(acolytes);
+
+	tests.checkCreateMonsters(acolyte, 5, Monster.createMonsters(Acolyte, 4).length, testCreateMonsters.name);
 }
 
 

@@ -164,7 +164,7 @@ function runTestCombatvMonsterBandits()
 	console.log("----------------------------------");
 	console.log("Party vs Bandits");
 	
-	var monsters = Monster.createMonsters(Bandit);
+	var monsters = Monster.createMonsters(Bandit, Bandit.getNumberAppearing());
     var party = create3FighterParty();
     
     runCombat(party, monsters);
@@ -174,7 +174,7 @@ function runTestCombatvMonsterCarrionCrawler()
 {
 	console.log("Party vs Carrion Crawler");
 
-	var monsters = Monster.createMonsters(CarrionCrawler);
+	var monsters = Monster.createMonsters(CarrionCrawler, CarrionCrawler.getNumberAppearing());
 	var party = create3FighterAnd3ClericParty();
 
     runCombat(party, monsters);
@@ -184,7 +184,7 @@ function runTestCombatvMonsterBear()
 {
     console.log("Party vs Grizzly Bear");
 
-	var monsters = Monster.createMonsters(BearCave);
+	var monsters = Monster.createMonsters(BearCave, BearCave.getNumberAppearing());
     var party = create3FighterAnd3ClericParty();
    
     runCombat(party, monsters);

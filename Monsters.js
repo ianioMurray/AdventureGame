@@ -8,6 +8,9 @@ const specialDamage = "Special";
 
 function Monster()
 {
+    this.firstLevelSpells = 0;
+    this.secondLevelSpells = 0;
+
     this.attack = function(opponent)
     {
         var count = 0;
@@ -75,13 +78,19 @@ function Monster()
     };
 }
 
-Monster.createMonsters = function(typeOfMonster)
+Monster.createMonsters = function(typeOfMonster, numberAppearing)
 {
     var monsters = [];
 
-    for(var i = 0; typeOfMonster.getNumberAppearing() > i; i++)
+    if(typeOfMonster.mayHaveLeader && numberAppearing >= Acolyte.numberRequiredToHaveLeader)
     {
-        var monster = new typeOfMonster();
+        let monster = new typeOfMonster.leaderType();
+        monsters.push(monster);
+    }
+
+    for(var i = 0;  numberAppearing > i; i++)
+    {
+        let monster = new typeOfMonster();
         monsters.push(monster);
     }
     return monsters;
@@ -92,8 +101,9 @@ Monster.createMonsters = function(typeOfMonster)
 //-------------Acolyte------------------------
 //--------------------------------------------
 
-//if there are more than 4 then 1 is a leader roll a 1D10 on 1-4 level 2 / 5-7 level 3 / 8-9 level 4 / 10 level 5
+//if there are more than 4 then 1 is a leader - roll a 1D10 on 1-4 level 2 / 5-7 level 3 / 8-9 level 4 / 10 level 5
 //the leader will know a random spell 
+//standard acolytes dont know any spells
 function Acolyte()
 {
     this.name = "Acolyte";
@@ -103,18 +113,66 @@ function Acolyte()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 60;
     this.attacks = [{ attackType: "WeaponAttack", damage: "1d6" }];
     this.saveAs = { class: characterType.Cleric, level: 1};
-    this.morale = 7;
-    this.treasureType = "U";
     //this.Alignment = [{ alignment: Lawful, probability: 33 }, { alignment: Chaotic, probability: 33 }, { alignment: Neutral, probability: 34 }];
 }
 
 Acolyte.prototype = new Monster();
 Acolyte.prototype.Constructor = Acolyte;
-Acolyte.getNumberAppearing = function() {return dice.rollDice("1D8");};
+Acolyte.prototype.treasureType = "U";
+Acolyte.prototype.movement = 60;
+Acolyte.prototype.morale = 7;
+Acolyte.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+Acolyte.mayHaveLeader = true;
+Acolyte.numberRequiredToHaveLeader = 4;
+Acolyte.leaderType = AcolyteLeader;
 
+//--------------------------------------------
+//-------------AcolyteLeader------------------
+//--------------------------------------------
+function AcolyteLeader()
+{
+    this.name = "Acolyte Leader";
+    this.hitDice = this.GetHitDice();
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    //this.Alignment = [{ alignment: Lawful, probability: 33 }, { alignment: Chaotic, probability: 33 }, { alignment: Neutral, probability: 34 }];
+}
+
+AcolyteLeader.prototype = new Acolyte();
+AcolyteLeader.prototype.Constructor = AcolyteLeader;
+AcolyteLeader.prototype.GetHitDice = function()
+{
+    var diceResult = dice.rollDice("1D10");
+    if (diceResult >= 1 && diceResult <=4)
+    {
+        this.firstLevelSpells = 1;
+        return 2;
+    }
+    else if (diceResult >= 5 && diceResult <=7)
+    {
+        this.firstLevelSpells = 2;
+        return 3;
+    }
+    else if (diceResult >= 8 && diceResult <=9)
+    {
+        this.firstLevelSpells = 2;
+        this.secondLevelSpells = 1;
+        return 4;
+    }
+    else if (diceResult === 10)
+    {
+        this.firstLevelSpells = 2;
+        this.secondLevelSpells = 2;
+        return 5;
+    }
+    else
+    {
+        throw "unexpected dice result";
+    }
+};
 
 //--------------------------------------------
 //-------------Ape, White---------------------
