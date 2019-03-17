@@ -1,6 +1,7 @@
 "use strict";
 
 //run tests
+const noOfTests = 200;
 var tests = new Tests();
 runCharacterUnitTests();
 runInventoryUnitTests();
@@ -8,7 +9,6 @@ runWeaponUnitTests();
 runMonsterUnitTests();
 runSavingThrowTests();
 //runAmmoTests();
-const noOfTests = 200;
 runDiceUnitTests();
 tests.testResults();
 
@@ -285,6 +285,12 @@ function Tests()
 		var message = " FAIL " + testName + ": " + actual + " " + monster.name + "s were created in the group but " + expected + " were expected";
 		this.validate(expected, actual, message);
 	};
+	
+	this.checkGetHPs = function (monster, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + monster + "'s hit points were outside expected range";
+		this.validate(expected, actual, message);
+	};
 
 	this.testResults = function()
 	{
@@ -393,6 +399,7 @@ function runMonsterUnitTests()
 	testMonsterTakeDamage();
 	testParseHitDice();
 	testCreateMonsters();
+	testGetHPs();
 }
 
 //-----------------------------------------------
@@ -1989,14 +1996,20 @@ function testParseHitDice()
 {
 	var carrionCrawler = new CarrionCrawler();
 	var ape = new Ape();
+	var bat = new BatNormal();
+	var goblin = new Goblin();
 
 	tests.checkParseHitDiceHd(carrionCrawler, "3", carrionCrawler.parseHitDice().hitDice, testParseHitDice.name);
 	tests.checkParseHitDiceModifier(carrionCrawler, 1, carrionCrawler.parseHitDice().modifier, testParseHitDice.name);	
 
 	tests.checkParseHitDiceHd(ape, "4", ape.parseHitDice().hitDice, testParseHitDice.name);
-	tests.checkParseHitDiceModifier(ape, 0, ape.parseHitDice().modifier, testParseHitDice.name);	
+	tests.checkParseHitDiceModifier(ape, 0, ape.parseHitDice().modifier, testParseHitDice.name);
+	
+	tests.checkParseHitDiceHd(bat, "0.1", bat.parseHitDice().hitDice, testParseHitDice.name);
+	tests.checkParseHitDiceModifier(bat, 0, bat.parseHitDice().modifier, testParseHitDice.name);
 
-	//TODO a test is required for a monster with -ve modifier to ensure the the parse Modifier works correctly
+	tests.checkParseHitDiceHd(goblin, "1", goblin.parseHitDice().hitDice, testParseHitDice.name);
+	tests.checkParseHitDiceModifier(goblin, -1, goblin.parseHitDice().modifier, testParseHitDice.name);
 }
 
 function testCreateMonsters()
@@ -2007,6 +2020,64 @@ function testCreateMonsters()
 	tests.checkCreateMonsters(carrionCrawler, 2, Monster.createMonsters(CarrionCrawler, 2).length, testCreateMonsters.name);
 	tests.checkCreateMonsters(acolyte, 3, Monster.createMonsters(Acolyte, 3).length, testCreateMonsters.name);
 	tests.checkCreateMonsters(acolyte, 5, Monster.createMonsters(Acolyte, 4).length, testCreateMonsters.name);
+}
+
+function testGetHPs()
+{
+	testApeHps();
+	testBatHps();
+	testKolboldHPs();
+}
+
+function checkHPs(params)
+{
+	var resultOutsideRange = false;
+	for(let i =0; noOfTests > i; i++)
+	{
+		var monster = new params.monsterType();
+		var result = monster.GetHPs();
+		if(result < params.min || result > params.max)
+		{
+			resultOutsideRange = true;
+		}
+	}
+	tests.checkGetHPs(params.monsterName, false, resultOutsideRange, checkHPs.name);
+}
+
+function testApeHps()
+{
+	//Ape is 4 Hit Dice
+	var params = {
+		min: 4,
+		max: 32,
+		monsterName: "Ape",
+		monsterType: Ape
+	};
+	checkHPs(params);
+}
+
+function testBatHps()
+{
+	//Bat is 0.1 Hit Dice so has 1 Hp
+	var params = {
+		min: 1,
+		max: 1,
+		monsterName: "Normal Bat",
+		monsterType: BatNormal
+	};
+	checkHPs(params);
+}
+
+function testKolboldHPs()
+{
+	//Bat is 0.5 Hit Dice so has 1 Hp
+	var params = {
+		min: 1,
+		max: 4,
+		monsterName: "Kolbold",
+		monsterType: Kobold
+	};
+	checkHPs(params);
 }
 
 
@@ -2028,9 +2099,9 @@ function checkDice(params)
 {
 	dice.rollDice(params.diceRollAsString);
 
-	tests.checkNoOfDice(params.diceRollAsString, params.noOfDice, dice.getNumberOfDice(), test3d6.name);
-	tests.checkTypeOfDice(params.diceRollAsString, params.typeOfDice, dice.getTypeOfDice(), test3d6.name);
-	tests.checkDiceModifier(params.diceRollAsString, params.modifier, dice.getDiceModifier(), test3d6.name);
+	tests.checkNoOfDice(params.diceRollAsString, params.noOfDice, dice.getNumberOfDice(), checkDice.name);
+	tests.checkTypeOfDice(params.diceRollAsString, params.typeOfDice, dice.getTypeOfDice(), checkDice.name);
+	tests.checkDiceModifier(params.diceRollAsString, params.modifier, dice.getDiceModifier(), checkDice.name);
 
 	var resultOutsideRange = false;
 
@@ -2042,7 +2113,7 @@ function checkDice(params)
 			resultOutsideRange = true;
 		}
 	}
-	tests.checkDiceRange(params.diceRollAsString, false, resultOutsideRange, test3d6.name);
+	tests.checkDiceRange(params.diceRollAsString, false, resultOutsideRange, checkDice.name);
 }
 
 function test3d6()

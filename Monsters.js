@@ -11,6 +11,8 @@ function Monster()
     this.firstLevelSpells = 0;
     this.secondLevelSpells = 0;
     this.inLiar = false;
+    this.flyMovement = 0;
+    this.hitDiceStars = 0;
 
     this.attack = function(opponent)
     {
@@ -49,7 +51,8 @@ function Monster()
 
     this.parseHitDice = function()
     {
-        var match = /^([0-9]+)/.exec(this.hitDice);
+         //get the number of hitDice - numbers 0-9 [any amount of them] and decimal point and then number 0-9 [any amount of them]       
+        var match = /^([0-9]*\.?[0-9]+)/.exec(this.hitDice);
         var match2 = /[+-][0-9]+/.exec(this.hitDice);
         
         if(match2 === null)
@@ -65,7 +68,9 @@ function Monster()
 
     this.parseHitDiceWithoutModifier = function()
     {
-        var match = /^([0-9]+)[+-]?/.exec(this.hitDice);
+        //get the number of hitDice - numbers 0-9 [any amount of them] and decimal point and then number 0-9 [any amount of them]
+        // then an optional + or -
+        var match = /^([0-9]*\.?[0-9]+)[+-]?/.exec(this.hitDice);
 
         return match[0];
     };
@@ -74,8 +79,20 @@ function Monster()
     {
         var parsedHitDice = this.parseHitDice();
         var hitPoints = 0;  
-        hitPoints = dice.rollDice( parsedHitDice.hitDice + "D8");
-        return hitPoints + parsedHitDice.modifier;
+        if(parsedHitDice.hitDice === "0.1")
+        {
+            return 1;
+        }
+        else if (parsedHitDice.hitDice === "0.5")
+        {
+            hitPoints = dice.rollDice( "1D4");
+            return hitPoints + parsedHitDice.modifier;
+        }
+        else 
+        {
+            hitPoints = dice.rollDice( parsedHitDice.hitDice + "D8");
+            return hitPoints + parsedHitDice.modifier;
+        }
     };
 }
 
@@ -240,7 +257,6 @@ Bandit.prototype.GetTreasureType = function()
 Bandit.prototype.movement = 120;
 Bandit.prototype.morale = 8;
 
-
 Bandit.getNumberAppearing = function(inLiar = false) 
 {
      if(inLiar)
@@ -254,38 +270,45 @@ Bandit.getNumberAppearing = function(inLiar = false)
 };
 
 
+//------------------------------------------
+//---           Bat Prototype           ---
+//------------------------------------------
+function Bat() 
+{  }
 
-
-
-
-
+Bat.prototype = new Monster();
+Bat.prototype.Constructor = Bat;
 
 //--------------------------------------------
-//---------------Bat--------------------------
+//---------------Bat Normal-------------------
 //--------------------------------------------
 
-//confusion = -2 to hit and saving throws and cannot cast spells
-function Bat()
+function BatNormal()
  {
     this.name = "Bat";
     this.race = "animal";
     this.armourClass = 6;
-    this.hitDice = 0;
-    this.hitPoints = "1";
+    this.hitDice = "0.1";
+    this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 120;
-    this.attacks = [{ attackType: "Confusion", damage: "0D4" }]; //does no damage
+    this.attacks = [{ attackType: "Confusion", damage: specialDamage }]; 
     this.saveAs = { class: characterType.NormalMan, level: 0};  
-    this.morale = 6;
-    this.treasureType = "Nil";
     //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
-Bat.prototype = new Monster();
-Bat.prototype.Constructor = Bat;
-Bat.getNumberAppearing = function() {return dice.rollDice("1D100");};
-
+BatNormal.prototype = new Bat();
+BatNormal.prototype.Constructor = BatNormal;
+BatNormal.prototype.movement = 9;
+BatNormal.prototype.flyMovement = 120;
+BatNormal.prototype.getTreasureType = function() { return []; };
+BatNormal.prototype.morale = 6;
+BatNormal.getNumberAppearing = function() {return dice.rollDice("1D100");};
+BatNormal.prototype.specialDamage = function(opponent)
+{
+    //does not do damage 
+    //causes confusion -- -2 toHit and -2 saving throws and cannot cast spells
+};
 
 //--------------------------------------------
 //---------------Bat, Giant-------------------
@@ -300,17 +323,60 @@ function BatGiant()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 180;
     this.attacks = [{ attackType: "Bite", damage: "1D4" }]; 
     this.saveAs = { class: characterType.Fighter, level: 1};  
-    this.morale = 8;
-    this.treasureType = "Nil";
     //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
-BatGiant.prototype = new Monster();
+BatGiant.prototype = new Bat();
 BatGiant.prototype.Constructor = BatGiant;
+BatGiant.prototype.movement = 30;
+BatGiant.prototype.flyMovement = 180;
+BatGiant.prototype.morale = 8;
+BatGiant.prototype.getTreasureType = function() { return []; };
 BatGiant.getNumberAppearing = function() {return dice.rollDice("1D10");};
+
+//--------------------------------------------
+//---------------Bat, Giant Vampire-----------
+//--------------------------------------------
+
+function BatGiantVampire()
+ {
+    this.name = "Giant Vampire Bat";
+    this.race = "animal";
+    this.armourClass = 6;
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "Bite", damage: specialDamage }]; 
+    this.saveAs = { class: characterType.Fighter, level: 1};  
+    //this.Alignment = [{ alignment: Neutral, probability: 100 }];
+}
+
+BatGiantVampire.prototype = new Bat();
+BatGiantVampire.prototype.Constructor = BatGiantVampire;
+BatGiantVampire.prototype.movement = 30;
+BatGiantVampire.prototype.flyMovement = 180;
+BatGiantVampire.prototype.morale = 8;
+BatGiantVampire.prototype.getTreasureType = function() { return []; };
+BatGiant.getNumberAppearing = function() {return dice.rollDice("1D10");};
+BatGiantVampire.prototype.specialDamage = function(opponent) 
+{
+    opponent.takeDamage(dice.rollDice("1D4"));
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, dice.rollDice("1D20")))
+    {
+        opponent.isParalysised = true;
+        opponent.paralysisedDuration = dice.rollDice("1D10");
+        //opponent now will automatically be hit and take 1D4 damage
+        //if they die this way they must save vs spells or become undead in 24 hours
+    }
+};
+
+
+
+
+
 
 
 //------------------------------------------
