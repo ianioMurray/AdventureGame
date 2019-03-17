@@ -298,6 +298,12 @@ function Tests()
 		this.validate(expected, actual, message);		
 	};
 
+	this.checkGetLevel = function(monster, expected, actual, testName) 
+	{
+		var message = " FAIL " + testName + ": " + monster.name + "'s level is " + actual + " but the expected was " +  expected;
+		this.validate(expected, actual, message);	
+	};
+
 	this.testResults = function()
 	{
 		if(this.allTestsPass === true)
@@ -407,6 +413,7 @@ function runMonsterUnitTests()
 	testCreateMonsters();
 	testGetHPs();
 	testSurpriseOpponent();
+	testGetLevel();
 }
 
 //-----------------------------------------------
@@ -2104,7 +2111,12 @@ function testSurpriseOpponent()
 	tests.checkSurpriseOpponent(bugbear, false, bugbear.surpriseOpponent(4), testSurpriseOpponent.name);
 }
 
+function testGetLevel()
+{
+	var dwarfLeader = new DwarfLeader();
 
+	tests.checkGetLevel(dwarfLeader, "3", dwarfLeader.getLevel(3), testGetLevel.name);
+}
 
 //--------------------------------------------------------------------------------------------------------------
 

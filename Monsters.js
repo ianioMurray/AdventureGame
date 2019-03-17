@@ -17,6 +17,7 @@ function Monster()
     this.hitDiceStars = 0;
     this.canTalk = 0;
     this.isSleep = 0;
+    this.leaderAlive = false;
 
     this.attack = function(opponent)
     {
@@ -116,10 +117,11 @@ Monster.createMonsters = function(typeOfMonster, numberAppearing, inLiar = false
 {
     var monsters = [];
 
-    if(typeOfMonster.mayHaveLeader && numberAppearing >= Acolyte.numberRequiredToHaveLeader)
+    if(typeOfMonster.mayHaveLeader && numberAppearing >= typeOfMonster.numberRequiredToHaveLeader)
     {
         let monster = new typeOfMonster.leaderType();
         monsters.push(monster);
+        this.leaderAlive = true;
     }
 
     for(var i = 0;  numberAppearing > i; i++)
@@ -156,7 +158,7 @@ Acolyte.prototype = new Monster();
 Acolyte.prototype.Constructor = Acolyte;
 Acolyte.prototype.getTreasureType = function() { return ["U"]; };
 Acolyte.prototype.movement = 60;
-Acolyte.prototype.morale = 7;
+Acolyte.prototype.getMorale = function() { return  7; };
 Acolyte.prototype.firstLevelSpells = 0;
 Acolyte.getNumberAppearing = function() { return dice.rollDice("1D8"); };
 Acolyte.mayHaveLeader = true;
@@ -235,7 +237,7 @@ Ape.prototype = new Monster();
 Ape.prototype.Constructor = Ape;
 Ape.prototype.getTreasureType = function() { return []; };
 Ape.prototype.movement = 120;
-Ape.prototype.morale = 7;
+Ape.prototype.getMorale = function() { return  7; };
 Ape.getNumberAppearing = function() {return dice.rollDice("1D6");};
 
 
@@ -272,7 +274,7 @@ Bandit.prototype.GetTreasureType = function()
     }
 };
 Bandit.prototype.movement = 120;
-Bandit.prototype.morale = 8;
+Bandit.prototype.getMorale = function() { return 8; };
 Bandit.getNumberAppearing = function(inLiar = false) 
 {
      if(inLiar)
@@ -339,7 +341,7 @@ BatNormal.prototype.Constructor = BatNormal;
 BatNormal.prototype.movement = 9;
 BatNormal.prototype.flyMovement = 120;
 BatNormal.prototype.getTreasureType = function() { return []; };
-BatNormal.prototype.morale = 6;
+BatNormal.prototype.getMorale = function() { return 6; };
 BatNormal.getNumberAppearing = function() {return dice.rollDice("1D100");};
 BatNormal.prototype.specialDamage = function(opponent)
 {
@@ -369,7 +371,7 @@ BatGiant.prototype = new Bat();
 BatGiant.prototype.Constructor = BatGiant;
 BatGiant.prototype.movement = 30;
 BatGiant.prototype.flyMovement = 180;
-BatGiant.prototype.morale = 8;
+BatGiant.prototype.getMorale = function() { return 8; };
 BatGiant.prototype.getTreasureType = function() { return []; };
 BatGiant.getNumberAppearing = function() {return dice.rollDice("1D10");};
 
@@ -395,7 +397,7 @@ BatGiantVampire.prototype = new Bat();
 BatGiantVampire.prototype.Constructor = BatGiantVampire;
 BatGiantVampire.prototype.movement = 30;
 BatGiantVampire.prototype.flyMovement = 180;
-BatGiantVampire.prototype.morale = 8;
+BatGiantVampire.prototype.getMorale = function() { return 8; };
 BatGiantVampire.prototype.getTreasureType = function() { return []; };
 BatGiant.getNumberAppearing = function() {return dice.rollDice("1D10");};
 BatGiantVampire.prototype.specialDamage = function(opponent) 
@@ -452,7 +454,7 @@ function BearBlack()
 
 BearBlack.prototype = new Bear();
 BearBlack.prototype.Constructor = BearBlack;
-BearBlack.prototype.morale = 7;
+BearBlack.prototype.getMorale = function() { return  7; };
 BearBlack.prototype.getTreasureType = function() { return ["U"]; };
 BearBlack.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 BearBlack.prototype.clawDamage = function(opponent)
@@ -484,7 +486,7 @@ function BearGrizzly()
 
 BearGrizzly.prototype = new Bear();
 BearGrizzly.prototype.Constructor = BearGrizzly;
-BearGrizzly.prototype.morale = 8;
+BearGrizzly.prototype.getMorale = function() { return  8; };
 BearGrizzly.prototype.getTreasureType = function() { return ["U"]; };
 BearGrizzly.getNumberAppearing = function() { return 1; };
 BearGrizzly.prototype.clawDamage = function(opponent)
@@ -514,7 +516,7 @@ function BearPolar()
 
 BearPolar.prototype = new Bear();
 BearPolar.prototype.Constructor = BearPolar;
-BearPolar.prototype.morale = 8;
+BearPolar.prototype.getMorale = function() { return 8; };
 BearPolar.prototype.getTreasureType = function() { return ["U"]; };
 BearPolar.getNumberAppearing = function() { return 1; };
 BearPolar.prototype.clawDamage = function(opponent)
@@ -544,7 +546,7 @@ function BearCave()
 
 BearCave.prototype = new Bear();
 BearCave.prototype.Constructor = BearCave;
-BearCave.prototype.morale = 9;
+BearCave.prototype.getMorale = function() { return 9; };
 BearCave.prototype.getTreasureType = function() { return ["V"]; };
 BearCave.getNumberAppearing = function() { return dice.rollDice("1D2"); };
 BearCave.prototype.clawDamage = function(opponent)
@@ -582,7 +584,7 @@ function BeetleFire()
 BeetleFire.prototype = new BeetleGiant();
 BeetleFire.prototype.Constructor = BeetleFire;
 BeetleFire.prototype.movement = 120;
-BeetleFire.prototype.morale = 7;
+BeetleFire.prototype.getMorale = function() { return 7; };
 BeetleFire.prototype.getTreasureType = function() { return []; };
 BeetleFire.getNumberAppearing = function() { return dice.rollDice("1D8"); };
 
@@ -609,7 +611,7 @@ function BeetleOil()
 BeetleOil.prototype = new BeetleGiant();
 BeetleOil.prototype.Constructor = BeetleOil;
 BeetleOil.prototype.movement = 120;
-BeetleOil.prototype.morale = 8;
+BeetleOil.prototype.getMorale = function() { return 8; };
 BeetleOil.prototype.getTreasureType = function() { return []; };
 BeetleOil.getNumberAppearing = function() { return dice.rollDice("1D8"); };
 BeetleOil.prototype.specialDamage = function(opponent)
@@ -638,7 +640,7 @@ function BeetleTiger()
 BeetleTiger.prototype = new BeetleGiant();
 BeetleTiger.prototype.Constructor = BeetleTiger;
 BeetleTiger.prototype.movement = 150;
-BeetleTiger.prototype.morale = 9;
+BeetleTiger.prototype.getMorale = function() { return 9; };
 BeetleTiger.prototype.getTreasureType = function() { return ["U"]; };
 BeetleTiger.getNumberAppearing = function() { return dice.rollDice("1D6"); };
 
@@ -666,7 +668,7 @@ function Berserker()
 Berserker.prototype = new Monster();
 Berserker.prototype.Constructor = Berserker;
 Berserker.prototype.movement = 120;
-Berserker.prototype.morale = 12;           //set to 12 for the moment to reflect that they never run or surrender
+Berserker.prototype.getMorale = function() { return 12; };   //set to 12 for the moment to reflect that they never run or surrender
 Berserker.prototype.getTreasureType = function() 
 {
     if(this.inWilderness)
@@ -701,7 +703,7 @@ function Boar()
 Boar.prototype = new Monster();
 Boar.prototype.Constructor = Boar;
 Boar.prototype.movement = 150;
-Boar.prototype.morale = 9;
+Boar.prototype.getMorale = function() { return 9; };
 Boar.prototype.getTreasureType = function() { return []; };
 Boar.getNumberAppearing = function() { return dice.rollDice("1D6"); };
 
@@ -728,7 +730,7 @@ function Bugbear()
 Bugbear.prototype = new Monster();
 Bugbear.prototype.Constructor = Bugbear;
 Bugbear.prototype.movement = 90;
-Bugbear.prototype.morale = 9;
+Bugbear.prototype.getMorale = function() { return 9; };
 Bugbear.prototype.getTreasureType = function() { return ["B"]; };
 Bugbear.getNumberAppearing = function() { return dice.rollDice("2D4"); };
 Bugbear.prototype.surpriseOpponent= function(diceResult)
@@ -774,7 +776,7 @@ function CarrionCrawler()
 CarrionCrawler.prototype = new Monster();
 CarrionCrawler.prototype.Constructor = CarrionCrawler;
 CarrionCrawler.prototype.movement = 120;
-CarrionCrawler.prototype.morale = 9;
+CarrionCrawler.prototype.getMorale = function() { return 9; };
 CarrionCrawler.prototype.getTreasureType = function() { return ["B"]; };
 CarrionCrawler.getNumberAppearing = function() { return dice.rollDice("1D3"); };
 CarrionCrawler.prototype.specialDamage = function(opponent) {
@@ -819,7 +821,7 @@ function MountainLion()
 MountainLion.prototype = new CatGiant();
 MountainLion.prototype.Constructor = MountainLion;
 MountainLion.prototype.movement = 150;
-MountainLion.prototype.morale = 8;
+MountainLion.prototype.getMorale = function() { return  8; };
 MountainLion.prototype.treasureType = function() { retunr ["U"]; };
 MountainLion.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 
@@ -846,7 +848,7 @@ function Panther()
 Panther.prototype = new CatGiant();
 Panther.prototype.Constructor = Panther;
 Panther.prototype.movement = 210;
-Panther.prototype.morale = 8;
+Panther.prototype.getMorale = function() { return  8; };
 Panther.prototype.getRreasureType = function() { return ["U"]; };
 Panther.getNumberAppearing = function() { return dice.rollDice("1D2"); };
 
@@ -873,7 +875,7 @@ function Lion()
 Lion.prototype = new CatGiant();
 Lion.prototype.Constructor = Lion;
 Lion.prototype.movement = 150;
-Lion.prototype.morale = 9;
+Lion.prototype.getMorale = function() { return  9; };
 Lion.prototype.treasureType = function() { return ["U"]; };
 Lion.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 
@@ -900,7 +902,7 @@ function Tiger()
 Tiger.prototype = new CatGiant();
 Tiger.prototype.Constructor = Tiger;
 Tiger.prototype.movement = 150;
-Tiger.prototype.morale = 9;
+Tiger.prototype.getMorale = function() { return 9; };
 Tiger.prototype.getTreasureType = function() { return ["U"]; };
 Tiger.getNumberAppearing = function() { return 1; };
 
@@ -927,7 +929,7 @@ function SabreToothTiger()
 SabreToothTiger.prototype = new CatGiant();
 SabreToothTiger.prototype.Constructor = SabreToothTiger;
 SabreToothTiger.prototype.movement = 150;
-SabreToothTiger.prototype.morale = 10;
+SabreToothTiger.prototype.getMorale = function() { return  10; };
 SabreToothTiger.prototype.getTreasureType = function() { return ["V"]; };
 SabreToothTiger.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
 
@@ -961,7 +963,7 @@ CaveLocust.prototype = new Monster();
 CaveLocust.prototype.Constructor = CaveLocust;
 CaveLocust.prototype.movement = 60;
 CaveLocust.prototype.flyMovement = 180;
-CaveLocust.prototype.morale = 5;
+CaveLocust.prototype.getMorale = function() { return 5; };
 CaveLocust.prototype.getTreasureType = function() { return []; };
 CaveLocust.getNumberAppearing = function() {  return dice.rollDice("2D10"); };
 CaveLocust.prototype.specialDamage = function(opponent) {
@@ -995,7 +997,7 @@ function CentipedeGiant()
 CentipedeGiant.prototype = new Monster();
 CentipedeGiant.prototype.Constructor = CentipedeGiant;
 CentipedeGiant.prototype.movement = 60;
-CentipedeGiant.prototype.morale = 7;
+CentipedeGiant.prototype.getMorale = function() { return  7; };
 CentipedeGiant.prototype.getTreasureType = function() { return []; };
 CentipedeGiant.getNumberAppearing = function() {  return dice.rollDice("2D4"); };
 CentipedeGiant.prototype.specialDamage = function(opponent) {
@@ -1029,7 +1031,7 @@ function Doppleganger() {
 Doppleganger.prototype = new Monster();
 Doppleganger.prototype.Constructor = Doppleganger;
 Doppleganger.prototype.movement = 90;
-Doppleganger.prototype.morale = 10;
+Doppleganger.prototype.getMorale = function() { return 10; };
 Doppleganger.prototype.getTreasureType = function() { return ["E"]; }; 
 Doppleganger.getNumberAppearing = function() {  return dice.rollDice("1D6"); };
 
@@ -1089,7 +1091,7 @@ function WhiteDragon() {
 
 WhiteDragon.prototype = new Dragon();
 WhiteDragon.prototype.Constructor = WhiteDragon;
-WhiteDragon.prototype.morale = 8;
+WhiteDragon.prototype.getMorale = function() { return 8; };
 WhiteDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
 
 //--------------------------------------------
@@ -1122,7 +1124,7 @@ function BlackDragon() {
 
 BlackDragon.prototype = new Dragon();
 BlackDragon.prototype.Constructor = BlackDragon;
-BlackDragon.prototype.morale = 8;
+BlackDragon.prototype.getMorale = function() { return  8; };
 BlackDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
 
 //--------------------------------------------
@@ -1155,7 +1157,7 @@ function GreenDragon() {
 
 GreenDragon.prototype = new Dragon();
 GreenDragon.prototype.Constructor = GreenDragon;
-GreenDragon.prototype.morale = 9;
+GreenDragon.prototype.getMorale = function() { return 9; };
 GreenDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
 
 //--------------------------------------------
@@ -1188,7 +1190,7 @@ function BlueDragon() {
 
 BlueDragon.prototype = new Dragon();
 BlueDragon.prototype.Constructor = BlueDragon;
-BlueDragon.prototype.morale = 9;
+BlueDragon.prototype.getMorale = function() { return 9; };
 BlueDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
 
 //--------------------------------------------
@@ -1221,7 +1223,7 @@ function RedDragon() {
 
 RedDragon.prototype = new Dragon();
 RedDragon.prototype.Constructor = RedDragon;
-RedDragon.prototype.morale = 10;  
+RedDragon.prototype.getMorale = function() { return 10; };  
 RedDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
 
 //--------------------------------------------
@@ -1255,7 +1257,7 @@ function GoldDragon() {
 
 GoldDragon.prototype = new Dragon();
 GoldDragon.prototype.Constructor = GoldDragon;
-GoldDragon.prototype.morale = 10; 
+GoldDragon.prototype.getMorale = function() { return 10; }; 
 GoldDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
 
 //--------------------------------------------
@@ -1279,7 +1281,7 @@ function DriverAnt() {
 DriverAnt.prototype = new Monster();
 DriverAnt.prototype.Constructor = DriverAnt;
 DriverAnt.prototype.movement = 180;
-DriverAnt.prototype.morale = 7;                     // but once engaged they will always continue to fight
+DriverAnt.prototype.getMorale = function() { return 7; };  // but once engaged they will always continue to fight
 DriverAnt.prototype.getTreasureType = function() 
 {
     //30% chance a nest will have gold nuggets worth 1D10 thousand gold pieces 
@@ -1309,20 +1311,11 @@ DriverAnt.getNumberAppearing = function(inLiar = false)
      }
 };
 
-
-
-
-
-
-
-
-
-
 //--------------------------------------------
 //-------------------Dwarf--------------------
 //--------------------------------------------
 
-//there will be a leader if more than 20 dwarves Level 3-8 usually with a magic item
+//NOTE : the morale is calculated correctly but the leader dieing has not be implemented 
 
 function Dwarf() {
     this.name = "Dwarf";
@@ -1332,17 +1325,56 @@ function Dwarf() {
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 60;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" } ];
     this.saveAs = { class: characterType.Fighter, level: 1 }; 
-    this.morale = 8;
-    this.treasureType = "G";    
     //this.Alignment = [{ alignment = Neutral/Lawful, probability = 100 }];
 }
 
 Dwarf.prototype = new Monster();
 Dwarf.prototype.Constructor = Dwarf;
+Dwarf.prototype.movement = 60;
+Dwarf.prototype.getMorale = function() 
+{
+    if(leaderAlive)
+    {
+        return 10;
+    }
+    else 
+    {
+        return 8;
+    }
+};
+Dwarf.prototype.getTreasureType = function() { return ["G"]; };  
 Dwarf.getNumberAppearing = function() {  return dice.rollDice("1D6"); };
+Dwarf.mayHaveLeader = true;
+Dwarf.numberRequiredToHaveLeader = 20;
+
+//--------------------------------------------
+//-------------------DwarfLeader--------------
+//--------------------------------------------
+
+//there will be a leader if more than 20 dwarves Level 3-8 usually with a magic item
+
+function DwarfLeader() {
+    this.name = "Dwarf Leader";
+    this.hitDice = this.getLevel(dice.rollDice("1D6+2"));
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" } ];
+    this.saveAs = { class: characterType.Fighter, level: 1 }; 
+    //this.Alignment = [{ alignment = Neutral/Lawful, probability = 100 }];
+}
+
+DwarfLeader.prototype = new Dwarf();
+DwarfLeader.prototype.Constructor = DwarfLeader;
+DwarfLeader.prototype.getLevel = function(level) { return level.toString(); };
+
+
+
+
+
+
 
 //--------------------------------------------
 //-------------------Elf----------------------
