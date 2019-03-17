@@ -13,13 +13,10 @@ runDiceUnitTests();
 tests.testResults();
 
 //runTestCombatvCharacter();
-//runTestCombatvMonsterBandits();
+runTestCombatvMonsterBandits();
+runTestCombatvMonsterBanditsInLair();
 //runTestCombatvMonsterCarrionCrawler();
-runTestCombatvMonsterBear();
-
-
-
-
+//runTestCombatvMonsterBear();
 
 
 function Tests()
@@ -2008,11 +2005,7 @@ function testCreateMonsters()
 	var acolyte = new Acolyte();
 
 	tests.checkCreateMonsters(carrionCrawler, 2, Monster.createMonsters(CarrionCrawler, 2).length, testCreateMonsters.name);
-	tests.checkCreateMonsters(acolyte, 2, Monster.createMonsters(Acolyte, 2).length, testCreateMonsters.name);
-
-	var acolytes = Monster.createMonsters(Acolyte, 4);
-	console.log(acolytes);
-
+	tests.checkCreateMonsters(acolyte, 3, Monster.createMonsters(Acolyte, 3).length, testCreateMonsters.name);
 	tests.checkCreateMonsters(acolyte, 5, Monster.createMonsters(Acolyte, 4).length, testCreateMonsters.name);
 }
 

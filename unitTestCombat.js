@@ -166,9 +166,21 @@ function runTestCombatvMonsterBandits()
 	
 	var monsters = Monster.createMonsters(Bandit, Bandit.getNumberAppearing());
     var party = create3FighterParty();
-    
-    runCombat(party, monsters);
+	console.log(monsters[0].GetTreasureType());
+	runCombat(party, monsters);
 }
+
+function runTestCombatvMonsterBanditsInLair()
+{
+	console.log("----------------------------------");
+	console.log("Party vs Bandits");
+	var inLiar = true;
+	var monsters = Monster.createMonsters(Bandit, Bandit.getNumberAppearing(inLiar), inLiar);
+	var party = create3FighterParty();
+	console.log(monsters[0].GetTreasureType());
+	runCombat(party, monsters);
+}
+
 
 function runTestCombatvMonsterCarrionCrawler()
 {

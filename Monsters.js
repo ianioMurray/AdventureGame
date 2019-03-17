@@ -10,6 +10,7 @@ function Monster()
 {
     this.firstLevelSpells = 0;
     this.secondLevelSpells = 0;
+    this.inLiar = false;
 
     this.attack = function(opponent)
     {
@@ -78,7 +79,7 @@ function Monster()
     };
 }
 
-Monster.createMonsters = function(typeOfMonster, numberAppearing)
+Monster.createMonsters = function(typeOfMonster, numberAppearing, inLiar = false)
 {
     var monsters = [];
 
@@ -92,6 +93,7 @@ Monster.createMonsters = function(typeOfMonster, numberAppearing)
     {
         let monster = new typeOfMonster();
         monsters.push(monster);
+        monster.inLiar = inLiar;
     }
     return monsters;
 };
@@ -101,9 +103,7 @@ Monster.createMonsters = function(typeOfMonster, numberAppearing)
 //-------------Acolyte------------------------
 //--------------------------------------------
 
-//if there are more than 4 then 1 is a leader - roll a 1D10 on 1-4 level 2 / 5-7 level 3 / 8-9 level 4 / 10 level 5
-//the leader will know a random spell 
-//standard acolytes dont know any spells
+//if there are more than 4 then 1 is a leader 
 function Acolyte()
 {
     this.name = "Acolyte";
@@ -120,9 +120,10 @@ function Acolyte()
 
 Acolyte.prototype = new Monster();
 Acolyte.prototype.Constructor = Acolyte;
-Acolyte.prototype.treasureType = "U";
+Acolyte.prototype.getTreasureType = function() { return ["U"]; };
 Acolyte.prototype.movement = 60;
 Acolyte.prototype.morale = 7;
+Acolyte.prototype.firstLevelSpells = 0;
 Acolyte.getNumberAppearing = function() { return dice.rollDice("1D8"); };
 Acolyte.mayHaveLeader = true;
 Acolyte.numberRequiredToHaveLeader = 4;
@@ -131,6 +132,9 @@ Acolyte.leaderType = AcolyteLeader;
 //--------------------------------------------
 //-------------AcolyteLeader------------------
 //--------------------------------------------
+
+//the leader will know random spells 
+
 function AcolyteLeader()
 {
     this.name = "Acolyte Leader";
@@ -145,6 +149,7 @@ AcolyteLeader.prototype = new Acolyte();
 AcolyteLeader.prototype.Constructor = AcolyteLeader;
 AcolyteLeader.prototype.GetHitDice = function()
 {
+    //roll a 1D10 on 1-4 level 2 / 5-7 level 3 / 8-9 level 4 / 10 level 5
     var diceResult = dice.rollDice("1D10");
     if (diceResult >= 1 && diceResult <=4)
     {
@@ -186,16 +191,17 @@ function Ape()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 120;
-    this.attacks = [{ attackType: "Claw", damage: "1d4" }, { attackType: "Claw", damage: "1d4" }];
+    this.attacks = [{ attackType: "Claw", damage: "1d4" }, 
+                    { attackType: "Claw", damage: "1d4" }];
     this.saveAs = { class: characterType.Fighter, level: 2};
-    this.morale = 7;
-    this.treasureType = "Nil";
     //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
 Ape.prototype = new Monster();
 Ape.prototype.Constructor = Ape;
+Ape.prototype.getTreasureType = function() { return []; };
+Ape.prototype.movement = 120;
+Ape.prototype.morale = 7;
 Ape.getNumberAppearing = function() {return dice.rollDice("1D6");};
 
 
@@ -203,9 +209,7 @@ Ape.getNumberAppearing = function() {return dice.rollDice("1D6");};
 //-------------Bandit-------------------------
 //--------------------------------------------
 
-//This is a typical bandit 
-//If a bandit Camp is encountered the teasureType will be "U" and the noAppearing "3D10"
-//Bandits might have a leader who can be any class and is 1 level higher than a standard bandit
+//Bandits may have a leader who - any class and is 1 level higher than a standard bandit
 function Bandit()
  {
     this.name = "Bandit";
@@ -215,17 +219,45 @@ function Bandit()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 120;
     this.attacks = [{ attackType: "WeaponAttack", damage: "1d6" }];
     this.saveAs = { class: characterType.Thief, level: 1};  
-    this.morale = 8;
-    this.treasureType = "U";
     //this.Alignment = [{ alignment: Chaotic, probability: 50 }, { alignment: Neutral, probability: 50 }];
 }
 
 Bandit.prototype = new Monster();
 Bandit.prototype.Constructor = Bandit;
-Bandit.getNumberAppearing = function() {return dice.rollDice("1D8");};
+Bandit.prototype.GetTreasureType = function()
+{
+    if(this.inLiar)
+    { 
+        return ["A"];
+    }  
+    else
+    {
+        return ["U"];
+    }
+};
+Bandit.prototype.movement = 120;
+Bandit.prototype.morale = 8;
+
+
+Bandit.getNumberAppearing = function(inLiar = false) 
+{
+     if(inLiar)
+     {
+        return dice.rollDice("3D10");
+     }
+     else
+     {
+        return dice.rollDice("1D8");
+     }
+};
+
+
+
+
+
+
 
 
 //--------------------------------------------
