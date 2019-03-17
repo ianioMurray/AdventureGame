@@ -11,6 +11,7 @@ function Monster()
     this.firstLevelSpells = 0;
     this.secondLevelSpells = 0;
     this.inLiar = false;
+    this.inWilderness = false;
     this.flyMovement = 0;
     this.hitDiceStars = 0;
 
@@ -96,7 +97,7 @@ function Monster()
     };
 }
 
-Monster.createMonsters = function(typeOfMonster, numberAppearing, inLiar = false)
+Monster.createMonsters = function(typeOfMonster, numberAppearing, inLiar = false, inWilderness = false)
 {
     var monsters = [];
 
@@ -111,6 +112,7 @@ Monster.createMonsters = function(typeOfMonster, numberAppearing, inLiar = false
         let monster = new typeOfMonster();
         monsters.push(monster);
         monster.inLiar = inLiar;
+        monster.inWilderness = inWilderness;
     }
     return monsters;
 };
@@ -226,7 +228,7 @@ Ape.getNumberAppearing = function() {return dice.rollDice("1D6");};
 //-------------Bandit-------------------------
 //--------------------------------------------
 
-//Bandits may have a leader who - any class and is 1 level higher than a standard bandit
+//Bandits may have a leader - BanditLeader
 function Bandit()
  {
     this.name = "Bandit";
@@ -268,6 +270,27 @@ Bandit.getNumberAppearing = function(inLiar = false)
         return dice.rollDice("1D8");
      }
 };
+
+//--------------------------------------------
+//-------------Bandit Leader------------------
+//--------------------------------------------
+
+// can be any class 
+
+function BanditLeader()
+ {
+    this.name = "Bandit Leader";
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damage: "1d6" }];
+    this.saveAs = { class: characterType.Thief, level: 1};  
+    //this.Alignment = [{ alignment: Chaotic, probability: 50 }, { alignment: Neutral, probability: 50 }];
+}
+
+BanditLeader.prototype = new Bandit();
+BanditLeader.prototype.Constructor = BanditLeader;
 
 
 //------------------------------------------
@@ -373,12 +396,6 @@ BatGiantVampire.prototype.specialDamage = function(opponent)
     }
 };
 
-
-
-
-
-
-
 //------------------------------------------
 //---           Bear Prototype           ---
 //------------------------------------------
@@ -387,6 +404,7 @@ function Bear()
 
 Bear.prototype = new Monster();
 Bear.prototype.Constructor = Bear;
+Bear.prototype.movement = 120;
 Bear.prototype.specialDamage = function(opponent, noOfPreviousClawHits)
 {
     this.clawDamage(opponent);
@@ -411,18 +429,17 @@ function BearBlack()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 120;
     this.attacks = [{ attackType: "Claw", damage: specialDamage }, 
                     { attackType: "Claw", damage: specialDamage }, 
                     { attackType: "Bite", damage: "1D6"} ]; 
     this.saveAs = { class: characterType.Fighter, level: 2};  
-    this.morale = 7;
-    this.treasureType = "U";
    // this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
 BearBlack.prototype = new Bear();
 BearBlack.prototype.Constructor = BearBlack;
+BearBlack.prototype.morale = 7;
+BearBlack.prototype.getTreasureType = function() { return ["U"]; };
 BearBlack.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 BearBlack.prototype.clawDamage = function(opponent)
 {
@@ -442,18 +459,19 @@ function BearGrizzly()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 120;
+
     this.attacks = [{ attackType: "Claw", damage: specialDamage }, 
                     { attackType: "Claw", damage: specialDamage }, 
                     { attackType: "Bite", damage: "1D8"}]; 
     this.saveAs = { class: characterType.Fighter, level: 2};  
-    this.morale = 8;
-    this.treasureType = "U";
+
    //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
 BearGrizzly.prototype = new Bear();
 BearGrizzly.prototype.Constructor = BearGrizzly;
+BearGrizzly.prototype.morale = 8;
+BearGrizzly.prototype.getTreasureType = function() { return ["U"]; };
 BearGrizzly.getNumberAppearing = function() { return 1; };
 BearGrizzly.prototype.clawDamage = function(opponent)
 {
@@ -473,18 +491,17 @@ function BearPolar()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 120;
     this.attacks = [{ attackType: "Claw", damage: specialDamage }, 
                     { attackType: "Claw", damage: specialDamage }, 
                     { attackType: "Bite", damage: "1D10"} ]; 
     this.saveAs = { class: characterType.Fighter, level: 3};  
-    this.morale = 8;
-    this.treasureType = "U";
    //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
 BearPolar.prototype = new Bear();
 BearPolar.prototype.Constructor = BearPolar;
+BearPolar.prototype.morale = 8;
+BearPolar.prototype.getTreasureType = function() { return ["U"]; };
 BearPolar.getNumberAppearing = function() { return 1; };
 BearPolar.prototype.clawDamage = function(opponent)
 {
@@ -504,18 +521,17 @@ function BearCave()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 120;
     this.attacks = [{ attackType: "Claw", damage: specialDamage }, 
                     { attackType: "Claw", damage: specialDamage }, 
                     { attackType: "Bite", damage: "2D6"} ]; 
     this.saveAs = { class: characterType.Fighter, level: 3};  
-    this.morale = 9;
-    this.treasureType = "V";
    //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
 BearCave.prototype = new Bear();
 BearCave.prototype.Constructor = BearCave;
+BearCave.prototype.morale = 9;
+BearCave.prototype.getTreasureType = function() { return ["V"]; };
 BearCave.getNumberAppearing = function() { return dice.rollDice("1D2"); };
 BearCave.prototype.clawDamage = function(opponent)
 {
@@ -544,23 +560,22 @@ function BeetleFire()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 120;
     this.attacks = [{ attackType: "Bite", damage: "2D4" } ]; 
     this.saveAs = { class: characterType.Fighter, level: 1};  
-    this.morale = 7;
-    this.treasureType = "Nil";
    //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
 BeetleFire.prototype = new BeetleGiant();
 BeetleFire.prototype.Constructor = BeetleFire;
+BeetleFire.prototype.movement = 120;
+BeetleFire.prototype.morale = 7;
+BeetleFire.prototype.getTreasureType = function() { return []; };
 BeetleFire.getNumberAppearing = function() { return dice.rollDice("1D8"); };
 
 //--------------------------------------------
 //---------------Beetle, Oil-----------------
 //--------------------------------------------
 
-// special damage which will reduce characters toHit roll for 24hrs
 function BeetleOil()
  {
     this.name = "Oil Beetle";
@@ -570,17 +585,22 @@ function BeetleOil()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 120;
-    this.attacks = [{ attackType: "Bite", damage: "1D6" } ]; 
+    this.attacks = [{ attackType: "Bite", damage: "1D6" }, 
+                    { attackType: "squirt", damage: specialDamage }]; 
     this.saveAs = { class: characterType.Fighter, level: 1};  
-    this.morale = 8;
-    this.treasureType = "Nil";
    //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
 BeetleOil.prototype = new BeetleGiant();
 BeetleOil.prototype.Constructor = BeetleOil;
+BeetleOil.prototype.movement = 120;
+BeetleOil.prototype.morale = 8;
+BeetleOil.prototype.getTreasureType = function() { return []; };
 BeetleOil.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+BeetleOil.prototype.specialDamage = function(opponent)
+{
+    //squirts fluid that will cause the opponent to fight at -2 toHit for 24 hours
+};
 
 //--------------------------------------------
 //---------------Beetle, Tiger----------------
@@ -595,16 +615,16 @@ function BeetleTiger()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 150;
     this.attacks = [{ attackType: "Bite", damage: "2D6" } ]; 
     this.saveAs = { class: characterType.Fighter, level: 1 };  
-    this.morale = 9;
-    this.treasureType = "U";
    //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
 BeetleTiger.prototype = new BeetleGiant();
 BeetleTiger.prototype.Constructor = BeetleTiger;
+BeetleTiger.prototype.movement = 150;
+BeetleTiger.prototype.morale = 9;
+BeetleTiger.prototype.getTreasureType = function() { return ["U"]; };
 BeetleTiger.getNumberAppearing = function() { return dice.rollDice("1D6"); };
 
 //--------------------------------------------
@@ -612,7 +632,6 @@ BeetleTiger.getNumberAppearing = function() { return dice.rollDice("1D6"); };
 //--------------------------------------------
 
 // they get +2 toHit against Men, Kobolds, Goblins, Orcs
-// they never Retreat Or Surrender 
 
 function Berserker() 
 {
@@ -623,17 +642,32 @@ function Berserker()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 120;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" }];
     this.saveAs = { class: characterType.Fighter, level: 1 }; 
-    this.morale = 12;                   //set to 12 for the moment to reflect that they never run or surrender
-    this.treasureType = "P";
     //this.Alignment = Neutral;
 }
 
 Berserker.prototype = new Monster();
 Berserker.prototype.Constructor = Berserker;
+Berserker.prototype.movement = 120;
+Berserker.prototype.morale = 12;           //set to 12 for the moment to reflect that they never run or surrender
+Berserker.prototype.getTreasureType = function() 
+{
+    if(this.inWilderness)
+    {
+        return ["B"]; 
+    } 
+    else
+    {
+        return ["P"]; 
+    }
+};
 Berserker.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+
+
+
+
+
 
 //--------------------------------------------
 //-------------------Boar---------------------
