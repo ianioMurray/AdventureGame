@@ -292,6 +292,12 @@ function Tests()
 		this.validate(expected, actual, message);
 	};
 
+	this.checkSurpriseOpponent = function(monster, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " + monster.name + " has acheived surprise " + actual + " but the expected was " +  expected;
+		this.validate(expected, actual, message);		
+	};
+
 	this.testResults = function()
 	{
 		if(this.allTestsPass === true)
@@ -400,6 +406,7 @@ function runMonsterUnitTests()
 	testParseHitDice();
 	testCreateMonsters();
 	testGetHPs();
+	testSurpriseOpponent();
 }
 
 //-----------------------------------------------
@@ -1999,15 +2006,16 @@ function testParseHitDice()
 	var bat = new BatNormal();
 	var goblin = new Goblin();
 
+	//HD 3+1 
 	tests.checkParseHitDiceHd(carrionCrawler, "3", carrionCrawler.parseHitDice().hitDice, testParseHitDice.name);
 	tests.checkParseHitDiceModifier(carrionCrawler, 1, carrionCrawler.parseHitDice().modifier, testParseHitDice.name);	
-
+	//HD 4
 	tests.checkParseHitDiceHd(ape, "4", ape.parseHitDice().hitDice, testParseHitDice.name);
 	tests.checkParseHitDiceModifier(ape, 0, ape.parseHitDice().modifier, testParseHitDice.name);
-	
+	//HD 0.1
 	tests.checkParseHitDiceHd(bat, "0.1", bat.parseHitDice().hitDice, testParseHitDice.name);
 	tests.checkParseHitDiceModifier(bat, 0, bat.parseHitDice().modifier, testParseHitDice.name);
-
+	//HD 1-1
 	tests.checkParseHitDiceHd(goblin, "1", goblin.parseHitDice().hitDice, testParseHitDice.name);
 	tests.checkParseHitDiceModifier(goblin, -1, goblin.parseHitDice().modifier, testParseHitDice.name);
 }
@@ -2079,6 +2087,19 @@ function testKolboldHPs()
 	};
 	checkHPs(params);
 }
+
+function testSurpriseOpponent()
+{
+	var boar = new Boar();
+	var bugbear = new Bugbear();
+
+	tests.checkSurpriseOpponent(boar, true, boar.surpriseOpponent(2), testSurpriseOpponent.name);
+	tests.checkSurpriseOpponent(boar, false, boar.surpriseOpponent(3), testSurpriseOpponent.name);
+
+	tests.checkSurpriseOpponent(bugbear, true, bugbear.surpriseOpponent(3), testSurpriseOpponent.name);
+	tests.checkSurpriseOpponent(bugbear, false, bugbear.surpriseOpponent(4), testSurpriseOpponent.name);
+}
+
 
 
 //--------------------------------------------------------------------------------------------------------------

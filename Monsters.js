@@ -95,6 +95,18 @@ function Monster()
             return hitPoints + parsedHitDice.modifier;
         }
     };
+
+    this.surpriseOpponent = function(diceResult)
+    {
+        if(diceResult <= 2)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    };
 }
 
 Monster.createMonsters = function(typeOfMonster, numberAppearing, inLiar = false, inWilderness = false)
@@ -582,6 +594,7 @@ function BeetleOil()
     this.race = "animal";
     this.armourClass = 4;
     this.hitDice = "2";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
@@ -639,6 +652,7 @@ function Berserker()
     this.race = "human";
     this.armourClass = 7;
     this.hitDice = "1+1";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
@@ -664,11 +678,6 @@ Berserker.prototype.getTreasureType = function()
 };
 Berserker.getNumberAppearing = function() { return dice.rollDice("1D6"); };
 
-
-
-
-
-
 //--------------------------------------------
 //-------------------Boar---------------------
 //--------------------------------------------
@@ -682,23 +691,22 @@ function Boar()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 150;
     this.attacks = [{ attackType: "Tusk", damageAmount: "2D4" }];
     this.saveAs = { class: characterType.Fighter, level: 2 }; 
-    this.morale = 9;
-    this.treasureType = "Nil";
     //this.Alignment = Neutral;
 }
 
 Boar.prototype = new Monster();
 Boar.prototype.Constructor = Boar;
+Boar.prototype.movement = 150;
+Boar.prototype.morale = 9;
+Boar.prototype.getTreasureType = function() { return []; };
 Boar.getNumberAppearing = function() { return dice.rollDice("1D6"); };
 
 //--------------------------------------------
 //-------------------Bugbear------------------
 //--------------------------------------------
 
-//surprise on a 1 to 3 on 1D6.  
 //if using weapon they get weapon damage +1
 
 function Bugbear() 
@@ -710,17 +718,33 @@ function Bugbear()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 90;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "2D4" }];  //if weapon they get +1
     this.saveAs = { class: characterType.Fighter, level: 3 }; 
-    this.morale = 9;
-    this.treasureType = "B";
     //this.Alignment = Chaotic;
 }
 
 Bugbear.prototype = new Monster();
 Bugbear.prototype.Constructor = Bugbear;
+Bugbear.prototype.movement = 90;
+Bugbear.prototype.morale = 9;
+Bugbear.prototype.getTreasureType = function() { return ["B"]; };
 Bugbear.getNumberAppearing = function() { return dice.rollDice("2D4"); };
+Bugbear.prototype.surpriseOpponent= function(diceResult)
+{
+    //Bugbears surprise on a 1-3
+    if(diceResult <= 3)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+};
+
+
+
+
 
 //--------------------------------------------
 //---------------Carrion Crawler--------------
