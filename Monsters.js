@@ -1326,7 +1326,7 @@ function Dwarf() {
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" } ];
-    this.saveAs = { class: characterType.Fighter, level: 1 }; 
+    this.saveAs = { class: characterType.Dwarf, level: 1 }; 
     //this.Alignment = [{ alignment = Neutral/Lawful, probability = 100 }];
 }
 
@@ -1362,7 +1362,7 @@ function DwarfLeader() {
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" } ];
-    this.saveAs = { class: characterType.Fighter, level: 1 }; 
+    this.saveAs = { class: characterType.Dwarf, level: parseInt(this.hitDice) }; 
     //this.Alignment = [{ alignment = Neutral/Lawful, probability = 100 }];
 }
 
