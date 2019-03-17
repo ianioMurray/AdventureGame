@@ -10,10 +10,13 @@ function Monster()
 {
     this.firstLevelSpells = 0;
     this.secondLevelSpells = 0;
+    this.thirdLevelSpells = 0;
     this.inLiar = false;
     this.inWilderness = false;
     this.flyMovement = 0;
     this.hitDiceStars = 0;
+    this.canTalk = 0;
+    this.isSleep = 0;
 
     this.attack = function(opponent)
     {
@@ -270,7 +273,6 @@ Bandit.prototype.GetTreasureType = function()
 };
 Bandit.prototype.movement = 120;
 Bandit.prototype.morale = 8;
-
 Bandit.getNumberAppearing = function(inLiar = false) 
 {
      if(inLiar)
@@ -742,10 +744,6 @@ Bugbear.prototype.surpriseOpponent= function(diceResult)
     }
 };
 
-
-
-
-
 //--------------------------------------------
 //---------------Carrion Crawler--------------
 //--------------------------------------------
@@ -757,10 +755,10 @@ function CarrionCrawler()
     this.race = "animal";
     this.armourClass = 7;
     this.hitDice = "3+1";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 120;
     this.attacks = [{ attackType: "Tentacle", damage: specialDamage },
                     { attackType: "Tentacle", damage: specialDamage }, 
                     { attackType: "Tentacle", damage: specialDamage },
@@ -770,13 +768,14 @@ function CarrionCrawler()
                     { attackType: "Tentacle", damage: specialDamage },
                     { attackType: "Tentacle", damage: specialDamage } ]; 
     this.saveAs = { class: characterType.Fighter, level: 2};  
-    this.morale = 9;
-    this.treasureType = "B";
    //this.Alignment = [{ alignment: Neutral, probability: 100 }];
 }
 
 CarrionCrawler.prototype = new Monster();
 CarrionCrawler.prototype.Constructor = CarrionCrawler;
+CarrionCrawler.prototype.movement = 120;
+CarrionCrawler.prototype.morale = 9;
+CarrionCrawler.prototype.getTreasureType = function() { return ["B"]; };
 CarrionCrawler.getNumberAppearing = function() { return dice.rollDice("1D3"); };
 CarrionCrawler.prototype.specialDamage = function(opponent) {
     if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, dice.rollDice("1D20")))
@@ -810,18 +809,18 @@ function MountainLion()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 150;
     this.attacks = [{ attackType: "Claw", damageAmount: "1D3" }, 
                     { attackType: "Claw", damageAmount: "1D3" }, 
                     { attackType: "Bite", damageAmount: "1D6" } ]; 
     this.saveAs = { class: characterType.Fighter, level: 2 }; 
-    this.morale = 8;
-    this.treasureType = "U";
     //this.Alignment = Neutral;
 }
 
 MountainLion.prototype = new CatGiant();
 MountainLion.prototype.Constructor = MountainLion;
+MountainLion.prototype.movement = 150;
+MountainLion.prototype.morale = 8;
+MountainLion.prototype.treasureType = function() { retunr ["U"]; };
 MountainLion.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 
 //--------------------------------------------
@@ -837,18 +836,18 @@ function Panther()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 210;
     this.attacks = [{ attackType: "Claw", damageAmount: "1D4" }, 
                     { attackType: "Claw", damageAmount: "1D4" }, 
                     { attackType: "Bite", damageAmount: "1D8" } ]; 
     this.saveAs = { class: characterType.Fighter, level: 2 }; 
-    this.morale = 8;
-    this.treasureType = "U";
     //this.Alignment = Neutral;
 }
 
 Panther.prototype = new CatGiant();
 Panther.prototype.Constructor = Panther;
+Panther.prototype.movement = 210;
+Panther.prototype.morale = 8;
+Panther.prototype.getRreasureType = function() { return ["U"]; };
 Panther.getNumberAppearing = function() { return dice.rollDice("1D2"); };
 
 //--------------------------------------------
@@ -864,18 +863,18 @@ function Lion()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 150;
     this.attacks = [{ attackType: "Claw", damageAmount: "1D4+1" },      
                     { attackType: "Claw", damageAmount: "1D4+1" }, 
                     { attackType: "Bite", damageAmount: "1D10" } ]; 
     this.saveAs = { class: characterType.Fighter, level: 3 }; 
-    this.morale = 9;
-    this.treasureType = "U";
     //this.Alignment = Neutral;
 }
 
 Lion.prototype = new CatGiant();
 Lion.prototype.Constructor = Lion;
+Lion.prototype.movement = 150;
+Lion.prototype.morale = 9;
+Lion.prototype.treasureType = function() { return ["U"]; };
 Lion.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 
 //--------------------------------------------
@@ -891,18 +890,18 @@ function Tiger()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 150;
     this.attacks = [{ attackType: "Claw", damageAmount: "1D6" },      
                     { attackType: "Claw", damageAmount: "1D6" }, 
                     { attackType: "Bite", damageAmount: "2D6" } ]; 
     this.saveAs = { class: characterType.Fighter, level: 3 }; 
-    this.morale = 9;
-    this.treasureType = "U";
     //this.Alignment = Neutral;
 }
 
 Tiger.prototype = new CatGiant();
 Tiger.prototype.Constructor = Tiger;
+Tiger.prototype.movement = 150;
+Tiger.prototype.morale = 9;
+Tiger.prototype.getTreasureType = function() { return ["U"]; };
 Tiger.getNumberAppearing = function() { return 1; };
 
 //--------------------------------------------
@@ -918,18 +917,18 @@ function SabreToothTiger()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 150;
     this.attacks = [{ attackType: "Claw", damageAmount: "1D8" },      
                     { attackType: "Claw", damageAmount: "1D8" }, 
                     { attackType: "Bite", damageAmount: "2D8" } ]; 
     this.saveAs = { class: characterType.Fighter, level: 4 }; 
-    this.morale = 10;
-    this.treasureType = "V";
     //this.Alignment = Neutral;
 }
 
 SabreToothTiger.prototype = new CatGiant();
 SabreToothTiger.prototype.Constructor = SabreToothTiger;
+SabreToothTiger.prototype.movement = 150;
+SabreToothTiger.prototype.morale = 10;
+SabreToothTiger.prototype.getTreasureType = function() { return ["V"]; };
 SabreToothTiger.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
 
 //--------------------------------------------
@@ -949,18 +948,21 @@ function CaveLocust()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 60;
+
     this.attacks = [{ attackType: "Bite", damageAmount: "1D2" },      
                     { attackType: "Bump", damageAmount: "1D4" }, 
                     { attackType: "Spit", damageAmount: specialDamage } ]; 
     this.saveAs = { class: characterType.Fighter, level: 2 }; 
-    this.morale = 5;
-    this.treasureType = "Nil";
+
     //this.Alignment = Neutral;
 }
 
 CaveLocust.prototype = new Monster();
 CaveLocust.prototype.Constructor = CaveLocust;
+CaveLocust.prototype.movement = 60;
+CaveLocust.prototype.flyMovement = 180;
+CaveLocust.prototype.morale = 5;
+CaveLocust.prototype.getTreasureType = function() { return []; };
 CaveLocust.getNumberAppearing = function() {  return dice.rollDice("2D10"); };
 CaveLocust.prototype.specialDamage = function(opponent) {
     if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
@@ -979,20 +981,22 @@ function CentipedeGiant()
     this.name = "Giant Centipede";
     this.race = "animal";
     this.armourClass = 9;
-    this.hitDice = "0.5";        //TODO - work out how to deal with this (1-4 hps)
+    this.hitDice = "0.5";        
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 60;
+
     this.attacks = [{ attackType: "Bite", damageAmount: specialDamage } ]; 
     this.saveAs = { class: characterType.NormalMan, level: 0 }; 
-    this.morale = 7;
-    this.treasureType = "Nil";
+
     //this.Alignment = Neutral;
 }
 
 CentipedeGiant.prototype = new Monster();
 CentipedeGiant.prototype.Constructor = CentipedeGiant;
+CentipedeGiant.prototype.movement = 60;
+CentipedeGiant.prototype.morale = 7;
+CentipedeGiant.prototype.getTreasureType = function() { return []; };
 CentipedeGiant.getNumberAppearing = function() {  return dice.rollDice("2D4"); };
 CentipedeGiant.prototype.specialDamage = function(opponent) {
     if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
@@ -1001,34 +1005,32 @@ CentipedeGiant.prototype.specialDamage = function(opponent) {
     }
 };
 
-
 //--------------------------------------------
 //----------------Doppleganger----------------
 //--------------------------------------------
 
-//this.specialAbilities = [{ description = "able to shape itself into the double of any humanoid creature (up to seven or so feet tall) it observes" },
-//{ description = "Save Vs Spells bonus", modifierAmount = + 10 },
-//{ description = "Save vs Wands bonus", modifierAmount = +7 }];
-// unaffected by charm and sleep spells
+//able to shape itself into the double of any humanoid creature it observes (up to seven or so feet tall) 
+//they save against charm and sleep spells as fighter level 10
 
 function Doppleganger() {
     this.name = "Doppleganger";
     this.race = "???";                 //not sure what this should be
     this.armourClass = 5;
     this.hitDice = "4";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 90;
     this.attacks = [{ attackType: "UnspecifiedAttack", damageAmount: "1D12" }];
     this.saveAs = { class: characterType.Fighter, level: 10 }; 
-    this.morale = 10;
-    this.treasureType = "E";    
     //this.Alignment = [{ alignment = ChaoticEvil, probability = 50 }, { alignment = Neutral, probability = 50 }];
 }
 
 Doppleganger.prototype = new Monster();
 Doppleganger.prototype.Constructor = Doppleganger;
+Doppleganger.prototype.movement = 90;
+Doppleganger.prototype.morale = 10;
+Doppleganger.prototype.getTreasureType = function() { return ["E"]; }; 
 Doppleganger.getNumberAppearing = function() {  return dice.rollDice("1D6"); };
 
 //------------------------------------------
@@ -1044,6 +1046,10 @@ function Dragon()
 
 Dragon.prototype = new Monster();
 Dragon.prototype.Constructor = Dragon;
+Dragon.prototype.hitDiceStars = 2;
+Dragon.prototype.movement = 90;
+Dragon.prototype.flyMovement = 240;
+Dragon.prototype.getTreasureType = function() { return ["H"]; };
 Dragon.prototype.specialDamage = function(opponent) {
     var damage = this.currentHitPoints;
     if(savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DragonBreath, dice.rollDice("1D20")))
@@ -1057,7 +1063,7 @@ Dragon.prototype.specialDamage = function(opponent) {
 //----------------White Dragon----------------
 //--------------------------------------------
 
-// this.specialAbilities = [{ description = "BreathWeapon: Cold", area= "80 foot X 30 foot cone" }];
+// BreathWeapon: Cold" - area= "80 foot X 30 foot cone" 
 // not affected by cold attacks
 
 function WhiteDragon() {
@@ -1068,14 +1074,11 @@ function WhiteDragon() {
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 90;
     this.attacks = [{ attackType: "Claw", damageAmount: "1D4" }, 
                     { attackType: "Claw", damageAmount: "1D4" }, 
                     { attackType: "Bite", damageAmount: "2D8" },
                     { attackType: "Breath", damageAmount: specialDamage } ];
     this.saveAs = { class: characterType.Fighter, level: 6 }; 
-    this.morale = 8;
-    this.treasureType = "H";    
     //this.Alignment = [{ alignment = Neutral, probability = 100 }];
     this.canTalk = 10;
     this.isSleep = 50;
@@ -1086,13 +1089,14 @@ function WhiteDragon() {
 
 WhiteDragon.prototype = new Dragon();
 WhiteDragon.prototype.Constructor = WhiteDragon;
+WhiteDragon.prototype.morale = 8;
 WhiteDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
 
 //--------------------------------------------
 //----------------Black Dragon----------------
 //--------------------------------------------
 
-// this.specialAbilities = [{ description = "BreathWeapon: acid", area= "60 foot X 5 foot line" }];
+// BreathWeapon: acid - area= "60 foot X 5 foot line"
 // not affected by acid attacks
 
 function BlackDragon() {
@@ -1103,14 +1107,11 @@ function BlackDragon() {
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 90;
     this.attacks = [{ attackType: "Claw", damageAmount: "1D4+1" }, 
                     { attackType: "Claw", damageAmount: "1D4+1" }, 
                     { attackType: "Bite", damageAmount: "2D10" },
                     { attackType: "Breath", damageAmount: specialDamage } ];
     this.saveAs = { class: characterType.Fighter, level: 7 }; 
-    this.morale = 8;
-    this.treasureType = "H";    
     //this.Alignment = [{ alignment = Chaotic, probability = 100 }];
     this.canTalk = 20;
     this.isSleep = 40;
@@ -1121,13 +1122,14 @@ function BlackDragon() {
 
 BlackDragon.prototype = new Dragon();
 BlackDragon.prototype.Constructor = BlackDragon;
+BlackDragon.prototype.morale = 8;
 BlackDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
 
 //--------------------------------------------
 //----------------Green Dragon----------------
 //--------------------------------------------
 
-// this.specialAbilities = [{ description = "BreathWeapon: Chlorine Gas", area= "50 foot X 40 foot cloud" }];
+// BreathWeapon: Chlorine Gas - area= "50 foot X 40 foot cloud"
 // not affected by Chlorine Gas attacks
 
 function GreenDragon() {
@@ -1138,14 +1140,11 @@ function GreenDragon() {
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 90;
     this.attacks = [{ attackType: "Claw", damageAmount: "1D6" }, 
                     { attackType: "Claw", damageAmount: "1D6" }, 
                     { attackType: "Bite", damageAmount: "3D8" },
                     { attackType: "Breath", damageAmount: specialDamage } ];
     this.saveAs = { class: characterType.Fighter, level: 8 }; 
-    this.morale = 9;
-    this.treasureType = "H";    
     //this.Alignment = [{ alignment = Chaotic, probability = 100 }];
     this.canTalk = 30;
     this.isSleep = 30;
@@ -1156,13 +1155,14 @@ function GreenDragon() {
 
 GreenDragon.prototype = new Dragon();
 GreenDragon.prototype.Constructor = GreenDragon;
+GreenDragon.prototype.morale = 9;
 GreenDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
 
 //--------------------------------------------
 //----------------Blue Dragon----------------
 //--------------------------------------------
 
-// this.specialAbilities = [{ description = "BreathWeapon: Lightening", area= "100 foot X 5 foot line" }];
+// BreathWeapon: Lightening", area= "100 foot X 5 foot line" 
 // not affected by Lightening attacks
 
 function BlueDragon() {
@@ -1173,14 +1173,11 @@ function BlueDragon() {
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 90;
     this.attacks = [{ attackType: "Claw", damageAmount: "1D6+1" }, 
                     { attackType: "Claw", damageAmount: "1D6+1" }, 
                     { attackType: "Bite", damageAmount: "3D10" },
                     { attackType: "Breath", damageAmount: specialDamage } ];
-    this.saveAs = { class: characterType.Fighter, level: 9 }; 
-    this.morale = 9;
-    this.treasureType = "H";    
+    this.saveAs = { class: characterType.Fighter, level: 9 };
     //this.Alignment = [{ alignment = Neutral, probability = 100 }];
     this.canTalk = 40;
     this.isSleep = 20;
@@ -1191,13 +1188,14 @@ function BlueDragon() {
 
 BlueDragon.prototype = new Dragon();
 BlueDragon.prototype.Constructor = BlueDragon;
+BlueDragon.prototype.morale = 9;
 BlueDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
 
 //--------------------------------------------
 //----------------Red Dragon----------------
 //--------------------------------------------
 
-// this.specialAbilities = [{ description = "BreathWeapon: Fire", area= "90 foot X 30 foot cone" }];
+// "BreathWeapon: Fire", area= "90 foot X 30 foot cone" 
 // not affected by Fire attacks
 
 function RedDragon() {
@@ -1208,14 +1206,11 @@ function RedDragon() {
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 90;
     this.attacks = [{ attackType: "Claw", damageAmount: "1D8" }, 
                     { attackType: "Claw", damageAmount: "1D8" }, 
                     { attackType: "Bite", damageAmount: "4D8" },
                     { attackType: "Breath", damageAmount: specialDamage } ];
     this.saveAs = { class: characterType.Fighter, level: 10 }; 
-    this.morale = 10;
-    this.treasureType = "H";    
     //this.Alignment = [{ alignment = Chaotic, probability = 100 }];
     this.canTalk = 50;
     this.isSleep = 10;
@@ -1226,6 +1221,7 @@ function RedDragon() {
 
 RedDragon.prototype = new Dragon();
 RedDragon.prototype.Constructor = RedDragon;
+RedDragon.prototype.morale = 10;  
 RedDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
 
 //--------------------------------------------
@@ -1244,14 +1240,11 @@ function GoldDragon() {
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 90;
     this.attacks = [{ attackType: "Claw", damageAmount: "2D4" }, 
                     { attackType: "Claw", damageAmount: "2D4" }, 
                     { attackType: "Bite", damageAmount: "6D6" },
                     { attackType: "Breath", damageAmount: specialDamage } ];
     this.saveAs = { class: characterType.Fighter, level: 11 }; 
-    this.morale = 10;
-    this.treasureType = "H";    
     //this.Alignment = [{ alignment = Lawful, probability = 100 }];
     this.canTalk = 100;
     this.isSleep = 5;
@@ -1262,34 +1255,68 @@ function GoldDragon() {
 
 GoldDragon.prototype = new Dragon();
 GoldDragon.prototype.Constructor = GoldDragon;
+GoldDragon.prototype.morale = 10; 
 GoldDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
 
 //--------------------------------------------
 //----------------Driver Ant------------------
 //--------------------------------------------
 
-//once engaged in combat they will cross fire to get at an opponent
-//30% chance a nest will have gold nuggets worth 1D10 thousand gold pieces 
-
 function DriverAnt() {
     this.name = "Driver Ant";
     this.race = "animal";                 
     this.armourClass = 3;
     this.hitDice = "4";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 180;
     this.attacks = [{ attackType: "Bite", damageAmount: "2D6" } ];
     this.saveAs = { class: characterType.Fighter, level: 2 }; 
-    this.morale = 7;
-    this.treasureType = "U";    
     //this.Alignment = [{ alignment = Neutral, probability = 100 }];
 }
 
 DriverAnt.prototype = new Monster();
 DriverAnt.prototype.Constructor = DriverAnt;
-DriverAnt.getNumberAppearing = function() {  return dice.rollDice("2D4"); };
+DriverAnt.prototype.movement = 180;
+DriverAnt.prototype.morale = 7;                     // but once engaged they will always continue to fight
+DriverAnt.prototype.getTreasureType = function() 
+{
+    //30% chance a nest will have gold nuggets worth 1D10 thousand gold pieces 
+    if(this.inLiar)
+    { 
+        var extraGold = 0;
+        if(dice.rollDice("1D10") <= 3)
+        {
+            extraGold = dice.rollDice("1D10") * 1000;
+        }
+        return ["U", extraGold];
+    }  
+    else
+    {
+        return [];
+    }
+};
+DriverAnt.getNumberAppearing = function(inLiar = false) 
+{
+     if(inLiar)
+     {
+        return dice.rollDice("4D6");
+     }
+     else
+     {
+        return dice.rollDice("2D4");
+     }
+};
+
+
+
+
+
+
+
+
+
 
 //--------------------------------------------
 //-------------------Dwarf--------------------

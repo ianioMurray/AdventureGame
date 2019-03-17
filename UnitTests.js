@@ -2005,6 +2005,7 @@ function testParseHitDice()
 	var ape = new Ape();
 	var bat = new BatNormal();
 	var goblin = new Goblin();
+	var mountainLion = new MountainLion();
 
 	//HD 3+1 
 	tests.checkParseHitDiceHd(carrionCrawler, "3", carrionCrawler.parseHitDice().hitDice, testParseHitDice.name);
@@ -2018,6 +2019,9 @@ function testParseHitDice()
 	//HD 1-1
 	tests.checkParseHitDiceHd(goblin, "1", goblin.parseHitDice().hitDice, testParseHitDice.name);
 	tests.checkParseHitDiceModifier(goblin, -1, goblin.parseHitDice().modifier, testParseHitDice.name);
+	//HD 3+2
+	tests.checkParseHitDiceHd(mountainLion, "3", mountainLion.parseHitDice().hitDice, testParseHitDice.name);
+	tests.checkParseHitDiceModifier(mountainLion, 2, mountainLion.parseHitDice().modifier, testParseHitDice.name);
 }
 
 function testCreateMonsters()
