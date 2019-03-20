@@ -13,8 +13,8 @@ runDiceUnitTests();
 tests.testResults();
 
 //runTestCombatvCharacter();
-runTestCombatvMonsterBandits();
-runTestCombatvMonsterBanditsInLair();
+//runTestCombatvMonsterBandits();
+//runTestCombatvMonsterBanditsInLair();
 //runTestCombatvMonsterCarrionCrawler();
 //runTestCombatvMonsterBear();
 
@@ -304,6 +304,30 @@ function Tests()
 		this.validate(expected, actual, message);	
 	};
 
+	this.checkNoOfMonsters = function(monster, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": there were " + actual + " " + monster.name + "s created but  " + expected + " was expected";
+		this.validate(expected, actual, message);
+	};
+
+	this.checkMonstersName = function(monster, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " +  monster.name + "'s name is " + actual + " but " + expected + " was expected";
+		this.validate(expected, actual, message);
+	};	
+
+	this.checkGetMorale = function(monster, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " +  monster.name + "'s morale is " + actual + " but " + expected + " was expected";
+		this.validate(expected, actual, message);
+	};
+
+	this.checkLeaderAlive = function(monster, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " +  monster.name + "'s leader is alive " + actual + " but " + expected + " was expected";
+		this.validate(expected, actual, message);		
+	};
+
 	this.testResults = function()
 	{
 		if(this.allTestsPass === true)
@@ -414,6 +438,7 @@ function runMonsterUnitTests()
 	testGetHPs();
 	testSurpriseOpponent();
 	testGetLevel();
+	testGetMorale();
 }
 
 //-----------------------------------------------
@@ -2117,6 +2142,51 @@ function testGetLevel()
 
 	tests.checkGetLevel(dwarfLeader, "3", dwarfLeader.getLevel(3), testGetLevel.name);
 }
+
+function testGetMorale()
+{
+	//create a group of dwarves with a leader 
+	var dwarvesWithLeader = Monster.createMonsters(Dwarf, 20);
+
+	tests.checkNoOfMonsters(dwarvesWithLeader[1], 21, dwarvesWithLeader.length, testGetMorale.name);
+	tests.checkMonstersName(dwarvesWithLeader[0], "Dwarf Leader", dwarvesWithLeader[0].name, testGetMorale.name);
+	tests.checkMonstersName(dwarvesWithLeader[1], "Dwarf", dwarvesWithLeader[1].name, testGetMorale.name);
+
+	tests.checkGetMorale(dwarvesWithLeader[1], 10, dwarvesWithLeader[1].getMorale(), testGetMorale.name);
+	//kill a random dwarf and morale is unaffected 
+	dwarvesWithLeader[1].setIsDead();
+	tests.checkLeaderAlive(dwarvesWithLeader[1], true, Dwarf.leaderAlive, testGetMorale.name);
+	tests.checkGetMorale(dwarvesWithLeader[1], 10, dwarvesWithLeader[1].getMorale(), testGetMorale.name);
+	//kill the leader and morale should drop
+	dwarvesWithLeader[0].setIsDead();
+	tests.checkLeaderAlive(dwarvesWithLeader[1], false, Dwarf.leaderAlive, testGetMorale.name);	
+	tests.checkGetMorale(dwarvesWithLeader[1], 8, dwarvesWithLeader[1].getMorale(), testGetMorale.name);
+
+	//create a group of dwarves with NO leader 
+	var dwarvesWithNoLeader = Monster.createMonsters(Dwarf, 10);
+	tests.checkNoOfMonsters(dwarvesWithNoLeader[1], 10, dwarvesWithNoLeader.length, testGetMorale.name);	
+	tests.checkGetMorale(dwarvesWithNoLeader[1], 8, dwarvesWithNoLeader[1].getMorale(), testGetMorale.name);
+	//kill a random dwarf and morale is unaffected 
+	dwarvesWithNoLeader[1].setIsDead();
+	tests.checkLeaderAlive(dwarvesWithLeader[1], false, Dwarf.leaderAlive, testGetMorale.name);	
+	tests.checkGetMorale(dwarvesWithNoLeader[1], 8, dwarvesWithNoLeader[1].getMorale(), testGetMorale.name);
+
+	//create a group of Acolytes with leader 
+	var acolytesWithLeader = Monster.createMonsters(Acolyte, 4);
+	tests.checkMonstersName(acolytesWithLeader[0], "Acolyte Leader", acolytesWithLeader[0].name, testGetMorale.name);
+	tests.checkMonstersName(acolytesWithLeader[1], "Acolyte", acolytesWithLeader[1].name, testGetMorale.name);
+
+	tests.checkNoOfMonsters(acolytesWithLeader[1], 5, acolytesWithLeader.length, testGetMorale.name);	
+	tests.checkLeaderAlive(acolytesWithLeader[1], true, Acolyte.leaderAlive, testGetMorale.name);	
+	tests.checkGetMorale(acolytesWithLeader[1], 7, acolytesWithLeader[1].getMorale(), testGetMorale.name);
+	//kill the leader does not affect acolyte morale
+	acolytesWithLeader[0].setIsDead();
+	tests.checkLeaderAlive(acolytesWithLeader[1], false, Acolyte.leaderAlive, testGetMorale.name);	
+	tests.checkGetMorale(acolytesWithLeader[1], 7, acolytesWithLeader[1].getMorale(), testGetMorale.name);
+}
+
+
+
 
 //--------------------------------------------------------------------------------------------------------------
 

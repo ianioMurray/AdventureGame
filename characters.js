@@ -400,7 +400,7 @@ function Character()
 		this.currentHitPoints = this.currentHitPoints - damageAmount;
 		if(this.currentHitPoints <= 0)
 		{
-			this.isDead = true;
+			this.setIsDead();
 		}
 	};
 	
@@ -463,6 +463,11 @@ function Character()
 		
 		return hitPointsUplift + maxHps;
 	};
+
+	this.setIsDead = function()
+	{
+		this.isDead = true;
+	}
 }
 
 

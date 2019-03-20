@@ -17,7 +17,7 @@ function Monster()
     this.hitDiceStars = 0;
     this.canTalk = 0;
     this.isSleep = 0;
-    this.leaderAlive = false;
+    this.leader = false;
 
     this.attack = function(opponent)
     {
@@ -50,7 +50,7 @@ function Monster()
         this.currentHitPoints = this.currentHitPoints - damageAmount;
         if(this.currentHitPoints <= 0)
         {
-            this.isDead = true;
+            this.setIsDead();
         }
     };
 
@@ -111,6 +111,15 @@ function Monster()
             return false;
         }
     };
+
+    this.setIsDead = function()
+    {
+        if(this.leader === true)
+        {
+            this.setLeaderDead();
+        }
+        this.isDead = true;
+    };
 }
 
 Monster.createMonsters = function(typeOfMonster, numberAppearing, inLiar = false, inWilderness = false)
@@ -119,9 +128,10 @@ Monster.createMonsters = function(typeOfMonster, numberAppearing, inLiar = false
 
     if(typeOfMonster.mayHaveLeader && numberAppearing >= typeOfMonster.numberRequiredToHaveLeader)
     {
-        let monster = new typeOfMonster.leaderType();
+        var leaderType = typeOfMonster.getLeaderType();
+        let monster = new leaderType();
         monsters.push(monster);
-        this.leaderAlive = true;
+        typeOfMonster.leaderAlive = true;
     }
 
     for(var i = 0;  numberAppearing > i; i++)
@@ -161,9 +171,10 @@ Acolyte.prototype.movement = 60;
 Acolyte.prototype.getMorale = function() { return  7; };
 Acolyte.prototype.firstLevelSpells = 0;
 Acolyte.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+Acolyte.leaderAlive = false;
 Acolyte.mayHaveLeader = true;
 Acolyte.numberRequiredToHaveLeader = 4;
-Acolyte.leaderType = AcolyteLeader;
+Acolyte.getLeaderType = function() { return AcolyteLeader; };
 
 //--------------------------------------------
 //-------------AcolyteLeader------------------
@@ -178,11 +189,13 @@ function AcolyteLeader()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
+    this.leader = true;
     //this.Alignment = [{ alignment: Lawful, probability: 33 }, { alignment: Chaotic, probability: 33 }, { alignment: Neutral, probability: 34 }];
 }
 
 AcolyteLeader.prototype = new Acolyte();
 AcolyteLeader.prototype.Constructor = AcolyteLeader;
+AcolyteLeader.prototype.setLeaderDead = function() { Acolyte.leaderAlive = false; };
 AcolyteLeader.prototype.GetHitDice = function()
 {
     //roll a 1D10 on 1-4 level 2 / 5-7 level 3 / 8-9 level 4 / 10 level 5
@@ -286,6 +299,10 @@ Bandit.getNumberAppearing = function(inLiar = false)
         return dice.rollDice("1D8");
      }
 };
+Bandit.leaderAlive = false;
+//Bandit.mayHaveLeader = true;                        this is commented out as teh rules say there could be a leader not 
+//Bandit.numberRequiredToHaveLeader = ?????;          the number of bandits requird to have one 
+Bandit.getLeaderType = function() { return BanditLeader; };
 
 //--------------------------------------------
 //-------------Bandit Leader------------------
@@ -302,11 +319,13 @@ function BanditLeader()
     this.isDead = false;
     this.attacks = [{ attackType: "WeaponAttack", damage: "1d6" }];
     this.saveAs = { class: characterType.Thief, level: 1};  
+    this.leader = true;
     //this.Alignment = [{ alignment: Chaotic, probability: 50 }, { alignment: Neutral, probability: 50 }];
 }
 
 BanditLeader.prototype = new Bandit();
 BanditLeader.prototype.Constructor = BanditLeader;
+BanditLeader.prototype.setLeaderDead = function() { Bandit.leaderAlive = false; };
 
 
 //------------------------------------------
@@ -1315,8 +1334,6 @@ DriverAnt.getNumberAppearing = function(inLiar = false)
 //-------------------Dwarf--------------------
 //--------------------------------------------
 
-//NOTE : the morale is calculated correctly but the leader dieing has not be implemented 
-
 function Dwarf() {
     this.name = "Dwarf";
     this.race = "humanoid";                 
@@ -1335,7 +1352,7 @@ Dwarf.prototype.Constructor = Dwarf;
 Dwarf.prototype.movement = 60;
 Dwarf.prototype.getMorale = function() 
 {
-    if(leaderAlive)
+    if(Dwarf.leaderAlive)
     {
         return 10;
     }
@@ -1346,6 +1363,8 @@ Dwarf.prototype.getMorale = function()
 };
 Dwarf.prototype.getTreasureType = function() { return ["G"]; };  
 Dwarf.getNumberAppearing = function() {  return dice.rollDice("1D6"); };
+Dwarf.getLeaderType = function() { return DwarfLeader; };
+Dwarf.leaderAlive = false;
 Dwarf.mayHaveLeader = true;
 Dwarf.numberRequiredToHaveLeader = 20;
 
@@ -1363,12 +1382,14 @@ function DwarfLeader() {
     this.isDead = false;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" } ];
     this.saveAs = { class: characterType.Dwarf, level: parseInt(this.hitDice) }; 
+    this.leader = true;
     //this.Alignment = [{ alignment = Neutral/Lawful, probability = 100 }];
 }
 
 DwarfLeader.prototype = new Dwarf();
 DwarfLeader.prototype.Constructor = DwarfLeader;
 DwarfLeader.prototype.getLevel = function(level) { return level.toString(); };
+DwarfLeader.prototype.setLeaderDead = function() { Dwarf.leaderAlive = false; };
 
 
 
