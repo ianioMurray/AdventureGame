@@ -2198,7 +2198,7 @@ function testGetMorale()
 	tests.checkNoOfMonsters(banditsWithLeader[1], 5, banditsWithLeader.length, testGetMorale.name);	
 	tests.checkLeaderAlive(banditsWithLeader[1], true, Bandit.leaderAlive, testGetMorale.name);	
 	tests.checkGetMorale(banditsWithLeader[1], 8, banditsWithLeader[1].getMorale(), testGetMorale.name);
-	//kill the leader does not affect acolyte morale
+	//kill the leader does not affect bandits morale
 	banditsWithLeader[0].setIsDead();
 	tests.checkLeaderAlive(banditsWithLeader[1], false, Bandit.leaderAlive, testGetMorale.name);	
 	tests.checkGetMorale(banditsWithLeader[1], 8, banditsWithLeader[1].getMorale(), testGetMorale.name);
