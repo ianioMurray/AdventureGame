@@ -2058,12 +2058,16 @@ function testParseHitDice()
 
 function testCreateMonsters()
 {
-	var carrionCrawler = new CarrionCrawler;
-	var acolyte = new Acolyte();
-
-	tests.checkCreateMonsters(carrionCrawler, 2, Monster.createMonsters(CarrionCrawler, 2).length, testCreateMonsters.name);
-	tests.checkCreateMonsters(acolyte, 3, Monster.createMonsters(Acolyte, 3).length, testCreateMonsters.name);
-	tests.checkCreateMonsters(acolyte, 5, Monster.createMonsters(Acolyte, 4).length, testCreateMonsters.name);
+	tests.checkCreateMonsters(CarrionCrawler, 2, Monster.createMonsters(CarrionCrawler, 2).length, testCreateMonsters.name);
+	tests.checkCreateMonsters(Acolyte, 3, Monster.createMonsters(Acolyte, 3).length, testCreateMonsters.name);
+	//creates a group of acolytes with a leader
+	tests.checkCreateMonsters(Acolyte, 5, Monster.createMonsters(Acolyte, 4).length, testCreateMonsters.name);
+	//create a group of bandits with a leader
+	tests.checkCreateMonsters(Bandit, 7, Monster.createMonsters(Bandit, 6, false, false, true).length, testCreateMonsters.name);
+	//create a group of bandits without a leader
+	tests.checkCreateMonsters(Bandit, 12, Monster.createMonsters(Bandit, 12).length, testCreateMonsters.name);
+	//attempt to create a group of carrionCrawlers with a leader will create a group but a leader is not possible with carrion crawlers
+	tests.checkCreateMonsters(CarrionCrawler, 3, Monster.createMonsters(CarrionCrawler, 3, false, false, true).length, testCreateMonsters.name);
 }
 
 function testGetHPs()

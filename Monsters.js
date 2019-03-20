@@ -122,16 +122,26 @@ function Monster()
     };
 }
 
-Monster.createMonsters = function(typeOfMonster, numberAppearing, inLiar = false, inWilderness = false)
+Monster.createMonsters = function(typeOfMonster, numberAppearing, inLiar = false, inWilderness = false, leaderPresent = false)
 {
     var monsters = [];
 
-    if(typeOfMonster.mayHaveLeader && numberAppearing >= typeOfMonster.numberRequiredToHaveLeader)
+    if(typeOfMonster.mayHaveLeader)
     {
-        var leaderType = typeOfMonster.getLeaderType();
-        let monster = new leaderType();
-        monsters.push(monster);
-        typeOfMonster.leaderAlive = true;
+        if(numberAppearing >= typeOfMonster.numberRequiredToHaveLeader || leaderPresent)
+        {
+            try
+            {
+                var leaderType = typeOfMonster.getLeaderType();
+                let monster = new leaderType();
+                monsters.push(monster);
+                typeOfMonster.leaderAlive = true;
+            }
+            catch(err)
+            {
+                console.log(err.message);
+            }
+        }
     }
 
     for(var i = 0;  numberAppearing > i; i++)
@@ -258,7 +268,6 @@ Ape.getNumberAppearing = function() {return dice.rollDice("1D6");};
 //-------------Bandit-------------------------
 //--------------------------------------------
 
-//Bandits may have a leader - BanditLeader
 function Bandit()
  {
     this.name = "Bandit";
@@ -300,8 +309,7 @@ Bandit.getNumberAppearing = function(inLiar = false)
      }
 };
 Bandit.leaderAlive = false;
-//Bandit.mayHaveLeader = true;                        this is commented out as teh rules say there could be a leader not 
-//Bandit.numberRequiredToHaveLeader = ?????;          the number of bandits requird to have one 
+Bandit.mayHaveLeader = true;                         
 Bandit.getLeaderType = function() { return BanditLeader; };
 
 //--------------------------------------------
@@ -309,6 +317,7 @@ Bandit.getLeaderType = function() { return BanditLeader; };
 //--------------------------------------------
 
 // can be any class 
+//bandits will not have a leader unless one is set in the createMonsters function
 
 function BanditLeader()
  {
