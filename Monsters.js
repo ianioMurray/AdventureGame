@@ -18,6 +18,7 @@ function Monster()
     this.canTalk = 0;
     this.isSleep = 0;
     this.leader = false;
+    this.canOnlyBeDamagedBy = [];
 
     this.attack = function(opponent)
     {
@@ -119,6 +120,35 @@ function Monster()
             this.setLeaderDead();
         }
         this.isDead = true;
+    };
+
+    this.isImmuneToDamageType = function(weaponHitWith)
+    {
+        if(this.canOnlyBeDamagedBy.length === 0)
+        {
+            return false;
+        }
+
+        for (let i = 0; this.canOnlyBeDamagedBy.length > i; i++)
+        {
+            if(this.canOnlyBeDamagedBy[i] === immunityToDamageTypes.magicalWeapon)
+            {
+                if(weaponHitWith.isMagical)
+                {
+                    return false;
+                }
+            }
+
+            if(this.canOnlyBeDamagedBy[i] === immunityToDamageTypes.silverWeapon)
+            {
+                if(weaponHitWith.isSilver)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     };
 }
 
@@ -1371,7 +1401,17 @@ Dwarf.prototype.getMorale = function()
     }
 };
 Dwarf.prototype.getTreasureType = function() { return ["G"]; };  
-Dwarf.getNumberAppearing = function() {  return dice.rollDice("1D6"); };
+Dwarf.getNumberAppearing = function(inLiar = false) 
+{
+    if(inLiar)
+    {
+       return dice.rollDice("1D6");
+    }
+    else
+    {
+       return dice.rollDice("5D8");
+    }
+ };
 Dwarf.getLeaderType = function() { return DwarfLeader; };
 Dwarf.leaderAlive = false;
 Dwarf.mayHaveLeader = true;
@@ -1400,38 +1440,81 @@ DwarfLeader.prototype.Constructor = DwarfLeader;
 DwarfLeader.prototype.getLevel = function(level) { return level.toString(); };
 DwarfLeader.prototype.setLeaderDead = function() { Dwarf.leaderAlive = false; };
 
-
-
-
-
-
-
 //--------------------------------------------
 //-------------------Elf----------------------
 //--------------------------------------------
 
-//there will be a leader if more than 15 elves Level 2-7 usually with a magic item
+//each elf will have a random level 1 spell 
 
 function Elf() {
     this.name = "Elf";
     this.race = "humanoid";                 
     this.armourClass = 5;
     this.hitDice = "1+1";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 120;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" } ];
     this.saveAs = { class: characterType.Elf, level: 1 }; 
-    this.morale = 8;
-    this.treasureType = "E";    
     //this.Alignment = [{ alignment = Neutral, probability = 100 }];
     this.firstLevelSpells = 1;
 }
 
 Elf.prototype = new Monster();
 Elf.prototype.Constructor = Elf;
-Elf.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
+Elf.prototype.movement = 120;
+Elf.prototype.getMorale = function() 
+{
+    if(Dwarf.leaderAlive)
+    {
+        return 10;
+    }
+    else 
+    {
+        return 8;
+    }
+};
+Elf.prototype.getTreasureType = function() { return ["E"]; }; 
+Elf.getNumberAppearing = function() 
+{
+    if(inLiar)
+    {
+       return dice.rollDice("1D4");
+    }
+    else
+    {
+       return dice.rollDice("2D12");
+    }
+};
+Elf.getLeaderType = function() { return ElfLeader; };
+Elf.leaderAlive = false;
+Elf.mayHaveLeader = true;
+Elf.numberRequiredToHaveLeader = 15;
+
+//--------------------------------------------
+//-------------------ElfLeader--------------
+//--------------------------------------------
+
+//there will be a leader if more than 15 elves, the leader will be Level 2-7 usually with a magic item
+
+function ElfLeader() {
+    this.name = "Elf Leader";
+    this.hitDice = this.getLevel(dice.rollDice("1D6+1"));
+    this.hitDiceStars = 1;
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" } ];
+    this.saveAs = { class: characterType.Dwarf, level: parseInt(this.hitDice) }; 
+    this.leader = true;
+    //this.Alignment = [{ alignment = Neutral/Lawful, probability = 100 }];
+}
+
+ElfLeader.prototype = new Elf();
+ElfLeader.prototype.Constructor = ElfLeader;
+ElfLeader.prototype.getLevel = function(level) { return level.toString(); };
+ElfLeader.prototype.setLeaderDead = function() { Elf.leaderAlive = false; };
 
 //--------------------------------------------
 //--------------Ferret, Giant-----------------
@@ -1445,24 +1528,33 @@ function FerretGiant() {
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 150;
     this.attacks = [{ attackType: "Bite", damageAmount: "1D8" } ];
     this.saveAs = { class: characterType.Fighter, level: 1 }; 
-    this.morale = 8;
-    this.treasureType = "Nil";    
     //this.Alignment = [{ alignment = Neutral, probability = 100 }];
-    this.firstLevelSpells = 1;
 }
 
 FerretGiant.prototype = new Monster();
 FerretGiant.prototype.Constructor = FerretGiant;
-FerretGiant.getNumberAppearing = function() {  return dice.rollDice("1D8"); };
+FerretGiant.prototype.getMorale = function() { return 8; };
+FerretGiant.prototype.movement = 150;
+FerretGiant.prototype.getTreasureType = function() { return []; };   
+FerretGiant.getNumberAppearing = function(inLiar = false)
+{
+    if(inLiar)
+    {
+       return dice.rollDice("1D8");
+    }
+    else
+    {
+       return dice.rollDice("1D12");
+    }
+};
 
 //--------------------------------------------
 //-----------------Gargoyle-------------------
 //--------------------------------------------
 
-//    this.specialAbilities[{ description = "semi-intelligent and cunning" }, { description = "can only be hit with magic weapons" }];
+// semi-intelligent and cunning
 // not affected by sleep or charm spells
 
 function Gargoyle() 
@@ -1474,22 +1566,30 @@ function Gargoyle()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 90;
-    //this.movement = [{ movementType = Gound, movementRate = 90 }, { movementType = Flying, movementRate = 150 }];
     this.attacks = [
         { attackType: "Claw", damageAmount: "1D3" },
         { attackType: "Claw", damageAmount: "1D3" },
         { attackType: "Bite", damageAmount: "1D6" },
         { attackType: "Horn", damageAmount: "1D4" } ];
     this.saveAs = { class: characterType.Fighter, level: 8 }; 
-    this.morale = 11;
-    this.treasureType = "C"; 
     //this.Alignment = LawfulEvil;
 }
 
 Gargoyle.prototype = new Monster();
 Gargoyle.prototype.Constructor = Gargoyle;
+Gargoyle.prototype.movement = 90;
+Gargoyle.prototype.flyMovement = 150;
+Gargoyle.prototype.canOnlyBeDamagedBy = [immunityToDamageTypes.magicalWeapon];
+Gargoyle.prototype.getMorale = function() { return 11; };
+Gargoyle.prototype.getTreasureType = function() { return ["C"]; };
 Gargoyle.getNumberAppearing = function() {  return dice.rollDice("1D6"); };
+
+
+
+
+
+
+
 
 //--------------------------------------------
 //---------------Gelatinous Cube--------------

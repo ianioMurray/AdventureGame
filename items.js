@@ -4,6 +4,7 @@
 function Item() 
 {
 	this.isCombinableInInventory = false;
+	this.isSilver = false;
 }
 
 
@@ -110,6 +111,7 @@ function SilverDagger(params)
 	this.cost = 30;
 	this.damage = "D4";
 	this.id = "silver dagger";
+	this.isSilver = true;
 	this.isMagical = params.isMagical;
 	this.special = params.special;
 }

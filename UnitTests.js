@@ -328,6 +328,12 @@ function Tests()
 		this.validate(expected, actual, message);		
 	};
 
+	this.checkIsImmuneToDamageType = function(monster, weapon, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " +  monster.name + " is immune to " + weapon.name + " - " + actual + " but " + expected + " was expected";
+		this.validate(expected, actual, message);
+	};
+
 	this.testResults = function()
 	{
 		if(this.allTestsPass === true)
@@ -439,6 +445,7 @@ function runMonsterUnitTests()
 	testSurpriseOpponent();
 	testGetLevel();
 	testGetMorale();
+	testIsImmuneToDamageType();
 }
 
 //-----------------------------------------------
@@ -2204,7 +2211,25 @@ function testGetMorale()
 	tests.checkGetMorale(banditsWithLeader[1], 8, banditsWithLeader[1].getMorale(), testGetMorale.name);
 }
 
+function testIsImmuneToDamageType()
+{
+	var gargoyle = new Gargoyle();
+	var ferret = new FerretGiant();
 
+	var sword = new Sword(swordParams);
+	var silverDagger = new SilverDagger(silverDaggerParams);
+	var magicalSword = new Sword(magicalSwordParams);
+
+	//ferret is not immune to any damage
+	tests.checkIsImmuneToDamageType(ferret, sword, false, ferret.isImmuneToDamageType(sword), testIsImmuneToDamageType.name);
+	tests.checkIsImmuneToDamageType(ferret, silverDagger, false, ferret.isImmuneToDamageType(silverDagger), testIsImmuneToDamageType.name);
+	tests.checkIsImmuneToDamageType(ferret, magicalSword, false, ferret.isImmuneToDamageType(magicalSword), testIsImmuneToDamageType.name);
+
+	//gargoyle is immune to all damage except silver or magical weapons 
+	tests.checkIsImmuneToDamageType(gargoyle, sword, true, gargoyle.isImmuneToDamageType(sword), testIsImmuneToDamageType.name);
+	tests.checkIsImmuneToDamageType(gargoyle, silverDagger, true, gargoyle.isImmuneToDamageType(silverDagger), testIsImmuneToDamageType.name);
+	tests.checkIsImmuneToDamageType(gargoyle, magicalSword, false, gargoyle.isImmuneToDamageType(magicalSword), testIsImmuneToDamageType.name);
+}
 
 
 //--------------------------------------------------------------------------------------------------------------

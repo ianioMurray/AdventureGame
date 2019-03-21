@@ -17,6 +17,7 @@ function Character()
 	this.useableWeapon = [];
 	this.isParalysised = false;
 	this.paralysisedDuration = 0;
+	this.canOnlyBeDamagedBy = [];
 
 	this.getStrength = function() { return this.strength; };
 	this.getIntelligence = function() { return this.intelligence; };
@@ -391,7 +392,10 @@ function Character()
 		
 		if(attackIsAHit)
 		{
-			opponent.takeDamage(dice.rollDice(weapon.damage));
+			if(!opponent.isImmuneToDamageType(weapon))
+			{
+				opponent.takeDamage(dice.rollDice(weapon.damage));
+			}
 		}
 	};
 	
@@ -467,7 +471,7 @@ function Character()
 	this.setIsDead = function()
 	{
 		this.isDead = true;
-	}
+	};
 }
 
 

@@ -109,6 +109,13 @@ var swordParams = {
 	special: ""
 };
 
+var magicalSwordParams = {
+	name: "Magic Sword",
+	description: "magical sword",
+	isMagical: true,
+	special: ""
+};
+
 var twoHandedSwordParams = {
 	name: "Two Handed Sword",
 	description: "standard two handed sword",

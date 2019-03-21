@@ -20,4 +20,8 @@ var charactersPrimeRequisite = {
     Dexterity: "Dexterity"
 };
 
-
+//immunityToDamageTypes 
+var immunityToDamageTypes = {
+    magicalWeapon: "magicalWeapon",
+    silverWeapon: "silverWeapon"
+};
