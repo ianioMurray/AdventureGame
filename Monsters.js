@@ -1610,6 +1610,7 @@ function GelatinousCube()
     this.race = "slime";  
     this.armourClass = 8; 
     this.hitDice = "4";  
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
