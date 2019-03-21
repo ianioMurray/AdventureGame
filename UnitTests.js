@@ -334,6 +334,12 @@ function Tests()
 		this.validate(expected, actual, message);
 	};
 
+	this.checkAutomaticallyHits = function(monster, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " +  monster.name + " will auto hit - " + actual + " but " + expected + " was expected";
+		this.validate(expected, actual, message);
+	};
+
 	this.testResults = function()
 	{
 		if(this.allTestsPass === true)
@@ -446,6 +452,7 @@ function runMonsterUnitTests()
 	testGetLevel();
 	testGetMorale();
 	testIsImmuneToDamageType();
+	testAutomaticallyHits();
 }
 
 //-----------------------------------------------
@@ -2231,6 +2238,29 @@ function testIsImmuneToDamageType()
 	tests.checkIsImmuneToDamageType(gargoyle, magicalSword, false, gargoyle.isImmuneToDamageType(magicalSword), testIsImmuneToDamageType.name);
 }
 
+function testAutomaticallyHits()
+{
+	var gelatinousCube = new GelatinousCube();
+	var fighter = new Fighter(fighterTestParams);
+
+	//will NOT auto hit opponent that is not paralysised or that has not been hit before
+	tests.checkAutomaticallyHits(gelatinousCube, false, gelatinousCube.automaticallyHits(fighter), testAutomaticallyHits.name);
+
+	//will NOT auto hit opponent - fighter previously hit but not paralysised 
+	gelatinousCube.previouslyHit = [fighter];
+	fighter.isParalysised = false;
+	tests.checkAutomaticallyHits(gelatinousCube, false, gelatinousCube.automaticallyHits(fighter), testAutomaticallyHits.name);	
+
+	//will NOT auto hit opponent - fighter Not previously hit but is paralysised 
+	gelatinousCube.previouslyHit = [];
+	fighter.isParalysised = true;
+	tests.checkAutomaticallyHits(gelatinousCube, false, gelatinousCube.automaticallyHits(fighter), testAutomaticallyHits.name);	
+
+	//will auto hit opponent - fighter  previously hit and is paralysised 
+	gelatinousCube.previouslyHit = [fighter];
+	fighter.isParalysised = true;
+	tests.checkAutomaticallyHits(gelatinousCube, true, gelatinousCube.automaticallyHits(fighter), testAutomaticallyHits.name);	
+}
 
 //--------------------------------------------------------------------------------------------------------------
 

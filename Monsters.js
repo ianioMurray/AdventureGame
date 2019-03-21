@@ -19,6 +19,8 @@ function Monster()
     this.isSleep = 0;
     this.leader = false;
     this.canOnlyBeDamagedBy = [];
+    this.canAutoHit = false;
+    this.previouslyHit = [];
 
     this.attack = function(opponent)
     {
@@ -28,7 +30,7 @@ function Monster()
         {
             var ToHit = requiredToHit.getToHit(this, opponent);
 
-            if(dice.rollDice("1D20") >= ToHit)
+            if(this.automaticallyHits(opponent) || dice.rollDice("1D20") >= ToHit)
             {
                 var damage = this.attacks[i].damage;
 
@@ -149,6 +151,18 @@ function Monster()
         }
 
         return true;
+    };
+
+    this.automaticallyHits = function(opponent)
+    {
+        if(this.canAutoHit)
+        {
+            if(this.autoHitPrerequisitesMet(opponent))
+            {
+                return true;
+            }
+        }
+        return false;
     };
 }
 
@@ -1584,18 +1598,10 @@ Gargoyle.prototype.getMorale = function() { return 11; };
 Gargoyle.prototype.getTreasureType = function() { return ["C"]; };
 Gargoyle.getNumberAppearing = function() {  return dice.rollDice("1D6"); };
 
-
-
-
-
-
-
-
 //--------------------------------------------
 //---------------Gelatinous Cube--------------
 //--------------------------------------------
 
-//surprise on 1-4 (of 1D6)
 // immune to cold and lightening 
 
 function GelatinousCube()
@@ -1607,24 +1613,67 @@ function GelatinousCube()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 60;
     this.attacks = [
         { attackType: "Disolve", damageAmount: specialDamage } ];
     this.saveAs = { class: characterType.Fighter, level: 2 }; 
-    this.morale = 12;
-    this.treasureType = "V"; 
     //this.Alignment = Neutral;
+    this.previouslyHit = [];
 }
 
 GelatinousCube.prototype = new Monster();
 GelatinousCube.prototype.Constructor = GelatinousCube;
+GelatinousCube.prototype.getMorale = function() { return 12; };
+GelatinousCube.prototype.treasureType = function() { return ["V"]; }; 
+GelatinousCube.prototype.movement = 60;
+GelatinousCube.prototype.canAutoHit = true;
 GelatinousCube.getNumberAppearing = function() {  return 1; };
+GelatinousCube.prototype.surpriseOpponent= function(diceResult)
+{
+    //Gelatinous Cube surprise on a 1-4
+    if(diceResult <= 4)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+};
 GelatinousCube.prototype.specialDamage = function(opponent)
 {
-    //if opponent hit before they must make a save vs paralysis. If they fail all following attacks are always hits 
-    //first hit does 2D4 damage
+    //if opponent hit before they must make a save vs paralysis. If they fail they will be paralysised and all following attacks 
+    //will automatically hit
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, dice.rollDice("1D20")))
+    {
+        opponent.isParalysised = true;
+        opponent.paralysisedDuration = dice.rollDice("2D4");
+    }
+
     opponent.takeDamage(dice.rollDice("2D4"));
+    this.previouslyHit.push(opponent);
 };
+GelatinousCube.prototype.autoHitPrerequisitesMet = function(opponent)
+{
+    var currentOpponentPreviouslyHit  = false; 
+    if(this.previouslyHit.indexOf(opponent) > -1)
+    {
+        currentOpponentPreviouslyHit = true;
+    }
+
+    if(opponent.isParalysised && currentOpponentPreviouslyHit)
+    {
+        return true;
+    }
+    return false;
+};
+
+
+
+
+
+
+
+
 
 //--------------------------------------------
 //--------------------Ghoul-------------------
