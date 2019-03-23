@@ -96,6 +96,10 @@ function Monster()
             hitPoints = dice.rollDice( "1D4");
             return hitPoints + parsedHitDice.modifier;
         }
+        else if (parsedHitDice.hitDice === "3" && this.name === "Gnoll Leader")
+        {
+            return 16;
+        }
         else 
         {
             hitPoints = dice.rollDice( parsedHitDice.hitDice + "D8");
@@ -1419,11 +1423,11 @@ Dwarf.getNumberAppearing = function(inLiar = false)
 {
     if(inLiar)
     {
-       return dice.rollDice("1D6");
+       return dice.rollDice("5D8");
     }
     else
     {
-       return dice.rollDice("5D8");
+       return dice.rollDice("1D6");
     }
  };
 Dwarf.getLeaderType = function() { return DwarfLeader; };
@@ -1494,11 +1498,11 @@ Elf.getNumberAppearing = function()
 {
     if(inLiar)
     {
-       return dice.rollDice("1D4");
+       return dice.rollDice("2D12");
     }
     else
     {
-       return dice.rollDice("2D12");
+       return dice.rollDice("1D4");
     }
 };
 Elf.getLeaderType = function() { return ElfLeader; };
@@ -1556,11 +1560,11 @@ FerretGiant.getNumberAppearing = function(inLiar = false)
 {
     if(inLiar)
     {
-       return dice.rollDice("1D8");
+       return dice.rollDice("1D12");
     }
     else
     {
-       return dice.rollDice("1D12");
+       return dice.rollDice("1D8");
     }
 };
 
@@ -1596,7 +1600,17 @@ Gargoyle.prototype.flyMovement = 150;
 Gargoyle.prototype.canOnlyBeDamagedBy = [immunityToDamageTypes.magicalWeapon];
 Gargoyle.prototype.getMorale = function() { return 11; };
 Gargoyle.prototype.getTreasureType = function() { return ["C"]; };
-Gargoyle.getNumberAppearing = function() {  return dice.rollDice("1D6"); };
+Gargoyle.getNumberAppearing = function(inLiar = false)
+{
+    if(inLiar)
+    {
+       return dice.rollDice("2D4");
+    }
+    else
+    {
+       return dice.rollDice("1D6");
+    }
+};
 
 //--------------------------------------------
 //---------------Gelatinous Cube--------------
@@ -1668,57 +1682,58 @@ GelatinousCube.prototype.autoHitPrerequisitesMet = function(opponent)
     return false;
 };
 
-
-
-
-
-
-
-
-
 //--------------------------------------------
 //--------------------Ghoul-------------------
 //--------------------------------------------
 
 function Ghoul()
- {
+{
     this.name = "Ghoul";
     this.race = "undead";   
     this.armourClass = 6;
     this.hitDice = "2";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 90;
     this.attacks = [ { attackType: "Claw", damageAmount: specialDamage }, 
                      { attackType: "Claw", damageAmount: specialDamage }, 
                      { attackType: "Bite", damageAmount: specialDamage } ];
     this.saveAs = { class: characterType.Fighter, level: 2 }; 
-    this.morale = 9;
-    this.treasureType = "B"; 
     //this.Alignment = Chaotic;
- }
+}
 
- Ghoul.prototype = new Monster();
- Ghoul.prototype.Constructor = Ghoul;
- Ghoul.getNumberAppearing = function() { return dice.rollDice("1D6"); };
- Ghoul.prototype.specialDamage = function(opponent)
- {
+Ghoul.prototype = new Monster();
+Ghoul.prototype.Constructor = Ghoul;
+Ghoul.prototype.morale = 9;
+Ghoul.prototype.getTreasureType = function() { return ["B"]; }; 
+Ghoul.prototype.getMorale = function() { return 9; };
+Ghoul.prototype.getNumberAppearing = function()
+{
+    if(inLiar)
+    {
+       return dice.rollDice("2D8");
+    }
+    else
+    {
+       return dice.rollDice("1D6");
+    }
+};
+Ghoul.prototype.specialDamage = function(opponent)
+{
     opponent.takeDamage(dice.rollDice("2D4"));
-    //elves are not affected by paralysis
+    //elves are not affected by paralysis -- paralysis only affects creatures that are smaller than an orge
     if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.ParalysisTurnToStone, dice.rollDice("1D20")))
     {
         opponent.isParalysised = true;
         opponent.paralysisedDuration = dice.rollDice("2D4");
     }
     //if opponent is paralysised ghoul will attack another party member
- };
+};
 
 //--------------------------------------------
 //--------------------Gnoll-------------------
 //--------------------------------------------
-
-//if more than 20 gnolls they will have a leader with 16hps, who attacks as hitdice 3 monster
 
 function Gnoll()
  {
@@ -1729,17 +1744,66 @@ function Gnoll()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 90;
     this.attacks = [ { attackType: "WeaponAttack", damageAmount: "2D4" } ];
     this.saveAs = { class: characterType.Fighter, level: 2 }; 
-    this.morale = 8;
-    this.treasureType = "D"; 
     //this.Alignment = Chaotic;
  }
 
  Gnoll.prototype = new Monster();
  Gnoll.prototype.Constructor = Gnoll;
- Gnoll.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+ Gnoll.prototype.movement = 90;
+ Gnoll.prototype.getMorale = function() { return 8; };
+ Gnoll.prototype.treasureType = function() { return ["D"]; }; 
+ Gnoll.getNumberAppearing = function(inLiar = false)
+{
+    if(inLiar)
+    {
+        return dice.rollDice("3D6");
+    } 
+    else
+    {
+        return dice.rollDice("1D6");
+    }
+};
+Gnoll.getLeaderType = function() { return GnollLeader; };
+Gnoll.leaderAlive = false;
+Gnoll.mayHaveLeader = true;
+Gnoll.numberRequiredToHaveLeader = 20;
+
+//--------------------------------------------
+//--------------------GnollLeader-------------
+//--------------------------------------------
+
+function GnollLeader() {
+    this.name = "Gnoll Leader";
+    this.hitDice = "3";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" } ];
+    this.saveAs = { class: characterType.Fighter, level: parseInt(this.hitDice) }; 
+    this.leader = true;
+    //this.Alignment = [{ alignment = Neutral/Lawful, probability = 100 }];
+}
+
+GnollLeader.prototype = new Gnoll();
+GnollLeader.prototype.Constructor = GnollLeader;
+GnollLeader.prototype.setLeaderDead = function() { Gnoll.leaderAlive = false; };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //--------------------------------------------
 //--------------------Gnome-------------------

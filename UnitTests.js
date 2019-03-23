@@ -2089,6 +2089,7 @@ function testGetHPs()
 	testApeHps();
 	testBatHps();
 	testKolboldHPs();
+	testGnollLeaderHPs();	
 }
 
 function checkHPs(params)
@@ -2132,12 +2133,24 @@ function testBatHps()
 
 function testKolboldHPs()
 {
-	//Bat is 0.5 Hit Dice so has 1 Hp
+	//Kolbold is 0.5 hit dice
 	var params = {
 		min: 1,
 		max: 4,
 		monsterName: "Kolbold",
 		monsterType: Kobold
+	};
+	checkHPs(params);
+}
+
+function testGnollLeaderHPs()
+{
+	//Gnoll Leader is 3 hit dice and has 16 Hp
+	var params = {
+		min: 16,
+		max: 16,
+		monsterName: "Gnoll Leader",
+		monsterType: GnollLeader
 	};
 	checkHPs(params);
 }
