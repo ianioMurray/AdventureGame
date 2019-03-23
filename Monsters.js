@@ -18,6 +18,7 @@ function Monster()
     this.canTalk = 0;
     this.isSleep = 0;
     this.leader = false;
+    this.chieftain = false;
     this.canOnlyBeDamagedBy = [];
     this.canAutoHit = false;
     this.previouslyHit = [];
