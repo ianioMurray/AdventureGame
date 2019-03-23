@@ -96,9 +96,21 @@ function Monster()
             hitPoints = dice.rollDice( "1D4");
             return hitPoints + parsedHitDice.modifier;
         }
+        else if (parsedHitDice.hitDice === "2" && this.name === "Gnome Leader")
+        {
+            return 11;
+        }
         else if (parsedHitDice.hitDice === "3" && this.name === "Gnoll Leader")
         {
             return 16;
+        }
+        else if (parsedHitDice.hitDice === "3" && this.name === "Gnome Chieftain Bodyguard")
+        {
+            return dice.rollDice("1D4+9");
+        }
+        else if (parsedHitDice.hitDice === "4" && this.name === "Gnome Chieftain")
+        {
+            return 18;
         }
         else 
         {
@@ -124,6 +136,10 @@ function Monster()
         if(this.leader === true)
         {
             this.setLeaderDead();
+        }
+        if(this.chieftain === true)
+        {
+            this.setChieftainDead();
         }
         this.isDead = true;
     };
@@ -189,6 +205,21 @@ Monster.createMonsters = function(typeOfMonster, numberAppearing, inLiar = false
             {
                 console.log(err.message);
             }
+        }
+    }
+
+    if(typeOfMonster.mayHaveChieftain && inLiar)
+    {
+        var chieftainType = typeOfMonster.getChieftainType();
+        let monster = new chieftainType();
+        monsters.push(monster);
+        typeOfMonster.chieftainAlive = true;
+
+        for(let i = 0; chieftainType.numberOfBodyGuards > i; i++)
+        {
+            var bodyguardType = typeOfMonster.getChieftainBodyguardType();
+            let monster = new bodyguardType();
+            monsters.push(monster); 
         }
     }
 
@@ -1790,26 +1821,11 @@ GnollLeader.prototype = new Gnoll();
 GnollLeader.prototype.Constructor = GnollLeader;
 GnollLeader.prototype.setLeaderDead = function() { Gnoll.leaderAlive = false; };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //--------------------------------------------
 //--------------------Gnome-------------------
 //--------------------------------------------
 
-//if more than 20 gnomes they will have a leader with 11hps, who attacks as hitdice 2 monster
+//can see in the dark up to 90
 
 function Gnome()
  {
@@ -1820,17 +1836,123 @@ function Gnome()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;
-    this.movement = 60;
     this.attacks = [ { attackType: "WeaponAttack", damageAmount: "1D6" } ];
     this.saveAs = { class: characterType.Dwarf, level: 1 }; 
-    this.morale = 8;
-    this.treasureType = "C"; 
     //this.Alignment = Lawful/Neutral;
  }
 
  Gnome.prototype = new Monster();
  Gnome.prototype.Constructor = Gnome;
- Gnome.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+ Gnome.prototype.movement = 60;
+ Gnome.prototype.getMorale = function() 
+ {
+     if(Gnome.chieftainAlive)
+     {
+         return 10;
+     } 
+     else
+     {
+         return 8; 
+    }
+};
+ Gnome.prototype.getTreasureType = function() { return ["C"]; }; 
+ Gnome.getNumberAppearing = function(inLiar = false) 
+ {
+    if(inLiar)
+    {
+       return dice.rollDice("5D8");
+    }
+    else
+    {
+       return dice.rollDice("1D8");
+    }
+};
+Gnome.getLeaderType = function() { return GnomeLeader; };
+Gnome.getChieftainType = function() { return GnomeChieftain; };
+Gnome.getChieftainBodyguardType = function() { return GnomeChieftainBodyGuard; };
+Gnome.leaderAlive = false;
+Gnome.mayHaveLeader = true;
+Gnome.numberRequiredToHaveLeader = 20;
+Gnome.chieftainAlive = false;
+Gnome.mayHaveChieftain = true;
+
+//--------------------------------------------
+//--------------------GnomeLeader-------------
+//--------------------------------------------
+
+//gnome leader appears when there are 20 or more gnomes
+
+function GnomeLeader() {
+    this.name = "Gnome Leader";
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" } ];
+    this.saveAs = { class: characterType.Fighter, level: parseInt(this.hitDice) }; 
+    this.leader = true;
+    //this.Alignment = [{ alignment = Neutral/Lawful, probability = 100 }];
+}
+
+GnomeLeader.prototype = new Gnome();
+GnomeLeader.prototype.Constructor = GnomeLeader;
+GnomeLeader.prototype.setLeaderDead = function() { Gnome.leaderAlive = false; };
+
+//--------------------------------------------
+//----------------GnomeChieftain--------------
+//--------------------------------------------
+
+//gnome chieftain appears in the lair
+
+function GnomeChieftain() {
+    this.name = "Gnome Chieftain";
+    this.hitDice = "4";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8+1" } ];
+    this.saveAs = { class: characterType.Fighter, level: parseInt(this.hitDice) }; 
+    this.chieftain = true;
+    //this.Alignment = [{ alignment = Neutral/Lawful, probability = 100 }];
+}
+
+GnomeChieftain.prototype = new Gnome();
+GnomeChieftain.prototype.Constructor = GnomeChieftain;
+GnomeChieftain.prototype.setChieftainDead = function() { Gnome.chieftainAlive = false; };
+GnomeChieftain.numberOfBodyGuards = dice.rollDice("1D6");
+
+//--------------------------------------------
+//-----------GnomeChieftainBodyGuard----------
+//--------------------------------------------
+
+//gnome chieftain has 1-6 bodyguards
+
+function GnomeChieftainBodyGuard() {
+    this.name = "Gnome Chieftain Bodyguard";
+    this.hitDice = "3";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" } ];
+    this.saveAs = { class: characterType.Fighter, level: parseInt(this.hitDice) }; 
+    //this.Alignment = [{ alignment = Neutral/Lawful, probability = 100 }];
+}
+
+GnomeChieftainBodyGuard.prototype = new Gnome();
+GnomeChieftainBodyGuard.prototype.Constructor = GnomeChieftainBodyGuard;
+
+
+
+
+
+
+
+
+
+
+
+
+
  
 //--------------------------------------------
 //--------------------Goblin------------------
@@ -2097,9 +2219,9 @@ KillerBee.prototype.specialDamage = function(opponent)
 //--------------------------------------------
 
 //    this.specialAbilities = [{ Name = "infravision" }];
-// cheiftain has 9hps and 2hitdice
+// chieftain has 9hps and 2hitdice
 // he has 1D6 bodyGuards with 6hps and hitdice 1+1
-//moral is 8 with a cheiftain 
+//moral is 8 with a chieftain 
 
 function Kobold()
 {

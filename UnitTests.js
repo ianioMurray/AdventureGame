@@ -2089,7 +2089,9 @@ function testGetHPs()
 	testApeHps();
 	testBatHps();
 	testKolboldHPs();
-	testGnollLeaderHPs();	
+	testGnollLeaderHPs();
+	testGnomeChieftainHPs();
+	testGnomeChieftainBodyguardHPs();
 }
 
 function checkHPs(params)
@@ -2154,6 +2156,31 @@ function testGnollLeaderHPs()
 	};
 	checkHPs(params);
 }
+
+function testGnomeChieftainHPs()
+{
+	//Gnome Chieftain is 4 hit dice and has 18 Hp
+	var params = {
+		min: 18,
+		max: 18,
+		monsterName: "Gnome Chieftain",
+		monsterType: GnomeChieftain
+	};
+	checkHPs(params);
+}
+
+function testGnomeChieftainBodyguardHPs()
+{
+	//Gnome Chieftain bodyguard is 3 hit dice and have 10-13Hp
+	var params = {
+		min: 10,
+		max: 13,
+		monsterName: "Gnome Chieftain Bodyguard",
+		monsterType: GnomeChieftainBodyGuard
+	};
+	checkHPs(params);
+}
+
 
 function testSurpriseOpponent()
 {
@@ -2229,6 +2256,38 @@ function testGetMorale()
 	banditsWithLeader[0].setIsDead();
 	tests.checkLeaderAlive(banditsWithLeader[1], false, Bandit.leaderAlive, testGetMorale.name);	
 	tests.checkGetMorale(banditsWithLeader[1], 8, banditsWithLeader[1].getMorale(), testGetMorale.name);
+
+	//create a group of Gnomes in their lair with a leader and chieftain
+	var gnomesWithLeaderAndChieftain = Monster.createMonsters(Gnome, 20, true);
+	tests.checkMonstersName(gnomesWithLeaderAndChieftain[0], "Gnome Leader", gnomesWithLeaderAndChieftain[0].name, testGetMorale.name);
+	tests.checkMonstersName(gnomesWithLeaderAndChieftain[1], "Gnome Chieftain", gnomesWithLeaderAndChieftain[1].name, testGetMorale.name);
+	tests.checkMonstersName(gnomesWithLeaderAndChieftain[2], "Gnome Chieftain Bodyguard", gnomesWithLeaderAndChieftain[2].name, testGetMorale.name);
+	tests.checkMonstersName(gnomesWithLeaderAndChieftain[10], "Gnome", gnomesWithLeaderAndChieftain[10].name, testGetMorale.name);
+	tests.checkGetMorale(gnomesWithLeaderAndChieftain[1], 10, gnomesWithLeaderAndChieftain[1].getMorale(), testGetMorale.name);
+
+	//kill a random gnome and morale is unaffected 
+	gnomesWithLeaderAndChieftain[10].setIsDead();
+	tests.checkLeaderAlive(gnomesWithLeaderAndChieftain[1], true, Gnome.leaderAlive, testGetMorale.name);
+	tests.checkLeaderAlive(gnomesWithLeaderAndChieftain[1], true, Gnome.chieftainAlive, testGetMorale.name);
+	tests.checkGetMorale(gnomesWithLeaderAndChieftain[1], 10, gnomesWithLeaderAndChieftain[1].getMorale(), testGetMorale.name);
+
+	//kill a chieftain gnome and morale is unaffected 
+	gnomesWithLeaderAndChieftain[2].setIsDead();
+	tests.checkLeaderAlive(gnomesWithLeaderAndChieftain[1], true, Gnome.leaderAlive, testGetMorale.name);
+	tests.checkLeaderAlive(gnomesWithLeaderAndChieftain[1], true, Gnome.chieftainAlive, testGetMorale.name);
+	tests.checkGetMorale(gnomesWithLeaderAndChieftain[1], 10, gnomesWithLeaderAndChieftain[1].getMorale(), testGetMorale.name);
+
+	//kill the gnome leader and morale is unaffected (only affected by chieftain)
+	gnomesWithLeaderAndChieftain[0].setIsDead();
+	tests.checkLeaderAlive(gnomesWithLeaderAndChieftain[1], false, Gnome.leaderAlive, testGetMorale.name);
+	tests.checkLeaderAlive(gnomesWithLeaderAndChieftain[1], true, Gnome.chieftainAlive, testGetMorale.name);
+	tests.checkGetMorale(gnomesWithLeaderAndChieftain[1], 10, gnomesWithLeaderAndChieftain[1].getMorale(), testGetMorale.name);
+
+	//kill the gnome chieftain and morale changes to 8
+	gnomesWithLeaderAndChieftain[1].setIsDead();
+	tests.checkLeaderAlive(gnomesWithLeaderAndChieftain[1], false, Gnome.leaderAlive, testGetMorale.name);
+	tests.checkLeaderAlive(gnomesWithLeaderAndChieftain[1], false, Gnome.chieftainAlive, testGetMorale.name);
+	tests.checkGetMorale(gnomesWithLeaderAndChieftain[1], 8, gnomesWithLeaderAndChieftain[1].getMorale(), testGetMorale.name);
 }
 
 function testIsImmuneToDamageType()
