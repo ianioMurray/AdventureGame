@@ -101,9 +101,17 @@ function Monster()
         {
             return 11;
         }
+        else if (parsedHitDice.hitDice === "2" && this.name === "Goblin King Bodyguard")
+        {
+            return dice.rollDice("2D6");   
+        }
         else if (parsedHitDice.hitDice === "3" && this.name === "Gnoll Leader")
         {
             return 16;
+        }
+        else if (parsedHitDice.hitDice === "3" && this.name === "Goblin King")
+        {
+            return 15;
         }
         else if (parsedHitDice.hitDice === "3" && this.name === "Gnome Chieftain Bodyguard")
         {
@@ -1740,7 +1748,7 @@ Ghoul.prototype.Constructor = Ghoul;
 Ghoul.prototype.morale = 9;
 Ghoul.prototype.getTreasureType = function() { return ["B"]; }; 
 Ghoul.prototype.getMorale = function() { return 9; };
-Ghoul.prototype.getNumberAppearing = function()
+Ghoul.prototype.getNumberAppearing = function(inLiar = false)
 {
     if(inLiar)
     {
@@ -1942,29 +1950,14 @@ function GnomeChieftainBodyGuard() {
 GnomeChieftainBodyGuard.prototype = new Gnome();
 GnomeChieftainBodyGuard.prototype.Constructor = GnomeChieftainBodyGuard;
 
-
-
-
-
-
-
-
-
-
-
-
-
- 
 //--------------------------------------------
 //--------------------Goblin------------------
 //--------------------------------------------
 
-//   this.specialAbilities = [{ description = "-1 off attack die roll in daylight" },
-// { description = "can see in the dark" }, 
-//{ description = "Always attack dwarves on sight" }];
+// in daylight they get -1 toHit 
+// can see in the dark up to 90
+// Always attack dwarves on sight
 // 1 of every 4 will ride a dire wolf 
-//in their lair there will be a king with 15hps, 3 hitdice and +1 damage
-//the king  will have 2-12 body guards - fight as 2 hitdice and have 2-12hps
 
  function Goblin() 
  {
@@ -1975,17 +1968,108 @@ GnomeChieftainBodyGuard.prototype.Constructor = GnomeChieftainBodyGuard;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;    
-    this.movement = 60;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D6" } ];
     this.saveAs = { class: characterType.NormalMan, level: 0 };
-    this.morale = 7;
-    this.treasureType = "R";
   //  this.Alignment = Chaotic;
 }
 
 Goblin.prototype = new Monster();
 Goblin.prototype.Constructor = Goblin;
-Goblin.getNumberAppearing = function() { return dice.rollDice("2D4"); };
+Goblin.prototype.movement = 60;
+Goblin.prototype.getMorale = function() 
+{
+    if(Goblin.chieftainAlive)
+    {
+        return 9;
+    } 
+    else
+    {
+        return 7; 
+    }
+};
+Goblin.prototype.getTreasureType = function()
+{ 
+    if(this.inLiar || this.inWilderness)
+    {
+        return ["C"];
+    }
+    else 
+    {
+        return ["R"]; 
+    }
+};
+Goblin.getNumberAppearing = function(inLiar) 
+{
+    if(inLiar)
+    {
+        return dice.rollDice("6D10"); 
+    } 
+    else
+    {
+        return dice.rollDice("2D4"); 
+    }
+};
+Goblin.chieftainAlive = false;
+Goblin.mayHaveChieftain = true;
+Goblin.getChieftainType = function() { return GoblinKing; };
+
+
+//--------------------------------------------
+//----------------GoblinKing------------------
+//--------------------------------------------
+
+//goblin king appears in the lair
+// no day light penalty
+
+function GoblinKing() {
+    this.name = "Goblin King";
+    this.hitDice = "3";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D6+1" } ];
+    this.saveAs = { class: characterType.Fighter, level: parseInt(this.hitDice) }; 
+    this.chieftain = true;
+    //this.Alignment = [{ alignment = Neutral/Lawful, probability = 100 }];
+}
+
+GoblinKing.prototype = new Goblin();
+GoblinKing.prototype.Constructor = GoblinKing;
+GoblinKing.prototype.setChieftainDead = function() { Gnome.chieftainAlive = false; };
+GoblinKing.numberOfBodyGuards = dice.rollDice("2D6");
+
+//--------------------------------------------
+//-----------GoblinkingBodyGuard----------
+//--------------------------------------------
+
+//goblin king has 2-12 bodyguards
+// no day light penalty
+
+function GoblinChieftainBodyGuard() {
+    this.name = "Goblin King Bodyguard";
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D6" } ];
+    this.saveAs = { class: characterType.Fighter, level: parseInt(this.hitDice) }; 
+    //this.Alignment = [{ alignment = Neutral/Lawful, probability = 100 }];
+}
+
+GoblinChieftainBodyGuard.prototype = new Goblin();
+GoblinChieftainBodyGuard.prototype.Constructor = GoblinChieftainBodyGuard;
+
+
+
+
+
+
+
+
+
+
+
+
 
 //--------------------------------------------
 //--------------------Gray Ooze---------------
