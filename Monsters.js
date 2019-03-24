@@ -2059,25 +2059,12 @@ function GoblinChieftainBodyGuard() {
 GoblinChieftainBodyGuard.prototype = new Goblin();
 GoblinChieftainBodyGuard.prototype.Constructor = GoblinChieftainBodyGuard;
 
-
-
-
-
-
-
-
-
-
-
-
-
 //--------------------------------------------
 //--------------------Gray Ooze---------------
 //--------------------------------------------
 
-//this.specialAbilities = [{ description = "resembles wet stone and difficult to detect" }, 
-//{ description = "Can corrode metal in one turn" }, 
-//{ description = "Immune to cold and fire" }];
+//resembles wet stone and difficult to detect 
+//Immune to cold and fire
 
 function GrayOoze() 
 {
@@ -2088,23 +2075,50 @@ function GrayOoze()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;   
-    this.movement = 10;
     this.attacks = [{ attackType: "disolve", damageAmount: specialDamage }];
     this.saveAs = { class: characterType.Fighter, level: 2 };
-    this.morale = 12;
-    this.treasureType = "Nil";
     //  this.Alignment = Neutral;  
+    this.previouslyHit = [];
 }
 
 GrayOoze.prototype = new Monster();
 GrayOoze.prototype.Constructor = GrayOoze;
+GrayOoze.prototype.movement = 10;
+GrayOoze.prototype.getMorale = function() { return 12; };
+GrayOoze.prototype.getTreasureType = function() { return []; };
+GrayOoze.prototype.canAutoHit = true;
 GrayOoze.getNumberAppearing = function() { return 1; };
+
 GrayOoze.prototype.specialDamage = function(opponent)
 {
-    //the first hits does 2D8 damage after than all hits are automatic
-    //attack disolves armour in 1 turn
+    //after the first hit further hits are automatic
     opponent.takeDamage(dice.rollDice("2D8"));
+
+    //attack disolves armour in 1 turn
+    if(opponent.isArmourEquiped())
+    {
+        for(let i = 0; opponent.equipedArmour.length > i; i++)
+        {
+            opponent.unEquip(opponent.equipedArmour[i]);
+        }
+    }
 };
+GrayOoze.prototype.autoHitPrerequisitesMet = function(opponent)
+{
+    if(this.previouslyHit.indexOf(opponent) > -1)
+    {
+        return true;
+    }
+    return false;
+};
+
+
+
+
+
+
+
+
 
 //--------------------------------------------
 //---------------Green Slime------------------
