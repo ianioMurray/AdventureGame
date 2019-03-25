@@ -11,8 +11,9 @@ function Monster()
     this.firstLevelSpells = 0;
     this.secondLevelSpells = 0;
     this.thirdLevelSpells = 0;
-    this.inLiar = false;
+    this.inLair = false;
     this.inWilderness = false;
+    this.movement = 0;
     this.flyMovement = 0;
     this.hitDiceStars = 0;
     this.canTalk = 0;
@@ -98,6 +99,10 @@ function Monster()
             hitPoints = dice.rollDice( "1D4");
             return hitPoints + parsedHitDice.modifier;
         }
+        else if (parsedHitDice.hitDice === "1" && this.name === "Kobold King Bodyguard")
+        {
+            return 6;
+        }
         else if (parsedHitDice.hitDice === "2" && this.name === "Gnome Leader")
         {
             return 11;
@@ -105,6 +110,10 @@ function Monster()
         else if (parsedHitDice.hitDice === "2" && this.name === "Goblin King Bodyguard")
         {
             return dice.rollDice("2D6");   
+        }
+        else if (parsedHitDice.hitDice === "2" && this.name === "Kobold King")
+        {
+            return 9;   
         }
         else if (parsedHitDice.hitDice === "3" && this.name === "Gnoll Leader")
         {
@@ -121,6 +130,14 @@ function Monster()
         else if (parsedHitDice.hitDice === "4" && this.name === "Gnome Chieftain")
         {
             return 18;
+        }
+        else if (parsedHitDice.hitDice === "4" && this.name === "Hobgoblin King Bodyguard")
+        {
+            return dice.rollDice("3D6");
+        }
+        else if (parsedHitDice.hitDice === "5" && this.name === "Hobgoblin King")
+        {
+            return 22;
         }
         else 
         {
@@ -178,6 +195,16 @@ function Monster()
                     return false;
                 }
             }
+
+            if(this.canOnlyBeDamagedBy[i] === immunityToDamageTypes.fireDamage)
+            {
+                //does weapon do fire damage
+            }
+
+            if(this.canOnlyBeDamagedBy[i] === immunityToDamageTypes.coldDamage)
+            {
+                //does weapon do cold damage
+            }
         }
 
         return true;
@@ -205,7 +232,7 @@ function Monster()
     };
 }
 
-Monster.createMonsters = function(typeOfMonster, numberAppearing, inLiar = false, inWilderness = false, leaderPresent = false)
+Monster.createMonsters = function(typeOfMonster, numberAppearing, inLair = false, inWilderness = false, leaderPresent = false)
 {
     var monsters = [];
 
@@ -227,7 +254,7 @@ Monster.createMonsters = function(typeOfMonster, numberAppearing, inLiar = false
         }
     }
 
-    if(typeOfMonster.mayHaveChieftain && inLiar)
+    if(typeOfMonster.mayHaveChieftain && inLair)
     {
         var chieftainType = typeOfMonster.getChieftainType();
         let monster = new chieftainType();
@@ -246,7 +273,7 @@ Monster.createMonsters = function(typeOfMonster, numberAppearing, inLiar = false
     {
         let monster = new typeOfMonster();
         monsters.push(monster);
-        monster.inLiar = inLiar;
+        monster.inLair = inLair;
         monster.inWilderness = inWilderness;
     }
     return monsters;
@@ -384,7 +411,7 @@ Bandit.prototype = new Monster();
 Bandit.prototype.Constructor = Bandit;
 Bandit.prototype.GetTreasureType = function()
 {
-    if(this.inLiar)
+    if(this.inLair)
     { 
         return ["A"];
     }  
@@ -395,9 +422,9 @@ Bandit.prototype.GetTreasureType = function()
 };
 Bandit.prototype.movement = 120;
 Bandit.prototype.getMorale = function() { return 8; };
-Bandit.getNumberAppearing = function(inLiar = false) 
+Bandit.getNumberAppearing = function(inLair = false) 
 {
-     if(inLiar)
+     if(inLair)
      {
         return dice.rollDice("3D10");
      }
@@ -1411,7 +1438,7 @@ DriverAnt.prototype.getMorale = function() { return 7; };  // but once engaged t
 DriverAnt.prototype.getTreasureType = function() 
 {
     //30% chance a nest will have gold nuggets worth 1D10 thousand gold pieces 
-    if(this.inLiar)
+    if(this.inLair)
     { 
         var extraGold = 0;
         if(dice.rollDice("1D10") <= 3)
@@ -1425,9 +1452,9 @@ DriverAnt.prototype.getTreasureType = function()
         return [];
     }
 };
-DriverAnt.getNumberAppearing = function(inLiar = false) 
+DriverAnt.getNumberAppearing = function(inLair = false) 
 {
-     if(inLiar)
+     if(inLair)
      {
         return dice.rollDice("4D6");
      }
@@ -1469,9 +1496,9 @@ Dwarf.prototype.getMorale = function()
     }
 };
 Dwarf.prototype.getTreasureType = function() { return ["G"]; };  
-Dwarf.getNumberAppearing = function(inLiar = false) 
+Dwarf.getNumberAppearing = function(inLair = false) 
 {
-    if(inLiar)
+    if(inLair)
     {
        return dice.rollDice("5D8");
     }
@@ -1544,9 +1571,9 @@ Elf.prototype.getMorale = function()
     }
 };
 Elf.prototype.getTreasureType = function() { return ["E"]; }; 
-Elf.getNumberAppearing = function() 
+Elf.getNumberAppearing = function(inLair = false) 
 {
-    if(inLiar)
+    if(inLair)
     {
        return dice.rollDice("2D12");
     }
@@ -1606,9 +1633,9 @@ FerretGiant.prototype.Constructor = FerretGiant;
 FerretGiant.prototype.getMorale = function() { return 8; };
 FerretGiant.prototype.movement = 150;
 FerretGiant.prototype.getTreasureType = function() { return []; };   
-FerretGiant.getNumberAppearing = function(inLiar = false)
+FerretGiant.getNumberAppearing = function(inLair = false)
 {
-    if(inLiar)
+    if(inLair)
     {
        return dice.rollDice("1D12");
     }
@@ -1650,9 +1677,9 @@ Gargoyle.prototype.flyMovement = 150;
 Gargoyle.prototype.canOnlyBeDamagedBy = [immunityToDamageTypes.magicalWeapon];
 Gargoyle.prototype.getMorale = function() { return 11; };
 Gargoyle.prototype.getTreasureType = function() { return ["C"]; };
-Gargoyle.getNumberAppearing = function(inLiar = false)
+Gargoyle.getNumberAppearing = function(inLair = false)
 {
-    if(inLiar)
+    if(inLair)
     {
        return dice.rollDice("2D4");
     }
@@ -1758,9 +1785,9 @@ Ghoul.prototype.Constructor = Ghoul;
 Ghoul.prototype.morale = 9;
 Ghoul.prototype.getTreasureType = function() { return ["B"]; }; 
 Ghoul.prototype.getMorale = function() { return 9; };
-Ghoul.prototype.getNumberAppearing = function(inLiar = false)
+Ghoul.prototype.getNumberAppearing = function(inLair = false)
 {
-    if(inLiar)
+    if(inLair)
     {
        return dice.rollDice("2D8");
     }
@@ -1804,9 +1831,9 @@ function Gnoll()
  Gnoll.prototype.movement = 90;
  Gnoll.prototype.getMorale = function() { return 8; };
  Gnoll.prototype.treasureType = function() { return ["D"]; }; 
- Gnoll.getNumberAppearing = function(inLiar = false)
+ Gnoll.getNumberAppearing = function(inLair = false)
 {
-    if(inLiar)
+    if(inLair)
     {
         return dice.rollDice("3D6");
     } 
@@ -1875,9 +1902,9 @@ function Gnome()
     }
 };
  Gnome.prototype.getTreasureType = function() { return ["C"]; }; 
- Gnome.getNumberAppearing = function(inLiar = false) 
+ Gnome.getNumberAppearing = function(inLair = false) 
  {
-    if(inLiar)
+    if(inLair)
     {
        return dice.rollDice("5D8");
     }
@@ -1999,7 +2026,7 @@ Goblin.prototype.getMorale = function()
 };
 Goblin.prototype.getTreasureType = function()
 { 
-    if(this.inLiar || this.inWilderness)
+    if(this.inLair || this.inWilderness)
     {
         return ["C"];
     }
@@ -2008,9 +2035,9 @@ Goblin.prototype.getTreasureType = function()
         return ["R"]; 
     }
 };
-Goblin.getNumberAppearing = function(inLiar) 
+Goblin.getNumberAppearing = function(inLair) 
 {
-    if(inLiar)
+    if(inLair)
     {
         return dice.rollDice("6D10"); 
     } 
@@ -2022,7 +2049,7 @@ Goblin.getNumberAppearing = function(inLiar)
 Goblin.chieftainAlive = false;
 Goblin.mayHaveChieftain = true;
 Goblin.getChieftainType = function() { return GoblinKing; };
-
+Goblin.getChieftainBodyguardType = function() { return GoblinChieftainBodyGuard; };
 
 //--------------------------------------------
 //----------------GoblinKing------------------
@@ -2045,7 +2072,7 @@ function GoblinKing() {
 
 GoblinKing.prototype = new Goblin();
 GoblinKing.prototype.Constructor = GoblinKing;
-GoblinKing.prototype.setChieftainDead = function() { Gnome.chieftainAlive = false; };
+GoblinKing.prototype.setChieftainDead = function() { Goblin.chieftainAlive = false; };
 GoblinKing.numberOfBodyGuards = dice.rollDice("2D6");
 
 //--------------------------------------------
@@ -2082,6 +2109,7 @@ function GrayOoze()
     this.race = "slime";
     this.armourClass = 8;
     this.hitDice = "3";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;   
@@ -2122,26 +2150,20 @@ GrayOoze.prototype.autoHitPrerequisitesMet = function(opponent)
     return false;
 };
 
-
-
-
-
 //--------------------------------------------
 //---------------Green Slime------------------
 //--------------------------------------------
 
-//{ description: "Immune to all damage except fire and cold" },
 // burning the slime will do half damage to it and half to anyone being disolved by it 
-//{ description: "Eats everything but stone" },
-//{ description: "Sticks to flesh , turning the flesh into green slime. Can only be removed by Cure Disease spell" }];
 
 function GreenSlime()
  {
     this.name = "Green Slime";
     this.race = "slime";
     this.isHitAutomaticallyByOpponent = true;
-    this.armourClass = "?????";                 // "can always be hit";
+    this.armourClass = 9;          // added an armour class though one not need as they monster is always hit             
     this.hitDice = "2";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;   
@@ -2155,28 +2177,20 @@ GreenSlime.prototype.Constructor = GreenSlime;
 GreenSlime.prototype.movement = 3;
 GreenSlime.prototype.getMorale = function() { return 12; };
 GreenSlime.prototype.getTreasureType = function() { return []; };
+// Immune to all damage except fire and cold
+GreenSlime.prototype.canOnlyBeDamagedBy = [immunityToDamageTypes.fireDamage, immunityToDamageTypes.coldDamage];
 GreenSlime.getNumberAppearing = function() { return 1; };
 GreenSlime.prototype.specialDamage = function(opponent)
 {
-    //disolves wood and metal in 6 rounds 
-    //after armour disolved the opponent will be absorbed in 1 to 4 rounds
+    // Eats everything but stone - disolves wood and metal in 6 rounds 
+    // Sticks to flesh,  turning the flesh into green slime. 
+    // after armour disolved the opponent will be absorbed in 1 to 4 rounds
+    // Can only be removed by Cure Disease spell
 };
-
-
-
-
-
-
-
-
-
 
 //--------------------------------------------
 //-----------------Halfling-------------------
 //--------------------------------------------
-
-//in a village there will be a leader level 2-7 - 2hitDice
-//a leader will have a militia 5-20 halflings all 2 hitdice
 
 function Halfling()
  {
@@ -2187,23 +2201,88 @@ function Halfling()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;   
-    this.movement = 90;
     this.attacks =  [{ attackType: "WeaponAttack", damageAmount: "1D6" }];
     this.saveAs = { class: characterType.Halfling, level: 1 };
-    this.morale = 7;
-    this.treasureType = "V";
     //  this.Alignment = Lawful;  
  }
 
 Halfling.prototype = new Monster();
 Halfling.prototype.Constructor = Halfling;
-Halfling.getNumberAppearing = function() { return dice.rollDice("3D6"); };
+Halfling.prototype.movement = 90;
+Halfling.prototype.getMorale = function() { return 7; };
+Halfling.prototype.getTreasureType = function()
+{
+    if(this.inWilderness)
+    {
+        return ["B"];
+    }
+    else
+    {
+        return ["V"];
+    }
+};
+Halfling.getNumberAppearing = function(inLair = false)
+{ 
+    if(inLair)
+    {
+        return dice.rollDice("5D8");
+    }
+    else
+    {
+        return dice.rollDice("3D6"); 
+    }
+};
+Halfling.getChieftainType = function() { return HalflingLeader; };
+Halfling.getChieftainBodyguardType = function() { return HalflingMilitia; };
+Halfling.chieftainAlive = false;
+Halfling.mayHaveChieftain = true;
+
+//--------------------------------------------
+//----------------HalflingLeader--------------
+//--------------------------------------------
+
+function HalflingLeader() 
+{
+    this.name = "Halfling Leader";
+    this.hitDice = dice.rollDice("1D6+1");
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D6" } ];
+    this.saveAs = { class: characterType.Halfling, level: parseInt(this.hitDice) }; 
+    this.chieftain = true;
+    //this.Alignment = [{ alignment = Neutral/Lawful, probability = 100 }];
+}
+
+HalflingLeader.prototype = new Halfling();
+HalflingLeader.prototype.Constructor = HalflingLeader;
+HalflingLeader.prototype.setChieftainDead = function() { Halfling.chieftainAlive = false; };
+HalflingLeader.numberOfBodyGuards = dice.rollDice("5D4");
+
+//--------------------------------------------
+//-----------HalflingMilitia------------------
+//--------------------------------------------
+
+function HalflingMilitia() 
+{
+    this.name = "Halfling Militia";
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D6" } ];
+    this.saveAs = { class: characterType.Halfling, level: parseInt(this.hitDice) }; 
+    //this.Alignment = [{ alignment = Neutral/Lawful, probability = 100 }];
+}
+
+HalflingMilitia.prototype = new Halfling();
+HalflingMilitia.prototype.Constructor = HalflingMilitia;
 
 //--------------------------------------------
 //-------------------Harpy--------------------
 //--------------------------------------------
 
-//+2 to all saves
+// +2 to all their saving throws
 
 function Harpy()
  {
@@ -2211,23 +2290,35 @@ function Harpy()
     this.race = "?????";   //not sure 
     this.armourClass = 7; 
     this.hitDice = "3";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;   
-    this.movement = 60;
     this.attacks =  [{ attackType: "Claw", damageAmount: "1D4" },
                      { attackType: "Claw", damageAmount: "1D4" },
                      { attackType: "WeaponAttack", damageAmount: "1D6" },
                      { attackType: "Song", damageAmount: specialDamage } ];
     this.saveAs = { class: characterType.Halfling, level: 3 };
-    this.morale = 7;
-    this.treasureType = "C";
     //  this.Alignment = Chaotic;  
  }
 
 Harpy.prototype = new Monster();
 Harpy.prototype.Constructor = Harpy;
-Harpy.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+Harpy.prototype.movement = 60;
+Harpy.prototype.flyMovement = 150;
+Harpy.prototype.getMorale = function() { return 7; };
+Harpy.prototype.getTreasureType = function() { return ["C"]; };
+Harpy.getNumberAppearing = function(inLair = false)
+{ 
+    if(inLair)
+    {
+        return dice.rollDice("2D4");
+    }
+    else
+    {
+        return dice.rollDice("1D6"); 
+    }
+};
 Harpy.prototype.specialDamage = function(opponent)
 {
     if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.RodsStavesSpells, dice.rollDice("1D20")))
@@ -2240,9 +2331,9 @@ Harpy.prototype.specialDamage = function(opponent)
 //-------------------Hobgoblin----------------
 //--------------------------------------------
 
-// in their lair will be a king with 22hps 5hitdice +2 damage
-// he will have 1-4 body guards 4hitdice 3-18hps
-//with the king moral is 10
+// in their lair will be a king with 22hps 5 hitdice +2 damage
+// he will have 1-4 body guards 4 hitdice 3-18hps
+// with the king moral is 10
 
 function Hobgoblin()
  {
@@ -2253,111 +2344,327 @@ function Hobgoblin()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 90;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" }];
     this.saveAs = { class: characterType.Fighter, level: 1 };
-    this.morale = 8;
-    this.treasureType = "D";
     //  this.Alignment = Chaotic; 
 }
 
 Hobgoblin.prototype = new Monster();
 Hobgoblin.prototype.Constructor = Hobgoblin;
-Hobgoblin.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+Hobgoblin.prototype.movement = 90;
+Hobgoblin.prototype.getMorale = function() 
+{
+    if(Hobgoblin.chieftainAlivereturn)
+    {
+        return 10;
+    }
+    else
+    {
+        return 8;
+    }
+};
+Hobgoblin.prototype.getTreasureType = function() { return ["D"]; };
+Hobgoblin.getNumberAppearing = function(inLair = false) 
+{ 
+    if(inLair)
+    {
+       return dice.rollDice("4D6");
+    }
+    else
+    {
+        return dice.rollDice("1D6"); 
+    }
+};
+Hobgoblin.getChieftainType = function() { return HobgoblinKing; };
+Hobgoblin.getChieftainBodyguardType = function() { return HobgoblinKingBodyguard; };
+Hobgoblin.chieftainAlive = false;
+Hobgoblin.mayHaveChieftain = true;
+
+//--------------------------------------------
+//----------------HobgoblinKing---------------
+//--------------------------------------------
+
+function HobgoblinKing() 
+{
+    this.name = "Hobgoblin King";
+    this.hitDice = "5";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8+2" } ];
+    this.saveAs = { class: characterType.Fighter, level: parseInt(this.hitDice) }; 
+    this.chieftain = true;
+}
+
+HobgoblinKing.prototype = new Hobgoblin();
+HobgoblinKing.prototype.Constructor = HobgoblinKing;
+HobgoblinKing.prototype.setChieftainDead = function() { Hobgoblin.chieftainAlive = false; };
+HobgoblinKing.numberOfBodyGuards = dice.rollDice("1D4");
+
+//--------------------------------------------
+//-----------HobgoblinKingBodyguards----------
+//--------------------------------------------
+
+function HobgoblinKingBodyguard() 
+{
+    this.name = "Hobgoblin King Bodyguard";
+    this.hitDice = "4";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" } ];
+    this.saveAs = { class: characterType.Fighter, level: parseInt(this.hitDice) }; 
+}
+
+HobgoblinKingBodyguard.prototype = new Hobgoblin();
+HobgoblinKingBodyguard.prototype.Constructor = HobgoblinKingBodyguard;
 
 //--------------------------------------------
 //-------------------Insect Swarm-------------
 //--------------------------------------------
 
-//no damaged by weapons but waving them may ward off the swarm
-//touchs waved do 1-4 damage to the swarm
-//sleep will affect the full swarm
+// no damaged by weapons but waving them may ward off the swarm
+// touchs waved do 1-4 damage to the swarm
+// sleep will affect the full swarm
 
 function InsectSwarm()
  {
     this.name = "Insect Swarm";
     this.race = "animal";
     this.armourClass = 7;
-    this.hitDice = "3";                //can be anything from 2-4
+    this.hitDice = "1D3+1";                         
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 30;
-    this.attacks = [{ attackType: "Swarm", damageAmount: "2" }];  //exact damage and always hits
+    this.attacks = [{ attackType: "Swarm", damageAmount: specialDamage }];  
     this.saveAs = { class: characterType.NormalMan, level: 0 };
-    this.morale = 11;
-    this.treasureType = "Nil";
     //  this.Alignment = Neutral; 
 }
 
 InsectSwarm.prototype = new Monster();
 InsectSwarm.prototype.Constructor = InsectSwarm;
+InsectSwarm.prototype.canAutoHit = true;
+InsectSwarm.prototype.movement = 30;
+InsectSwarm.prototype.flyMovement = 60;
+InsectSwarm.prototype.getMorale = function() { return 11; };
+InsectSwarm.prototype.getTreasureType = function() { []; };
 InsectSwarm.getNumberAppearing = function() { return 1; };
+InsectSwarm.prototype.autoHitPrerequisitesMet = function(opponent)
+{
+    return true;
+};
+InsectSwarm.prototype.specialDamage = function(opponent)
+{
+    // TODO: if attempting to ward off insects take half damage 
+    if(opponent.isArmourEquiped())
+    {
+        opponent.takeDamage(2);
+    }
+    else
+    {
+        opponent.takeDamage(4);
+    }
+};
 
 //--------------------------------------------
 //-------------------Killer Bee--------------
 //--------------------------------------------
+
+// TODO: will attack anyone with 30 of lair automatically on sight
+// TODO: honey in lair cures 1D4 damage
 
 function KillerBee()
  {
     this.name = "Killer Bee";
     this.race = "animal";
     this.armourClass = 7;
-    this.hitDice = "0.5";                //half a hit dice - 1D4 hps
+    this.hitDice = "0.5";               
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 150;
-    this.attacks = [{ attackType: "String", damageAmount: SpecialDamage }];  
+    this.attacks = [{ attackType: "String", damageAmount: specialDamage }];  
     this.saveAs = { class: characterType.Fighter, level: 1 };
-    this.morale = 9;
-    this.treasureType = "Nil";
     //  this.Alignment = Neutral; 
 }
 
 KillerBee.prototype = new Monster();
 KillerBee.prototype.Constructor = KillerBee;
-KillerBee.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+KillerBee.prototype.flyMovement = 150;
+KillerBee.prototype.getMorale = function() { return 9; };
+KillerBee.prototype.getTreasureType = function() { return []; };
+KillerBee.getNumberAppearing = function(inLair = false)
+{
+    if(inLair)
+    {
+        var number = dice.rollDice("5D6"); 
+        // always 10 bees with the queen
+        if(number < 10)
+        {
+            number = 10;
+        }
+        return number;
+    }
+    else
+    {
+        return dice.rollDice("1D6"); 
+    }
+};
 KillerBee.prototype.specialDamage = function(opponent)
 {
     opponent.takeDamage(dice.rollDice("1D3"));
-    this.isDead = true;   //bee dies when it stings 
+    
+    // after a bee strings it dies unless its the queen 
+    if(!this.chieftain)
+    {
+        this.isDead = true;   
+    }
+
     if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
     {
         opponent.isDead= true; 
     }
-    //Once strung the opponent will take 1 damage until the sting is removed which takes 1 turn
+    
+    //TODO: Once strung the opponent will take 1 damage until the sting is removed which takes 1 turn
 };
+KillerBee.getChieftainType = function() { return KillerBeeQueen; };
+KillerBee.chieftainAlive = false;
+KillerBee.mayHaveChieftain = true;
+
+//--------------------------------------------
+//----------------KillerBeeQueen--------------
+//--------------------------------------------
+
+function KillerBeeQueen() 
+{
+    this.name = "Kille rBee Queen";
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "String", damageAmount: SpecialDamage }]; 
+    this.saveAs = { class: characterType.Fighter, level: parseInt(this.hitDice) }; 
+    this.chieftain = true;
+}
+
+KillerBeeQueen.prototype = new KillerBee();
+KillerBeeQueen.prototype.Constructor = KillerBeeQueen;
+KillerBeeQueen.prototype.setChieftainDead = function() { KillerBee.chieftainAlive = false; };
+KillerBeeQueen.prototype.numberOfBodyGuards = 0;
 
 //--------------------------------------------
 //---------------------Kobold-----------------
 //--------------------------------------------
 
-//    this.specialAbilities = [{ Name = "infravision" }];
-// chieftain has 9hps and 2hitdice
-// he has 1D6 bodyGuards with 6hps and hitdice 1+1
-//moral is 8 with a chieftain 
+// TODO: infravision up to 90 distance
+// TODO: they hate gnomes and will attack them on sight
 
 function Kobold()
 {
     this.name = "Kobold";
     this.race = "humanoid";
     this.armourClass = 7;
-    this.hitDice = "0.5";            //half hit dice - hps 1D4
+    this.hitDice = "0.5";            
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;   
-    this.movement = 60;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D4" }];
     this.saveAs = { class: characterType.NormalMan, level: 0 };
-    this.morale = 6;
-    this.treasureType = "P";
     //this.Alignment = Chaotic;
 }
 
 Kobold.prototype = new Monster();
 Kobold.prototype.Constructor = Kobold;
-Kobold.getNumberAppearing = function() { return dice.rollDice("4D4"); };
+Kobold.prototype.movement = 60;
+Kobold.prototype.getMorale = function() 
+{
+    if(this.chieftainAlive)
+    {
+        return 8;
+    }
+    else
+    {
+        return 6; 
+    }
+};
+Kobold.prototype.getTreasureType = function()
+{ 
+    if(this.inWilderness)
+    {
+        return ["J"]; 
+    }
+    else
+    {
+        return ["P"];
+    }
+};
+Kobold.getNumberAppearing = function(inLair = false) 
+{ 
+    if(inLair)
+    {
+        return dice.rollDice("6D10");   
+    }
+    else
+    {
+        return dice.rollDice("4D4"); 
+    }
+};   
+        
+Kobold.getChieftainType = function() { return KoboldKing; };
+Kobold.getChieftainBodyguardType = function() { return KoboldKingBodyguard; };
+Kobold.chieftainAlive = false;
+Kobold.mayHaveChieftain = true;
+
+//--------------------------------------------
+//----------------KoboldKing---------------
+//--------------------------------------------
+
+function KoboldKing() 
+{
+    this.name = "Kobold King";
+    this.hitDice = "2";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D4" } ];
+    this.saveAs = { class: characterType.NormalMan, level: parseInt(this.hitDice) }; 
+    this.chieftain = true;
+}
+
+KoboldKing.prototype = new Kobold();
+KoboldKing.prototype.Constructor = KoboldKing;
+KoboldKing.prototype.setChieftainDead = function() { Kobold.chieftainAlive = false; };
+KoboldKing.numberOfBodyGuards = dice.rollDice("1D6");
+
+//--------------------------------------------
+//-----------KoboldKingBodyguard--------------
+//--------------------------------------------
+
+function KoboldKingBodyguard() 
+{
+    this.name = "Kobold King Bodyguard";
+    this.hitDice = "1+1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D4" } ];
+    //TODO - it does not matter currently but a body guard is 1+1 but saves as level 1 
+    this.saveAs = { class: characterType.NormalMan, level: parseInt(this.hitDice) }; 
+}
+
+KoboldKingBodyguard.prototype = new Kobold();
+KoboldKingBodyguard.prototype.Constructor = KoboldKingBodyguard;
+
+
+
+
+
+
+
+
+
+
+
+
 
 //------------------------------------------
 //---       Living Statue Prototype      ---

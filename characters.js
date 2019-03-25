@@ -386,7 +386,7 @@ function Character()
 			}
 		}
 
-		var attackIsAHit = false
+		var attackIsAHit = false;
 
 		if(opponent.isAutomicallyHitByOpponent())
 		{
