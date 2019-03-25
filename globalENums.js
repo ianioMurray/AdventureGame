@@ -23,5 +23,9 @@ var charactersPrimeRequisite = {
 //immunityToDamageTypes 
 var immunityToDamageTypes = {
     magicalWeapon: "magicalWeapon",
-    silverWeapon: "silverWeapon"
+    silverWeapon: "silverWeapon",
+    fireDamage: "fireDamage",
+    coldDamage: "coldDamange",
+    electricityDamage: "electricityDamage",
+    normalWeapon: "normalWeapon"
 };

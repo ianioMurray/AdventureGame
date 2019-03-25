@@ -386,10 +386,18 @@ function Character()
 			}
 		}
 
-		var requiredToHit = this.roleRequiredToHit(opponent, weapon);
-		
-		var attackIsAHit = this.isAttackAHit(dice.rollDice("1D20"), requiredToHit);
-		
+		var attackIsAHit = false
+
+		if(opponent.isAutomicallyHitByOpponent())
+		{
+			attackIsAHit = true;
+		}
+		else
+		{
+			var requiredToHit = this.roleRequiredToHit(opponent, weapon);
+			attackIsAHit = this.isAttackAHit(dice.rollDice("1D20"), requiredToHit);
+		}
+
 		if(attackIsAHit)
 		{
 			if(!opponent.isImmuneToDamageType(weapon))

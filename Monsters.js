@@ -22,6 +22,7 @@ function Monster()
     this.canOnlyBeDamagedBy = [];
     this.canAutoHit = false;
     this.previouslyHit = [];
+    this.isHitAutomaticallyByOpponent = false;
 
     this.attack = function(opponent)
     {
@@ -31,7 +32,7 @@ function Monster()
         {
             var ToHit = requiredToHit.getToHit(this, opponent);
 
-            if(this.automaticallyHits(opponent) || dice.rollDice("1D20") >= ToHit)
+            if(this.automaticallyHitsOpponent(opponent) || dice.rollDice("1D20") >= ToHit)
             {
                 var damage = this.attacks[i].damage;
 
@@ -182,7 +183,7 @@ function Monster()
         return true;
     };
 
-    this.automaticallyHits = function(opponent)
+    this.automaticallyHitsOpponent = function(opponent)
     {
         if(this.canAutoHit)
         {
@@ -190,6 +191,15 @@ function Monster()
             {
                 return true;
             }
+        }
+        return false;
+    };
+
+    this.isAutomicallyHitByOpponent = function()
+    {
+        if(this.isHitAutomaticallyByOpponent)
+        {
+            return true;
         }
         return false;
     };
@@ -2116,10 +2126,6 @@ GrayOoze.prototype.autoHitPrerequisitesMet = function(opponent)
 
 
 
-
-
-
-
 //--------------------------------------------
 //---------------Green Slime------------------
 //--------------------------------------------
@@ -2127,33 +2133,43 @@ GrayOoze.prototype.autoHitPrerequisitesMet = function(opponent)
 //{ description: "Immune to all damage except fire and cold" },
 // burning the slime will do half damage to it and half to anyone being disolved by it 
 //{ description: "Eats everything but stone" },
-//{ description: "Sticks to flesh , turning the flesh into green slime. Can only be remeved by Cure Disease spell" }];
+//{ description: "Sticks to flesh , turning the flesh into green slime. Can only be removed by Cure Disease spell" }];
 
 function GreenSlime()
  {
     this.name = "Green Slime";
     this.race = "slime";
-    this.armourClass = "?????"; // "can always be hit";
+    this.isHitAutomaticallyByOpponent = true;
+    this.armourClass = "?????";                 // "can always be hit";
     this.hitDice = "2";
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;   
-    this.movement = 3;
     this.attacks =  [{ attackType: "disolve", damageAmount: specialDamage }];
     this.saveAs = { class: characterType.Fighter, level: 1 };
-    this.morale = 12;
-    this.treasureType = "Nil";
     //  this.Alignment = Neutral;  
  }
 
 GreenSlime.prototype = new Monster();
 GreenSlime.prototype.Constructor = GreenSlime;
+GreenSlime.prototype.movement = 3;
+GreenSlime.prototype.getMorale = function() { return 12; };
+GreenSlime.prototype.getTreasureType = function() { return []; };
 GreenSlime.getNumberAppearing = function() { return 1; };
 GreenSlime.prototype.specialDamage = function(opponent)
 {
     //disolves wood and metal in 6 rounds 
     //after armour disolved the opponent will be absorbed in 1 to 4 rounds
 };
+
+
+
+
+
+
+
+
+
 
 //--------------------------------------------
 //-----------------Halfling-------------------

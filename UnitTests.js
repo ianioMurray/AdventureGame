@@ -334,9 +334,15 @@ function Tests()
 		this.validate(expected, actual, message);
 	};
 
-	this.checkAutomaticallyHits = function(monster, expected, actual, testName)
+	this.checkAutomaticallyHitsOpponent = function(monster, expected, actual, testName)
 	{
 		var message = " FAIL " + testName + ": " +  monster.name + " will auto hit - " + actual + " but " + expected + " was expected";
+		this.validate(expected, actual, message);
+	};
+
+	this.checkIsAutomicallyHitByOpponent = function(monster, expected, actual, testName)
+	{
+		var message = " FAIL " + testName + ": " +  monster.name + " will be automatically hit - " + actual + " but " + expected + " was expected";
 		this.validate(expected, actual, message);
 	};
 
@@ -452,7 +458,8 @@ function runMonsterUnitTests()
 	testGetLevel();
 	testGetMorale();
 	testIsImmuneToDamageType();
-	testAutomaticallyHits();
+	testAutomaticallyHitsOpponent();
+	testIsAutomicallyHitByOpponent();
 }
 
 //-----------------------------------------------
@@ -2310,29 +2317,39 @@ function testIsImmuneToDamageType()
 	tests.checkIsImmuneToDamageType(gargoyle, magicalSword, false, gargoyle.isImmuneToDamageType(magicalSword), testIsImmuneToDamageType.name);
 }
 
-function testAutomaticallyHits()
+function testAutomaticallyHitsOpponent()
 {
 	var gelatinousCube = new GelatinousCube();
 	var fighter = new Fighter(fighterTestParams);
 
 	//will NOT auto hit opponent that is not paralysised or that has not been hit before
-	tests.checkAutomaticallyHits(gelatinousCube, false, gelatinousCube.automaticallyHits(fighter), testAutomaticallyHits.name);
+	tests.checkAutomaticallyHitsOpponent(gelatinousCube, false, gelatinousCube.automaticallyHitsOpponent(fighter), testAutomaticallyHitsOpponent.name);
 
 	//will NOT auto hit opponent - fighter previously hit but not paralysised 
 	gelatinousCube.previouslyHit = [fighter];
 	fighter.isParalysised = false;
-	tests.checkAutomaticallyHits(gelatinousCube, false, gelatinousCube.automaticallyHits(fighter), testAutomaticallyHits.name);	
+	tests.checkAutomaticallyHitsOpponent(gelatinousCube, false, gelatinousCube.automaticallyHitsOpponent(fighter), testAutomaticallyHitsOpponent.name);	
 
 	//will NOT auto hit opponent - fighter Not previously hit but is paralysised 
 	gelatinousCube.previouslyHit = [];
 	fighter.isParalysised = true;
-	tests.checkAutomaticallyHits(gelatinousCube, false, gelatinousCube.automaticallyHits(fighter), testAutomaticallyHits.name);	
+	tests.checkAutomaticallyHitsOpponent(gelatinousCube, false, gelatinousCube.automaticallyHitsOpponent(fighter), testAutomaticallyHitsOpponent.name);	
 
 	//will auto hit opponent - fighter  previously hit and is paralysised 
 	gelatinousCube.previouslyHit = [fighter];
 	fighter.isParalysised = true;
-	tests.checkAutomaticallyHits(gelatinousCube, true, gelatinousCube.automaticallyHits(fighter), testAutomaticallyHits.name);	
+	tests.checkAutomaticallyHitsOpponent(gelatinousCube, true, gelatinousCube.automaticallyHitsOpponent(fighter), testAutomaticallyHitsOpponent.name);	
 }
+
+function testIsAutomicallyHitByOpponent()
+{
+	var greenSlime = new GreenSlime();
+	var gnoll = new Gnoll();
+
+	tests.checkIsAutomicallyHitByOpponent(greenSlime, true, greenSlime.isAutomicallyHitByOpponent(), testIsAutomicallyHitByOpponent.name);
+	tests.checkIsAutomicallyHitByOpponent(gnoll, false, gnoll.isAutomicallyHitByOpponent(), testIsAutomicallyHitByOpponent.name);
+}
+
 
 //--------------------------------------------------------------------------------------------------------------
 
