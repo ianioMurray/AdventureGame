@@ -15,6 +15,7 @@ function Monster()
     this.inWilderness = false;
     this.movement = 0;
     this.flyMovement = 0;
+    this.swimMovement = 0;
     this.hitDiceStars = 0;
     this.canTalk = 0;
     this.isSleep = 0;
@@ -103,6 +104,14 @@ function Monster()
         {
             return 6;
         }
+        else if (parsedHitDice.hitDice === "1" && this.name === "Medium")
+        {
+            return dice.rollDice("1D4");
+        }
+        else if (parsedHitDice.hitDice === "3" && this.name === "Medium Master")
+        {
+            return dice.rollDice("3D4");
+        }
         else if (parsedHitDice.hitDice === "2" && this.name === "Gnome Leader")
         {
             return 11;
@@ -138,6 +147,10 @@ function Monster()
         else if (parsedHitDice.hitDice === "5" && this.name === "Hobgoblin King")
         {
             return 22;
+        }
+        else if (parsedHitDice.hitDice === "5" && this.name === "Werewolf Leader")
+        {
+            return 30;
         }
         else 
         {
@@ -238,7 +251,7 @@ Monster.createMonsters = function(typeOfMonster, numberAppearing, inLair = false
 
     if(typeOfMonster.mayHaveLeader)
     {
-        if(numberAppearing >= typeOfMonster.numberRequiredToHaveLeader || leaderPresent)
+        if(typeOfMonster.isLeaderPresent(numberAppearing) || leaderPresent)
         {
             try
             {
@@ -308,7 +321,14 @@ Acolyte.prototype.firstLevelSpells = 0;
 Acolyte.getNumberAppearing = function() { return dice.rollDice("1D8"); };
 Acolyte.leaderAlive = false;
 Acolyte.mayHaveLeader = true;
-Acolyte.numberRequiredToHaveLeader = 4;
+Acolyte.isLeaderPresent = function(noAppearing)
+{
+    if(noAppearing >= 4)
+    {
+        return true;
+    }
+    return false;
+};
 Acolyte.getLeaderType = function() { return AcolyteLeader; };
 
 //--------------------------------------------
@@ -436,13 +456,18 @@ Bandit.getNumberAppearing = function(inLair = false)
 Bandit.leaderAlive = false;
 Bandit.mayHaveLeader = true;                         
 Bandit.getLeaderType = function() { return BanditLeader; };
+Bandit.isLeaderPresent = function(noAppearing)
+{
+    // a leader is never automatically generated - they are only present when requested via the createMonsters
+    return false;
+};
 
 //--------------------------------------------
 //-------------Bandit Leader------------------
 //--------------------------------------------
 
-// can be any class 
-//bandits will not have a leader unless one is set in the createMonsters function
+// TODO: can be any class 
+// TODO: bandits will not have a leader unless one is set in the createMonsters function
 
 function BanditLeader()
  {
@@ -1510,7 +1535,14 @@ Dwarf.getNumberAppearing = function(inLair = false)
 Dwarf.getLeaderType = function() { return DwarfLeader; };
 Dwarf.leaderAlive = false;
 Dwarf.mayHaveLeader = true;
-Dwarf.numberRequiredToHaveLeader = 20;
+Dwarf.isLeaderPresent = function(noAppearing)
+{
+    if(noAppearing >= 20)
+    {
+        return true;
+    }
+    return false;
+};
 
 //--------------------------------------------
 //-------------------DwarfLeader--------------
@@ -1585,7 +1617,14 @@ Elf.getNumberAppearing = function(inLair = false)
 Elf.getLeaderType = function() { return ElfLeader; };
 Elf.leaderAlive = false;
 Elf.mayHaveLeader = true;
-Elf.numberRequiredToHaveLeader = 15;
+Elf.isLeaderPresent = function(noAppearing)
+{
+    if(noAppearing >= 15)
+    {
+        return true;
+    }
+    return false;
+};
 
 //--------------------------------------------
 //-------------------ElfLeader--------------
@@ -1845,7 +1884,14 @@ function Gnoll()
 Gnoll.getLeaderType = function() { return GnollLeader; };
 Gnoll.leaderAlive = false;
 Gnoll.mayHaveLeader = true;
-Gnoll.numberRequiredToHaveLeader = 20;
+Gnoll.isLeaderPresent = function(noAppearing)
+{
+    if(noAppearing >= 20)
+    {
+        return true;
+    }
+    return false;
+};
 
 //--------------------------------------------
 //--------------------GnollLeader-------------
@@ -1918,7 +1964,14 @@ Gnome.getChieftainType = function() { return GnomeChieftain; };
 Gnome.getChieftainBodyguardType = function() { return GnomeChieftainBodyGuard; };
 Gnome.leaderAlive = false;
 Gnome.mayHaveLeader = true;
-Gnome.numberRequiredToHaveLeader = 20;
+Gnome.isLeaderPresent = function(noAppearing)
+{
+    if(noAppearing >= 20)
+    {
+        return true;
+    }
+    return false;
+};
 Gnome.chieftainAlive = false;
 Gnome.mayHaveChieftain = true;
 
@@ -2654,23 +2707,11 @@ function KoboldKingBodyguard()
 KoboldKingBodyguard.prototype = new Kobold();
 KoboldKingBodyguard.prototype.Constructor = KoboldKingBodyguard;
 
-
-
-
-
-
-
-
-
-
-
-
-
 //------------------------------------------
 //---       Living Statue Prototype      ---
 //------------------------------------------
 
-//immune to sleep 
+// TODO: immune to sleep 
 
 function LivingStatue()
 {
@@ -2686,53 +2727,61 @@ LivingStatue.prototype.Constructor = LivingStatue;
 function CrystalStatue()
  {
     this.name = "Crystal Living Statue";
-    this.race = "??????";                     //not sure 
+    this.race = "living statue";                    
     this.armourClass = 4;
     this.hitDice = "3";
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 90;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D6" },
                     { attackType: "WeaponAttack", damageAmount: "1D6" } ];
     this.saveAs = { class: characterType.Fighter, level: 3 };
-    this.morale = 11;
-    this.treasureType = "Nil";
     //  this.Alignment = Lawful; 
 }
 
 CrystalStatue.prototype = new LivingStatue();
 CrystalStatue.prototype.Constructor = CrystalStatue;
-CrystalStatue.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+CrystalStatue.prototype.movement = 90;
+CrystalStatue.prototype.getMorale = function() { return 11; };
+CrystalStatue.prototype.getTreasureType = function() { []; };
+CrystalStatue.getNumberAppearing = function() 
+{
+    //always this even in lair
+    return dice.rollDice("1D6"); 
+};
 
 //--------------------------------------------
 //-------------------Iron Statue--------------
 //--------------------------------------------
 
-//if hit and the characters weapon is not magical their weapon will become stuck in the statue
-//the weapon can only be removed once it is dead
+//TODO: if hit and the characters weapon is not magical their weapon will become stuck in the statue
+//      the weapon can only be removed once it is dead
 
 function IronStatue()
  {
     this.name = "Iron Living Statue";
-    this.race = "??????";                     //not sure 
+    this.race = "living statue";                     
     this.armourClass = 2;
     this.hitDice = "4";
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 30;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D8" },
                     { attackType: "WeaponAttack", damageAmount: "1D8" } ];
     this.saveAs = { class: characterType.Fighter, level: 4 };
-    this.morale = 11;
-    this.treasureType = "Nil";
     //  this.Alignment = Neutral; 
 }
 
 IronStatue.prototype = new LivingStatue();
 IronStatue.prototype.Constructor = IronStatue;
-IronStatue.getNumberAppearing = function() { return dice.rollDice("1D4"); };
+IronStatue.prototype.movement = 30;
+IronStatue.prototype.getMorale = function() { return 11; };
+IronStatue.prototype.getTreasureType = function() { []; };
+IronStatue.getNumberAppearing = function() 
+{
+    //this is correct even in lair
+    return dice.rollDice("1D4"); 
+};
 
 //--------------------------------------------
 //-------------------Rock Statue--------------
@@ -2741,24 +2790,31 @@ IronStatue.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 function RockStatue()
  {
     this.name = "Rock Living Statue";
-    this.race = "??????";                     //not sure 
+    this.race = "living statue";                     
     this.armourClass = 4;
     this.hitDice = "5";
+    this.hitDiceStars = 2;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 60;
+
     this.attacks = [{ attackType: "Magma", damageAmount: "2D6" },
                     { attackType: "Magma", damageAmount: "2D6" } ];
     this.saveAs = { class: characterType.Fighter, level: 5 };
-    this.morale = 11;
-    this.treasureType = "Nil";
+
     //  this.Alignment = Chaotic; 
 }
 
 RockStatue.prototype = new LivingStatue();
 RockStatue.prototype.Constructor = RockStatue;
-RockStatue.getNumberAppearing = function() { return dice.rollDice("1D3"); };
+RockStatue.prototype.movement = 60;
+RockStatue.prototype.getMorale = function() { return 11; };
+RockStatue.prototype.getTreasureType = function() { []; };
+RockStatue.getNumberAppearing = function() 
+{ 
+    //this is correct even in lair
+    return dice.rollDice("1D3"); 
+};
 
 //------------------------------------------
 //---       Lizard Giant Prototype      ---
@@ -2784,17 +2840,27 @@ function Gecko()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
     this.attacks = [{ attackType: "Bite", damageAmount: "1D8" } ];
     this.saveAs = { class: characterType.Fighter, level: 2 };
-    this.morale = 7;
-    this.treasureType = "U";
     //  this.Alignment = Neutral; 
 }
 
 Gecko.prototype = new LizardGiant();
 Gecko.prototype.Constructor = Gecko;
-Gecko.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+Gecko.prototype.movement = 120;
+Gecko.prototype.getMorale = function() { return 7; };
+Gecko.prototype.getTreasureType = function() { return ["U"]; };
+Gecko.getNumberAppearing = function(inLair = false) 
+{
+    if(inLair)
+    {
+        return dice.rollDice("1D10");
+    }
+    else
+    {
+        return dice.rollDice("1D6"); 
+    }
+};
 
 //--------------------------------------------
 //-------------------Draco--------------------
@@ -2809,24 +2875,35 @@ function Draco()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
     this.attacks = [{ attackType: "Bite", damageAmount: "1D10" } ];
     this.saveAs = { class: characterType.Fighter, level: 3 };
-    this.morale = 7;
-    this.treasureType = "U";
     //  this.Alignment = Neutral; 
 }
 
 Draco.prototype = new LizardGiant();
 Draco.prototype.Constructor = Draco;
-Draco.getNumberAppearing = function() { return dice.rollDice("1D4"); };
+Draco.prototype.movement = 120;
+Draco.prototype.flyMovement = 210;
+Draco.prototype.getMorale = function() { return 7; };
+Draco.prototype.getTreasureType = function() { return ["U"]; };
+Draco.getNumberAppearing = function(inLair = false)
+{ 
+    if(inLair)
+    {
+        return dice.rollDice("1D8");
+    }
+    else
+    {
+        return dice.rollDice("1D4"); 
+    }
+};
 
 //--------------------------------------------
 //--------------Horned Chameleon--------------
 //--------------------------------------------
 
-//surprises on 1-5 on 1D6.  
-//horn can used to do 1D6 damage OR to knock another character over -  this does no damage but the character cannot attack for a turn
+// TODO: Can fire its tongue at opponent - with a successful hit it draws opponent to it and 
+//       automatically bites them (this might be covered already and might not need any change)
 
 function HornedChameleon()
  {
@@ -2834,25 +2911,57 @@ function HornedChameleon()
     this.race = "animal";                    
     this.armourClass = 2;
     this.hitDice = "5";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
     this.attacks = [{ attackType: "Bite", damageAmount: "2D4" },
-                    { attackType: "Horn", damageAmount: "1D6" } ];
+                    { attackType: "Horn", damageAmount: "1D6" },
+                    { attackType: "Tail", damageAmount: specialDamage } ];
     this.saveAs = { class: characterType.Fighter, level: 3 };
-    this.morale = 7;
-    this.treasureType = "U";
     //  this.Alignment = Neutral; 
 }
 
 HornedChameleon.prototype = new LizardGiant();
 HornedChameleon.prototype.Constructor = HornedChameleon;
-HornedChameleon.getNumberAppearing = function() { return dice.rollDice("1D3"); };
+HornedChameleon.prototype.movement = 120;
+HornedChameleon.prototype.getMorale = function() { return 7; };
+HornedChameleon.prototype.getTreasureType = function() { return ["U"]; };
+HornedChameleon.getNumberAppearing = function(inLair = false)
+{
+    if(inLair)
+    {
+        return dice.rollDice("1D6");
+    }
+    else
+    {
+        return dice.rollDice("1D3"); 
+    }
+};
+HornedChameleon.prototype.surpriseOpponent= function(diceResult)
+{
+    //Horned Chameleon surprise on a 1-5
+    if(diceResult <= 5)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+};
+HornedChameleon.prototype.specialDamage = function(opponent)
+{
+    // TODO: this is used against any opponent the lizard is not attacking
+    opponent.isKnockedDown = true;
+    // TODO: knocked down opponent cannot attack this turn 
+};
 
 //--------------------------------------------
 //-----------------Tuatara--------------------
 //--------------------------------------------
+
+// TODO: can see in the dark up to 90
 
 function Tuatara()
  {
@@ -2863,26 +2972,35 @@ function Tuatara()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
     this.attacks = [{ attackType: "Claw", damageAmount: "1D4" },
                     { attackType: "Claw", damageAmount: "1D4" },
                     { attackType: "Bite", damageAmount: "2D6" } ];
     this.saveAs = { class: characterType.Fighter, level: 4 };
-    this.morale = 6;
-    this.treasureType = "V";
     //  this.Alignment = Neutral; 
 }
 
 Tuatara.prototype = new LizardGiant();
 Tuatara.prototype.Constructor = Tuatara;
-Tuatara.getNumberAppearing = function() { return dice.rollDice("1D2"); };
+Tuatara.prototype.movement = 90;
+Tuatara.prototype.getMmorale = function() { return 6; };
+Tuatara.prototype.getTreasureType = function() { return ["V"]; };
+Tuatara.getNumberAppearing = function(inLair = false) 
+{
+    if(inLair)
+    {
+        return dice.rollDice("1D4");
+    }
+    else
+    {
+        return dice.rollDice("1D2"); 
+    }
+};
 
 //--------------------------------------------
 //-----------------Lizard Man-----------------
 //--------------------------------------------
 
-//    this.movement = [{ movementType=Ground, movementRate = 60 }, { movementType=Water, movementRate = 120 }];
-//    this.specialAbilities = [{ description = "Semi-Intelligent" }];
+// Semi-Intelligent
 
 function LizardMan()
  {
@@ -2893,25 +3011,36 @@ function LizardMan()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 60;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1d6+1" }];
     this.saveAs = { class: characterType.Fighter, level: 2 };
-    this.morale = 12;
-    this.treasureType = "D";
     //  this.Alignment = Neutral; 
  }
 
  LizardMan.prototype = new Monster();
  LizardMan.prototype.Constructor = LizardMan;
- LizardMan.getNumberAppearing = function() { return dice.rollDice("2D4"); };
+ LizardMan.prototype.movement = 60;
+ LizardMan.prototype.swimMovement = 120;
+ LizardMan.prototype.getMorale = function() { return 12; };
+ LizardMan.prototype.getTreasureType = function() { return ["D"]; };
+ LizardMan.getNumberAppearing = function(inLair = false)
+ { 
+    if(inLair)
+    {
+        return dice.rollDice("6D6");
+    }
+    else
+    {
+        return dice.rollDice("2D4"); 
+    }
+};
 
 //------------------------------------------
 //---      Lycanthrope Prototype      ---
 //------------------------------------------
 
-// Immune to NormalWeapons in were - form.  Can only be damaged by magic, silver weapons or magic weapons 
-// if hit by Wolfsbane a lycanthrope must save vs poison or run away - wolfsbane can be swung or thrown like a normal weapon
-// TransmitLycanthropy - any character that losses more than 50% health to a lycanthrope will become one in 2 - 24 days" }];
+// TODO: if hit by Wolfsbane a lycanthrope must save vs poison or run away - wolfsbane can be swung or thrown like a normal weapon
+// TODO: Transmit Lycanthropy - any character that losses more than 50% health to a lycanthrope will become one in 2 - 24 days
+// TODO: they can be in human or wereform (in human form different AC and damage immunity does not apply)
 
 function Lycanthrope()
 {   
@@ -2919,13 +3048,16 @@ function Lycanthrope()
 
 Lycanthrope.prototype = new Monster();
 Lycanthrope.prototype.Constructor = Lycanthrope;
+// TODO: immunity to damage types only applies in wereform
+// TODO: they can be damaged by spells  
+Lycanthrope.prototype.canOnlyBeDamagedBy = [immunityToDamageTypes.magicalWeapon,
+                                            immunityToDamageTypes.silverWeapon];
 
 //--------------------------------------------
 //-----------------Wererat--------------------
 //--------------------------------------------
 
-//ambush on 1-4 on a 1D6 dice 
-//this.specialAbillities.add({ description = "Summon Gaint Rats 1D2 arriving in 1D4 turns" });
+// TODO: Summon 1D2 Gaint Rats who arrive in 1D4 turns
 
 function Wererat()
  {
@@ -2933,27 +3065,49 @@ function Wererat()
     this.race = "lycanthrope";
     this.armourClass = 7;
     this.hitDice = "3";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
     this.attacks = [{ attackType: "Bite", damageAmount: "1D4" }];
     this.saveAs = { class: characterType.Fighter, level: 3 };
-    this.morale = 8;
-    this.treasureType = "C";
     //  this.Alignment = Chaotic;
  }
 
  Wererat.prototype = new Lycanthrope();
  Wererat.prototype.Constructor = Wererat;
- Wererat.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+ Wererat.prototype.movement = 120;
+ Wererat.prototype.getMmorale = function() { return 8; };
+ Wererat.prototype.getTreasureType = function() { return ["C"]; };
+ Wererat.getNumberAppearing = function(inLair = false)
+ { 
+    if(inLair)
+    {
+        return dice.rollDice("2D8");
+    }
+    else
+    {
+        return dice.rollDice("1D8"); 
+    }
+};
+Wererat.prototype.surpriseOpponent= function(diceResult)
+{
+    //Wererat surprise on a 1-4
+    if(diceResult <= 4)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+};
 
 //--------------------------------------------
 //-----------------Werewolf-------------------
 //--------------------------------------------
 
-//this.specialAbillities.add({ description = "Summon Wolves 1D2 arriving in 1D4 turns" });
-//any group of more than 5 will have a leader 30Hps, 5HitDice, +2 damage
+// TODO: Summon 1D2 normal wolves who arrive in 1D4 turns
 
  function Werewolf()
   {
@@ -2961,27 +3115,71 @@ function Wererat()
     this.race = "lycanthrope";
     this.armourClass = 5;
     this.hitDice = "4";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 180;
     this.attacks = [{ attackType: "Bite", damageAmount: "2D4" }];
     this.saveAs = { class: characterType.Fighter, level: 4 };
-    this.morale = 8;
-    this.treasureType = "C";
     //  this.Alignment = Chaotic;
  }
 
  Werewolf.prototype = new Lycanthrope();
  Werewolf.prototype.Constructor = Werewolf;
- Werewolf.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+ Werewolf.prototype.movement = 180;
+ Werewolf.prototype.getMorale = function() { return 8; };
+ Werewolf.prototype.getTreasureType = function() { return ["C"]; };
+ Werewolf.getNumberAppearing = function(inLair = false)
+ {
+    if(inLair)
+    {
+        return dice.rollDice("2D6");
+    }
+    else{
+        return dice.rollDice("1D6"); 
+    }
+};
+Werewolf.getLeaderType = function() { return WerewolfLeader; };
+Werewolf.leaderAlive = false;
+Werewolf.mayHaveLeader = true;
+Werewolf.isLeaderPresent = function(noAppearing)
+{
+    if(noAppearing >= 5)
+    {
+        return true;
+    }
+    return false;
+};
+
+//--------------------------------------------
+//--------------------WerewolfLeader-------------
+//--------------------------------------------
+
+//Werewolf Leader appears when there are 5 or more werewolves
+
+function WerewolfLeader() {
+    this.name = "Werewolf Leader";
+    this.hitDice = "5";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "2D4+2" } ];
+    this.saveAs = { class: characterType.Fighter, level: parseInt(this.hitDice) }; 
+    this.leader = true;
+    //  this.Alignment = Chaotic;
+}
+
+WerewolfLeader.prototype = new Werewolf();
+WerewolfLeader.prototype.Constructor = WerewolfLeader;
+WerewolfLeader.prototype.setLeaderDead = function() { Werewolf.leaderAlive = false; };
 
 //--------------------------------------------
 //-----------------Wereboar-------------------
 //--------------------------------------------
 
-//this.specialAbillities.add({ description = "Summon boars 1D2 arriving in 1D4 turns" });
-// in human form they get +2 damage
+// TODO: semi intelligent
+// TODO: Summon 1D2 normal boars who arrive in 1D4 turns
+// TODO: in human form they get +2 damage and will fight to the death 
 
  function Wereboar()
   {
@@ -2989,27 +3187,37 @@ function Wererat()
     this.race = "lycanthrope";
     this.armourClass = 4;
     this.hitDice = "4+1";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 150;
-    this.attacks = [{ attackType: "Bite", damageAmount: "2D6" }];
+    this.attacks = [{ attackType: "Tusk", damageAmount: "2D6" }];
     this.saveAs = { class: characterType.Fighter, level: 4 };
-    this.morale = 9;
-    this.treasureType = "C";
     //  this.Alignment = Neutral;
 }
 
 Wereboar.prototype = new Lycanthrope();
 Wereboar.prototype.Constructor = Wereboar;
-Wereboar.getNumberAppearing = function() { return dice.rollDice("1D4"); };
+Wereboar.prototype.movement = 150;
+Wereboar.prototype.getMorale = function() { return 9; };
+Wereboar.prototype.getTreasureType = function() { return ["C"]; };
+Wereboar.getNumberAppearing = function(inLair = false)
+{ 
+    if(inLair)
+    {
+        return dice.rollDice("2D4");
+    }
+    else
+    {
+        return dice.rollDice("1D4"); 
+    }
+};
 
 //--------------------------------------------
 //-----------------Weretiger------------------
 //--------------------------------------------
 
-//ambush on 1-4 on a 1D6 dice 
-//this.specialAbillities.add({ description = "Summon Great Cat 1D2" arriving in 1D4 turns -- prefer tigers });
+// TODO: Summon 1D2 Great Cats who arrive in 1D4 turns -- prefer tigers 
 
 function Weretiger()
  {
@@ -3017,28 +3225,51 @@ function Weretiger()
     this.race = "lycanthrope";
     this.armourClass = 3;
     this.hitDice = "5";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 150;
     this.attacks = [{ attackType: "Claw", damageAmount: "1D6" },
                     { attackType: "Claw", damageAmount: "1D6" },      
                     { attackType: "Bite", damageAmount: "2D6" }];
     this.saveAs = { class: characterType.Fighter, level: 5 };
-    this.morale = 9;
-    this.treasureType = "C";
     //  this.Alignment = Neutral;
 }
 
 Weretiger.prototype = new Lycanthrope();
 Weretiger.prototype.Constructor = Weretiger;
-Weretiger.getNumberAppearing = function() { return dice.rollDice("1D4"); };
+Weretiger.prototype.movement = 150;
+Weretiger.prototype.getMorale = function() {return 9; };
+Weretiger.prototype.getTreasureType = function() { return ["C"]; };
+Weretiger.getNumberAppearing = function(inLair = false) 
+{
+    if(inLair)
+    {
+        return dice.rollDice("1D4");
+    }
+    else
+    {
+        return dice.rollDice("1D4"); 
+    }
+};
+Weretiger.prototype.surpriseOpponent= function(diceResult)
+{
+    //Weretiger surprise on a 1-4
+    if(diceResult <= 4)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+};
 
 //--------------------------------------------
 //-----------------Werebear-------------------
 //--------------------------------------------
 
-//this.specialAbillities.add({ description = "Summon bears 1D2 arriving in 1D4 turns" });
+// TODO: Summon 1D2 of any type of bears who arrive in 1D4 turns
 
 function Werebear()
  {
@@ -3046,22 +3277,27 @@ function Werebear()
     this.race = "lycanthrope";
     this.armourClass = 2;
     this.hitDice = "6";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
     this.attacks = [{ attackType: "Claw", damageAmount: specialDamage },
                     { attackType: "Claw", damageAmount: specialDamage },      
                     { attackType: "Bite", damageAmount: "2D8" }];
     this.saveAs = { class: characterType.Fighter, level: 6 };
-    this.morale = 10;
-    this.treasureType = "C";
     //  this.Alignment = Neutral;
 }
 
 Werebear.prototype = new Lycanthrope();
 Werebear.prototype.Constructor = Werebear;
-Werebear.getNumberAppearing = function() { return dice.rollDice("1D4"); };
+Werebear.prototype.movement = 120;
+Werebear.prototype.getMorale = function() { return 10; };
+Werebear.prototype.getTreasureType = function() { return ["C"]; };
+Werebear.getNumberAppearing = function() 
+{
+    // always 1D4 even in lair 
+    return dice.rollDice("1D4"); 
+};
 Werebear.prototype.clawDamage = function(opponent)
 {
     opponent.takeDamage(dice.rollDice("2D4"));
@@ -3077,65 +3313,141 @@ Werebear.prototype.clawDamage = function(opponent)
 //-----------------Medium---------------------
 //--------------------------------------------
 
-//50% that they will have a master 3rd level magic user  - spells 2 first level and 1 end level
-
 function Medium()
  {
     this.name = "Medium";
     this.race = "humanoid";
     this.armourClass = 9;
     this.hitDice = "1";
+    this.hitDiceStars = 2;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
-    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1d4" }]; //or spells
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1d4" }]; // TODO: use a spell
     this.saveAs = { class: characterType.MagicUser, level: 1 };
-    this.morale = 7;
-    this.treasureType = "V";
     //  this.Alignment = Neutral / Lawful / Chaotic; 
     this.firstLevelSpells = 1;
  }
 
  Medium.prototype = new Monster();
  Medium.prototype.Constructor = Medium;
- Medium.getNumberAppearing = function() { return dice.rollDice("1D4"); };
+ Medium.prototype.movement = 120;
+ Medium.prototype.getMorale = function() { return 7; };
+ Medium.prototype.getTreasureType = function() { return ["V"]; };
+ Medium.getNumberAppearing = function(inLair = false)
+ {
+    if(inLair)
+    {
+        return dice.rollDice("1D12");
+    }
+    else
+    {
+        return dice.rollDice("1D4"); 
+    }
+};
+Medium.getLeaderType = function() { return MediumMaster; };
+Medium.leaderAlive = false;
+Medium.mayHaveLeader = true;
+Medium.isLeaderPresent = function(noAppearing)
+{
+    //there is a 50%  chance mediums will have a leader
+    if (dice.rollDice("1D2") === 1)
+    {
+        return true;
+    }
+    return false;
+};
+
+//--------------------------------------------
+//--------------------MediumMaster------------
+//--------------------------------------------
+
+//50% chance mediums will have master
+
+function MediumMaster() {
+    this.name = "Medium Master";
+    this.hitDice = "3";
+    this.hitDiceStars = 2;
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1d4" }]; // TODO: use a spell
+    this.saveAs = { class: characterType.MagicUser, level: parseInt(this.hitDice) }; 
+    this.leader = true;
+    //  this.Alignment = Chaotic;
+    this.firstLevelSpells = 2;
+    this.secondLevelSpells = 1;
+}
+
+MediumMaster.prototype = new Medium();
+MediumMaster.prototype.Constructor = MediumMaster;
+MediumMaster.prototype.setLeaderDead = function() { Medium.leaderAlive = false; };
 
 //--------------------------------------------
 //-----------------Medusa---------------------
 //--------------------------------------------
 
-//  PetrifyingGaze - will turn viewer into stone unless save vs turn to stone
+// TODO: PetrifyingGaze - will turn viewer into stone unless save vs turn to stone (including itself)
+// TODO: attacking a medusa without looking directly at it will be done with a -4 toHit
+//       when attacking this way the medusa get a +2 toHit 
+// TODO: they get +2 saving throw vs spells 
 
 function Medusa()
 {
-this.name = "Medusa";
-this.race = "????";   // to decide 
-this.armourClass = 8;
-this.hitDice = "4";
-this.hitPoints = this.GetHPs();
-this.currentHitPoints = this.hitPoints;
-this.isDead = false; 
-this.movement = 90;
-this.attacks = [{ attackType: "Snakebite", damageAmount: specialDamage }];  
-this.saveAs = { class: characterType.Fighter, level: 4 };
-this.morale = 8;
-this.treasureType = "F";
-//  this.Alignment = Chaotic; 
+    this.name = "Medusa";
+    this.race = "????";                 // not sure 
+    this.armourClass = 8;
+    this.hitDice = "4";
+    this.hitDiceStars = 2;
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false; 
+    this.attacks = [{ attackType: "Snakebite", damageAmount: specialDamage }];  
+    this.saveAs = { class: characterType.Fighter, level: 4 };
+    //  this.Alignment = Chaotic; 
 }
 
-  Medusa.prototype = new Monster();
-  Medusa.prototype.Constructor = Medusa;
-  Medusa.getNumberAppearing = function() { return dice.rollDice("1D3"); };
-  Medusa.prototype.specialDamage = function(opponent)
-  {
-      opponent.takeDamage(dice.rollDice("1D6"));
+Medusa.prototype = new Monster();
+Medusa.prototype.Constructor = Medusa;
+Medusa.prototype.movement = 90;
+Medusa.prototype.getMorale = function() { return 8; };
+Medusa.prototype.getTreasureType = function() { return ["F"]; };
+Medusa.getNumberAppearing = function(inLair = false)
+{
+    if(inLair)
+    {
+        return dice.rollDice("1D4");
+    }
+    else
+    {
+        return dice.rollDice("1D3"); 
+    }
+};
+Medusa.prototype.specialDamage = function(opponent)
+{
+    // bite from snakes on head
+    opponent.takeDamage(dice.rollDice("1D6"));
 
-      if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
-      {
-          opponent.isDead= true; 
-      }
-  };
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
+    {
+        // die in 1 turn
+        opponent.isDead= true; 
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //--------------------------------------------
 //-----------------Minotaur---------------------

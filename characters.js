@@ -17,6 +17,7 @@ function Character()
 	this.useableWeapon = [];
 	this.isParalysised = false;
 	this.paralysisedDuration = 0;
+	this.isKnockedDown = false;
 	this.canOnlyBeDamagedBy = [];
 
 	this.getStrength = function() { return this.strength; };
