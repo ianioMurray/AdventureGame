@@ -245,13 +245,20 @@ function Monster()
     };
 }
 
-Monster.createMonsters = function(typeOfMonster, numberAppearing, inLair = false, inWilderness = false, leaderPresent = false)
+Monster.createMonsters = function(typeOfMonster, numberOfMonstersAppearing, inLair = false, inWilderness = false, leaderPresent = false)
 {
     var monsters = [];
 
     if(typeOfMonster.mayHaveLeader)
     {
-        if(typeOfMonster.isLeaderPresent(numberAppearing) || leaderPresent)
+        var noOfLeaders = typeOfMonster.noOfLeadersPresent(numberOfMonstersAppearing, inLair);
+        
+        if(leaderPresent && noOfLeaders === 0)
+        {
+            noOfLeaders= 1;
+        }
+
+        for(let i = 0; i < noOfLeaders; i++)
         {
             try
             {
@@ -282,7 +289,7 @@ Monster.createMonsters = function(typeOfMonster, numberAppearing, inLair = false
         }
     }
 
-    for(var i = 0;  numberAppearing > i; i++)
+    for(var i = 0;  numberOfMonstersAppearing > i; i++)
     {
         let monster = new typeOfMonster();
         monsters.push(monster);
@@ -321,13 +328,13 @@ Acolyte.prototype.firstLevelSpells = 0;
 Acolyte.getNumberAppearing = function() { return dice.rollDice("1D8"); };
 Acolyte.leaderAlive = false;
 Acolyte.mayHaveLeader = true;
-Acolyte.isLeaderPresent = function(noAppearing)
+Acolyte.noOfLeadersPresent = function(noAppearing)
 {
     if(noAppearing >= 4)
     {
-        return true;
+        return 1;
     }
-    return false;
+    return 0;
 };
 Acolyte.getLeaderType = function() { return AcolyteLeader; };
 
@@ -456,10 +463,10 @@ Bandit.getNumberAppearing = function(inLair = false)
 Bandit.leaderAlive = false;
 Bandit.mayHaveLeader = true;                         
 Bandit.getLeaderType = function() { return BanditLeader; };
-Bandit.isLeaderPresent = function(noAppearing)
+Bandit.noOfLeadersPresent = function(noAppearing)
 {
     // a leader is never automatically generated - they are only present when requested via the createMonsters
-    return false;
+    return 0;
 };
 
 //--------------------------------------------
@@ -1511,6 +1518,7 @@ Dwarf.prototype.Constructor = Dwarf;
 Dwarf.prototype.movement = 60;
 Dwarf.prototype.getMorale = function() 
 {
+    // this is correct except when there are more than 1 leader.  Killing 1 leader will reduce all dwarves morale
     if(Dwarf.leaderAlive)
     {
         return 10;
@@ -1535,20 +1543,17 @@ Dwarf.getNumberAppearing = function(inLair = false)
 Dwarf.getLeaderType = function() { return DwarfLeader; };
 Dwarf.leaderAlive = false;
 Dwarf.mayHaveLeader = true;
-Dwarf.isLeaderPresent = function(noAppearing)
+Dwarf.noOfLeadersPresent = function(noAppearing)
 {
-    if(noAppearing >= 20)
-    {
-        return true;
-    }
-    return false;
+    //for every 20 dwarves there is 1 leader
+    return Math.floor(noAppearing / 20);
 };
 
 //--------------------------------------------
 //-------------------DwarfLeader--------------
 //--------------------------------------------
 
-//there will be a leader if more than 20 dwarves Level 3-8 usually with a magic item
+//there will be a leader for every 20 dwarves Level 3-8 usually with a magic item
 
 function DwarfLeader() {
     this.name = "Dwarf Leader";
@@ -1617,13 +1622,13 @@ Elf.getNumberAppearing = function(inLair = false)
 Elf.getLeaderType = function() { return ElfLeader; };
 Elf.leaderAlive = false;
 Elf.mayHaveLeader = true;
-Elf.isLeaderPresent = function(noAppearing)
+Elf.noOfLeadersPresent = function(noAppearing)
 {
     if(noAppearing >= 15)
     {
-        return true;
+        return 1;
     }
-    return false;
+    return 0;
 };
 
 //--------------------------------------------
@@ -1884,13 +1889,13 @@ function Gnoll()
 Gnoll.getLeaderType = function() { return GnollLeader; };
 Gnoll.leaderAlive = false;
 Gnoll.mayHaveLeader = true;
-Gnoll.isLeaderPresent = function(noAppearing)
+Gnoll.noOfLeadersPresent = function(noAppearing)
 {
     if(noAppearing >= 20)
     {
-        return true;
+        return 1;
     }
-    return false;
+    return 0;
 };
 
 //--------------------------------------------
@@ -1964,13 +1969,13 @@ Gnome.getChieftainType = function() { return GnomeChieftain; };
 Gnome.getChieftainBodyguardType = function() { return GnomeChieftainBodyGuard; };
 Gnome.leaderAlive = false;
 Gnome.mayHaveLeader = true;
-Gnome.isLeaderPresent = function(noAppearing)
+Gnome.noOfLeadersPresent = function(noAppearing)
 {
     if(noAppearing >= 20)
     {
-        return true;
+        return 1;
     }
-    return false;
+    return 0;
 };
 Gnome.chieftainAlive = false;
 Gnome.mayHaveChieftain = true;
@@ -3142,13 +3147,13 @@ Wererat.prototype.surpriseOpponent= function(diceResult)
 Werewolf.getLeaderType = function() { return WerewolfLeader; };
 Werewolf.leaderAlive = false;
 Werewolf.mayHaveLeader = true;
-Werewolf.isLeaderPresent = function(noAppearing)
+Werewolf.noOfLeadersPresent = function(noAppearing)
 {
     if(noAppearing >= 5)
     {
-        return true;
+        return 1;
     }
-    return false;
+    return 0;
 };
 
 //--------------------------------------------
@@ -3348,14 +3353,14 @@ function Medium()
 Medium.getLeaderType = function() { return MediumMaster; };
 Medium.leaderAlive = false;
 Medium.mayHaveLeader = true;
-Medium.isLeaderPresent = function(noAppearing)
+Medium.noOfLeadersPresent = function(noAppearing)
 {
     //there is a 50%  chance mediums will have a leader
     if (dice.rollDice("1D2") === 1)
     {
-        return true;
+        return 1;
     }
-    return false;
+    return 0;
 };
 
 //--------------------------------------------
@@ -3435,23 +3440,11 @@ Medusa.prototype.specialDamage = function(opponent)
     }
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //--------------------------------------------
 //-----------------Minotaur---------------------
 //--------------------------------------------
+
+// TODO: instead of the Gore and bite they can use use a weapon - weapon damage is +2
 
 function Minotaur()
 {
@@ -3462,50 +3455,71 @@ function Minotaur()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
     this.attacks = [{ attackType: "Gore", damageAmount: "1d6" }, 
-                    { attackType: "Bite", damageAmount: "1d6" } ];   //instead of the Gore and bite they can use use a weapon 
-                                                                    // - damage by weapon is +2 
+                    { attackType: "Bite", damageAmount: "1d6" } ];   
     this.saveAs = { class: characterType.Fighter, level: 6 };
-    this.morale = 12;
-    this.treasureType = "C";
     //  this.Alignment = Chaotic; 
 }
 
 Minotaur.prototype = new Monster();
 Minotaur.prototype.Constructor = Minotaur;
-Minotaur.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+Minotaur.prototype.movement = 120;
+Minotaur.prototype.getMorale = function() { return 12; };
+Minotaur.prototype.getTreasureType = function() { return ["C"]; };
+Minotaur.getNumberAppearing = function(inLair = false)
+{ 
+    if(inLair)
+    {
+        return dice.rollDice("1D8");
+    }
+    else
+    {
+        return dice.rollDice("1D6"); 
+    }
+};
 
 //--------------------------------------------
 //-----------------Mule-----------------------
 //--------------------------------------------
 
-// Can Carry 2000gp - 4000gp with a movement of 60 
+// TODO: a mule can carry 2000gp - it can carry 4000gp but its movement drops to 60 
 
 function Mule() 
 {
     this.name = "Mule";
-    this.race = "horse";
+    this.race = "animal";
     this.armourClass = 7;
     this.hitDice = "2";
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
-    this.attacks = [{ attackType: "Bite", damageAmount: "1d3" } ]; //or they can kick - 1D4 
+    this.attacks = [{ attackType: "Bite", damageAmount: "1d3" } ]; //TODO: rather than bite it can kick - 1D4 damage 
     this.saveAs = { class: characterType.NormalMan, level: 0 };
-    this.morale = 8;
-    this.treasureType = "Nil";
     //  this.Alignment = Neutral; 
 }
 
 Mule.prototype = new Monster();
 Mule.prototype.Constructor = Mule;
-Mule.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+Mule.prototype.movement = 120;
+Mule.prototype.getMorale = function() { return 8; };
+Mule.prototype.getTreasureType = function() { return []; }; 
+Mule.getNumberAppearing = function(inLair = false) 
+{
+    if(inLair)
+    {
+        return dice.rollDice("2D6");
+    }
+    else
+    {
+        return dice.rollDice("1D8"); 
+    }   
+};
 
 //--------------------------------------------
 //-----------Neaderthal (Caveman)-------------
 //--------------------------------------------
+
+// TODO: can use weapon -- with damage +1
 
 function Neaderthal() 
 {
@@ -3516,25 +3530,67 @@ function Neaderthal()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
-    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "2d4" } ];  
+    this.attacks = [{ attackType: "Punch", damageAmount: "2d4" } ];  
     this.saveAs = { class: characterType.Fighter, level: 2 };
-    this.morale = 7;
-    this.treasureType = "C";
     //  this.Alignment = Lawful; 
 }
 
 Neaderthal.prototype = new Monster();
 Neaderthal.prototype.Constructor = Neaderthal;
-Neaderthal.getNumberAppearing = function() { return dice.rollDice("1D10"); };
+Neaderthal.prototype.movement = 120;
+Neaderthal.prototype.getMorale = function() { return 7; };
+Neaderthal.prototype.getTreasureType = function() { return ["C"]; };
+Neaderthal.getNumberAppearing = function(inLiar = false) 
+{ 
+    if(inLair)
+    {
+        return dice.rollDice("10D4");
+    }
+    else
+    {
+        return dice.rollDice("1D10"); 
+    }
+};
+Neaderthal.getLeaderType = function() { return WerewolfLeader; };
+Neaderthal.leaderAlive = false;
+Neaderthal.mayHaveLeader = true;
+Neaderthal.noOfLeadersPresent = function(noAppearing, inLair = false)
+{
+    if(inLair)
+    {
+        return 2;
+    }
+    return 0;
+};
+
+//--------------------------------------------
+//---------------NeaderthalLeader-------------
+//--------------------------------------------
+
+// 2 Neaderthal Leaders appears when they are in their lair
+
+function NeaderthalLeader() {
+    this.name = "Neaderthal Leader";
+    this.hitDice = "6";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "Punch", damageAmount: "2d4" } ]; 
+    this.saveAs = { class: characterType.Fighter, level: parseInt(this.hitDice) }; 
+    this.leader = true;
+    //  this.Alignment = Lawful;
+}
+
+NeaderthalLeader.prototype = new Neaderthal();
+NeaderthalLeader.prototype.Constructor = NeaderthalLeader;
+NeaderthalLeader.prototype.setLeaderDead = function() { Neaderthal.leaderAlive = false; };
 
 //--------------------------------------------
 //-----------------Noble----------------------
 //--------------------------------------------
 
-//3rd level fighter
-//will be accompanied by a squire 2nd level
-//usually also 10 retainers of level 1 fighters
+// TODO: will be accompanied by a squire 2nd level
+// TODO: usually also 10 retainers of level 1 fighters
 
 function Noble() 
 {
@@ -3545,43 +3601,58 @@ function Noble()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 60;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1d8" } ];  
-    this.saveAs = "";//  variable     { class: characterType.Fighter, level: 2 };
-    this.morale = 8;
-    this.treasureType = "V";  // 3 lots of V
+    this.saveAs = { class: characterType.Fighter, level: 3 };
     //  this.Alignment = Lawful / Neutral / Chaotic; 
 }
 
 Noble.prototype = new Monster();
 Noble.prototype.Constructor = Noble;
-Noble.getNumberAppearing = function() { return dice.rollDice("2D6"); };
+Noble.prototype.movement = 60;
+Noble.prototype.getMorale = function() { return 8; };
+Noble.prototype.getTreasureType = function() { return ["V", "V", "V"]; };
+Noble.getNumberAppearing = function() 
+{ 
+    //always 2D6
+    return dice.rollDice("2D6"); 
+};
 
 //--------------------------------------------
 //-----------------Normal Human---------------
 //--------------------------------------------
+
+// TODO: weapon damage depends type of weapon used but set to 1D6 as a default  
 
 function NormalHuman() 
 {
     this.name = "Normal Human";
     this.race = "human";
     this.armourClass = 9;
-    this.hitDice = "0.5";      //1 to 4 hps
+    this.hitDice = "0.5";      
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
-    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1d6" } ];  //damage depends on weapon  
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1d6" } ];  
     this.saveAs = { class: characterType.NormalMan, level: 0 };
-    this.morale = 6;
-    this.treasureType = "U"; 
     //  this.Alignment = usually Lawful; 
 }
 
 NormalHuman.prototype = new Monster();
 NormalHuman.prototype.Constructor = NormalHuman;
-NormalHuman.getNumberAppearing = function() { return dice.rollDice("1D4"); };
-
+NormalHuman.prototype.movement = 120;
+NormalHuman.prototype.getMorale = function() { return 6; };
+NormalHuman.prototype.getTreasureType = function() { return ["U"]; }; 
+NormalHuman.getNumberAppearing = function(inLair = false) 
+{
+    if(inLair)
+    {
+        return dice.rollDice("1D20");
+    }
+    else
+    {
+        return dice.rollDice("1D4"); 
+    }
+};
 
 //--------------------------------------------
 //-----------------NPC party members----------
@@ -3589,6 +3660,25 @@ NormalHuman.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 
 
 //   NPC parties //
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //--------------------------------------------
