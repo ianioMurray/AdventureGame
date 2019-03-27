@@ -108,6 +108,10 @@ function Monster()
         {
             return dice.rollDice("1D4");
         }
+        else if (parsedHitDice.hitDice === "1" && this.name === "Orc Leader")
+        {
+            return 8;
+        }
         else if (parsedHitDice.hitDice === "3" && this.name === "Medium Master")
         {
             return dice.rollDice("3D4");
@@ -143,6 +147,10 @@ function Monster()
         else if (parsedHitDice.hitDice === "4" && this.name === "Hobgoblin King Bodyguard")
         {
             return dice.rollDice("3D6");
+        }
+        else if (parsedHitDice.hitDice === "4" && this.name === "Orc Chieftain")
+        {
+            return 15;
         }
         else if (parsedHitDice.hitDice === "5" && this.name === "Hobgoblin King")
         {
@@ -3661,34 +3669,13 @@ NormalHuman.getNumberAppearing = function(inLair = false)
 
 //   NPC parties //
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //--------------------------------------------
 //-----------------OchreJelly----------------
 //--------------------------------------------
 
-//disolves wood, leather and cloth in a round but it cannot dissolve metal or stone 
-//it can Seeps Through Cracks
-//only damaged by heat and cold 
-//attackes with weapons make 1D4 smaller ochreJellys 2hitDice -- damage 1D6
+// TODO: disolves wood, leather and cloth in a round but it cannot dissolve metal or stone 
+// it can Seeps Through Cracks
+// TODO: attackes with weapons or lightening only makes 1D4 smaller ochreJellys - 2hitDice damage 1D6
 
 function OchreJelly() 
 {
@@ -3696,20 +3683,23 @@ function OchreJelly()
     this.race = "slime";
     this.armourClass = 8;
     this.hitDice = "5";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 30;
     this.attacks = [{ attackType: "Disolve", damageAmount: "2d6" } ];  
     this.saveAs = { class: characterType.Fighter, level: 3 };
-    this.morale = 12;
-    this.treasureType = "Nil"; 
     //  this.Alignment = Neutral; 
 }
 
 OchreJelly.prototype = new Monster();
 OchreJelly.prototype.Constructor = OchreJelly;
+OchreJelly.prototype.movement = 30;
+OchreJelly.prototype.morale = function() { return 12; };
+OchreJelly.prototype.getTreasureType = function() { []; };
 OchreJelly.getNumberAppearing = function() { return 1; };
+OchreJelly.prototype.canOnlyBeDamagedBy = [immunityToDamageTypes.fireDamage,
+                                           immunityToDamageTypes.coldDamage];
 
 //--------------------------------------------
 //--------------------Ogre--------------------
@@ -3724,24 +3714,46 @@ function Ogre()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 90;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1d10" }];
     this.saveAs = { class: characterType.Fighter, level: 4 };
-    this.morale = 10;
-    this.treasureType = "C"; // plus 1000gp 
     //  this.Alignment = Chaotic; 
 }
 
 Ogre.prototype = new Monster();
 Ogre.prototype.Constructor = Ogre;
-Ogre.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+Ogre.prototype.movement = 90;
+Ogre.prototype.getMorale = function() { return 10; };
+Ogre.prototype.getTreasureType = function() 
+{ 
+    if(this.inWilderness)
+    {
+        return ["C", dice.rollDice("1D6") * 100];   // the 100-600 is gp 
+    }
+    else 
+    {
+        return ["C", 1000];       // the 1000 is 1000gp 
+    }
+ }; 
+Ogre.getNumberAppearing = function(inLair = false)
+{
+    if(inLair)
+    {
+        return dice.rollDice("2D6");
+    }
+    else
+    {
+        return dice.rollDice("1D6"); 
+    }
+};
 
 //--------------------------------------------
 //--------------------Orc---------------------
 //--------------------------------------------
 
-// hate sunlight - 1 Attack in Daylight
-// 1 will be a leader with 8Hps and +1 damage -- if killed moral of the rest will be 6
+// TODO: hate sunlight - 1 Attack in Daylight
+// TODO: can use weapon 
+// TODO: in the lair for every 20 orcs there will be a 1 in 1D6 chance of there being an ogre
+// TODO: in the lair there is a 1 in 1D10 chance of there being a troll
 
 function Orc()
 {
@@ -3752,17 +3764,90 @@ function Orc()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D6" }];
     this.saveAs = { class: characterType.Fighter, level: 1 };
-    this.morale = 8;
-    this.treasureType = "D";  
     //  this.Alignment = Chaotic;
 }
 
 Orc.prototype = new Monster();
 Orc.prototype.Constructor = Orc;
-Orc.getNumberAppearing = function() { return dice.rollDice("2D8"); };
+Orc.prototype.movement = 120;
+Orc.prototype.getMorale = function() 
+{
+    if(this.leaderAlive)
+    {
+        return 8; 
+    }
+    else
+    {
+        return 6;
+    }
+};
+Orc.prototype.getTreasureType = function() { return ["D"]; };  
+Orc.getNumberAppearing = function(inLair = false)
+{
+    if(inLair)
+    {
+        return dice.rollDice("10D6");
+    }
+    else
+    {
+        return dice.rollDice("2D8"); 
+    }
+};
+Orc.getLeaderType = function() { return OrcLeader; };
+Orc.getChieftainType = function() { return OrcChieftain; };
+Orc.leaderAlive = false;
+Orc.mayHaveLeader = true;
+Orc.noOfLeadersPresent = function(noAppearing)
+{
+    return 1;
+};
+Orc.chieftainAlive = false;
+Orc.mayHaveChieftain = true;
+
+//--------------------------------------------
+//---------------OrcLeader--------------------
+//--------------------------------------------
+
+// Orc Leader appears within ANY group of orcs
+
+function OrcLeader() {
+    this.name = "Orc Leader";
+    this.hitDice = "1";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D6+1" }];
+    this.saveAs = { class: characterType.Fighter, level: parseInt(this.hitDice) }; 
+    this.leader = true;
+    //  this.Alignment = Chaotic;
+}
+
+OrcLeader.prototype = new Orc();
+OrcLeader.prototype.Constructor = OrcLeader;
+OrcLeader.prototype.setLeaderDead = function() { Orc.leaderAlive = false; };
+
+//--------------------------------------------
+//----------------OrcChieftain----------------
+//--------------------------------------------
+
+function OrcChieftain() 
+{
+    this.name = "Orc Chieftain";
+    this.hitDice = "4";
+    this.hitPoints = this.GetHPs();
+    this.currentHitPoints = this.hitPoints;
+    this.isDead = false;
+    this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D6+2" }];
+    this.saveAs = { class: characterType.Fighter, level: parseInt(this.hitDice) }; 
+    this.chieftain = true;
+}
+
+OrcChieftain.prototype = new Orc();
+OrcChieftain.prototype.Constructor = OrcChieftain;
+OrcChieftain.prototype.setChieftainDead = function() { Orc.chieftainAlive = false; };
+OrcChieftain.numberOfBodyGuards = 0;
 
 //--------------------------------------------
 //--------------------OwlBear-----------------
@@ -3777,18 +3862,18 @@ function OwlBear()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
     this.attacks = [{ attackType: "Claw", damageAmount: specialDamage }, 
                     { attackType: "Claw", damageAmount: specialDamage },
                     { attackType: "Bite", damageAmount: "1D8" }];
     this.saveAs = { class: characterType.Fighter, level: 3 };
-    this.morale = 9;
-    this.treasureType = "C";  
     //  this.Alignment = Neutral;
 }
 
 OwlBear.prototype = new Monster();
 OwlBear.prototype.Constructor = OwlBear;
+OwlBear.prototype.movement = 120;
+OwlBear.prototype.getMorale = function() {return 9; };
+OwlBear.prototype.getTreasureType = function() { return ["C"]; };  
 OwlBear.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 OwlBear.prototype.clawDamage = function(opponent)
 {
@@ -3800,6 +3885,12 @@ OwlBear.prototype.clawDamage = function(opponent)
         opponent.takeDamage(dice.rollDice("2D8"));
     }
 };
+
+
+
+
+
+
 
 //--------------------------------------------
 //--------------------Pixie-------------------
