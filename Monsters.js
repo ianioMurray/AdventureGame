@@ -4841,28 +4841,11 @@ Trader.getNumberAppearing = function(inLair = false) {
     }
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //--------------------------------------------
 //---------------Troglodyte-------------------
 //--------------------------------------------
 
-//they surprise on a 1-4 of a 1D6
-//humans and demi-humans have -2 toHit them
+//TODO: smelly secreation - humans and demi-humans must save vs poison or have -2 toHit them in melee combat
 
 function Troglodyte() 
 {
@@ -4870,22 +4853,47 @@ function Troglodyte()
     this.race = "humanoid";          
     this.armourClass = 5;
     this.hitDice = "2";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
+
     this.damage = [ { attackType: "Claw", damageAmount: "1D4" }, 
                     { attackType: "Claw", damageAmount: "1D4" },
                     { attackType: "Bite", damageAmount: "1D4" } ];
     this.saveAs = { class: characterType.Fighter, level: 2 };
-    this.morale = 9;
-    this.treasureType = "A";   
+
     //  this.Alignment = Chaotic;
 }
 
 Troglodyte.prototype = new Monster();
 Troglodyte.prototype.Constructor = Troglodyte;
-Troglodyte.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+Troglodyte.prototype.movement = 120;
+Troglodyte.prototype.getMorale = function() { return 9; };
+Troglodyte.prototype.getTreasureType = function() { return ["A"]; };   
+Troglodyte.getNumberAppearing = function(inLair = false)
+{
+    if(inLair)
+    {
+        return dice.rollDice("5D8");
+    }
+    else
+    {
+        return dice.rollDice("1D8"); 
+    }
+};
+Troglodyte.prototype.surpriseOpponent= function(diceResult)
+{
+    // suprise on a 1-4 of a 1D6
+    if(diceResult <= 4)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+};
 
 //--------------------------------------------
 //---------------Veteran-----------------------
@@ -4896,27 +4904,41 @@ function Veteran()
     this.name = "Veteran";
     this.race = "human";     
     this.armourClass = 2;
-    this.hitDice = "2";   //really 1-3 
+    this.hitDice = this.GetHitDice(); 
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 60;
     this.damage = [ { attackType: "WeaponAttack", damageAmount: "1D8" } ];
-    this.saveAs = { class: characterType.Fighter, level: 2 };   //really 1-3
-    this.morale = 9;
-    this.treasureType = "V";   
+    this.saveAs = { class: characterType.Fighter, level: parseInt(this.hitDice) };   
     //  this.Alignment = Chaotic/Neutral/Lawful;
 }
 
 Veteran.prototype = new Monster();
 Veteran.prototype.Constructor = Veteran;
-Veteran.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+Veteran.prototype.movement = 60;
+Veteran.prototype.getMorale = function() { return 9; };
+Veteran.prototype.getTreasureType = function() { return ["V"]; }; 
+Veteran.prototype.GetHitDice = function()
+{
+    //hit dice are 1-3
+    var result = dice.rollDice("1D6");
+    return Math.floor(result/2);  
+};
+Veteran.getNumberAppearing = function(inLair) 
+{
+    if(inLair)
+    {
+        return dice.rollDice("2D6");
+    }
+    else
+    {
+        return dice.rollDice("2D4"); 
+    }
+};
 
 //--------------------------------------------
 //---------------Wight-----------------------
 //--------------------------------------------
-
-//can only be damaged by silver and magic weapons 
 
 function Wight() 
 {
@@ -4924,25 +4946,50 @@ function Wight()
     this.race = "undead";
     this.armourClass = 5;
     this.hitDice = "3";
+    this.hitDiceStars = 1; 
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 90;
     this.attacks = [{ attackType: "touchAttack", damageAmount: specialDamage} ];
     this.saveAs = { class: characterType.Fighter, level: 3 };  
-    this.morale = 12;
-    this.treasureType = "B";   
     //  this.Alignment = Chaotic
 }
 
 Wight.prototype = new Monster();
 Wight.prototype.Constructor = Wight;
-Wight.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+Wight.prototype.movement = 90;
+Wight.prototype.getMorale = function() { return 12; };
+Wight.prototype.getTreasureType = function() { return ["B"]; };
+Wight.prototype.canOnlyBeDamagedBy = [immunityToDamageTypes.magicalWeapon, immunityToDamageTypes.silverWeapon];
+Wight.getNumberAppearing = function(inLair) 
+{
+    if(inLair)
+    {
+        return dice.rollDice("1D8");
+    }
+    else
+    {
+        return dice.rollDice("1D6"); 
+    }
+};
 Wight.prototype.specialDamage = function(opponent)
 {
-    //drains a level from the opponent
-    //anyone who is killed in this way will become a wight in 1D4 days
+    //TODO: drains a level from the opponent (loss experience to go back to mid point of last level) 
+    //      anyone who is killed in this way will become a wight in 1D4 days - they will be under control of the wight that created them
+    //      also lose 1 hit dice of hps
 };
+
+
+
+
+
+
+
+
+
+
+
+
 
 //------------------------------------------
 //---             Wolf Prototype         ---
