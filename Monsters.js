@@ -1015,7 +1015,7 @@ MountainLion.prototype = new CatGiant();
 MountainLion.prototype.Constructor = MountainLion;
 MountainLion.prototype.movement = 150;
 MountainLion.prototype.getMorale = function() { return  8; };
-MountainLion.prototype.treasureType = function() { retunr ["U"]; };
+MountainLion.prototype.getTreasureType = function() { retunr ["U"]; };
 MountainLion.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 
 //--------------------------------------------
@@ -1069,7 +1069,7 @@ Lion.prototype = new CatGiant();
 Lion.prototype.Constructor = Lion;
 Lion.prototype.movement = 150;
 Lion.prototype.getMorale = function() { return  9; };
-Lion.prototype.treasureType = function() { return ["U"]; };
+Lion.prototype.getTreasureType = function() { return ["U"]; };
 Lion.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 
 //--------------------------------------------
@@ -1767,7 +1767,7 @@ function GelatinousCube()
 GelatinousCube.prototype = new Monster();
 GelatinousCube.prototype.Constructor = GelatinousCube;
 GelatinousCube.prototype.getMorale = function() { return 12; };
-GelatinousCube.prototype.treasureType = function() { return ["V"]; }; 
+GelatinousCube.prototype.getTreasureType = function() { return ["V"]; }; 
 GelatinousCube.prototype.movement = 60;
 GelatinousCube.prototype.canAutoHit = true;
 GelatinousCube.getNumberAppearing = function() {  return 1; };
@@ -1834,7 +1834,6 @@ function Ghoul()
 
 Ghoul.prototype = new Monster();
 Ghoul.prototype.Constructor = Ghoul;
-Ghoul.prototype.morale = 9;
 Ghoul.prototype.getTreasureType = function() { return ["B"]; }; 
 Ghoul.prototype.getMorale = function() { return 9; };
 Ghoul.prototype.getNumberAppearing = function(inLair = false)
@@ -1882,7 +1881,7 @@ function Gnoll()
  Gnoll.prototype.Constructor = Gnoll;
  Gnoll.prototype.movement = 90;
  Gnoll.prototype.getMorale = function() { return 8; };
- Gnoll.prototype.treasureType = function() { return ["D"]; }; 
+ Gnoll.prototype.getTreasureType = function() { return ["D"]; }; 
  Gnoll.getNumberAppearing = function(inLair = false)
 {
     if(inLair)
@@ -3695,7 +3694,7 @@ function OchreJelly()
 OchreJelly.prototype = new Monster();
 OchreJelly.prototype.Constructor = OchreJelly;
 OchreJelly.prototype.movement = 30;
-OchreJelly.prototype.morale = function() { return 12; };
+OchreJelly.prototype.getMorale = function() { return 12; };
 OchreJelly.prototype.getTreasureType = function() { []; };
 OchreJelly.getNumberAppearing = function() { return 1; };
 OchreJelly.prototype.canOnlyBeDamagedBy = [immunityToDamageTypes.fireDamage,
@@ -4160,7 +4159,7 @@ RustMonster.prototype = new Monster();
 RustMonster.prototype.Constructor = RustMonster;
 RustMonster.prototype.movement = 120;
 RustMonster.prototype.getMorale = function() { return 7; };
-RustMonster.prototype.treasureType = function() { return []; }; 
+RustMonster.prototype.getTreasureType = function() { return []; }; 
 RustMonster.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 RustMonster.prototype.specialDamage = function(opponent)
 {
@@ -4319,7 +4318,7 @@ Skeleton.prototype = new Monster();
 Skeleton.prototype.Constructor = Skeleton;
 Skeleton.prototype.movement = 60;
 Skeleton.prototype.getMorale = function() { return 12; };
-Skeleton.prototype.treasureType = function() { return []; }; 
+Skeleton.prototype.getTreasureType = function() { return []; }; 
 Skeleton.getNumberAppearing = function(inLair = false) 
 {
     if(inLair)
