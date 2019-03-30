@@ -16,6 +16,7 @@ function Monster()
     this.movement = 0;
     this.flyMovement = 0;
     this.swimMovement = 0;
+    this.webMovement = 0;
     this.hitDiceStars = 0;
     this.canTalk = 0;
     this.isSleep = 0;
@@ -1015,7 +1016,7 @@ MountainLion.prototype = new CatGiant();
 MountainLion.prototype.Constructor = MountainLion;
 MountainLion.prototype.movement = 150;
 MountainLion.prototype.getMorale = function() { return  8; };
-MountainLion.prototype.getTreasureType = function() { retunr ["U"]; };
+MountainLion.prototype.getTreasureType = function() { return ["U"]; };
 MountainLion.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 
 //--------------------------------------------
@@ -2512,7 +2513,7 @@ InsectSwarm.prototype.canAutoHit = true;
 InsectSwarm.prototype.movement = 30;
 InsectSwarm.prototype.flyMovement = 60;
 InsectSwarm.prototype.getMorale = function() { return 11; };
-InsectSwarm.prototype.getTreasureType = function() { []; };
+InsectSwarm.prototype.getTreasureType = function() { return []; };
 InsectSwarm.getNumberAppearing = function() { return 1; };
 InsectSwarm.prototype.autoHitPrerequisitesMet = function(opponent)
 {
@@ -2755,7 +2756,7 @@ CrystalStatue.prototype = new LivingStatue();
 CrystalStatue.prototype.Constructor = CrystalStatue;
 CrystalStatue.prototype.movement = 90;
 CrystalStatue.prototype.getMorale = function() { return 11; };
-CrystalStatue.prototype.getTreasureType = function() { []; };
+CrystalStatue.prototype.getTreasureType = function() { return []; };
 CrystalStatue.getNumberAppearing = function() 
 {
     //always this even in lair
@@ -2788,7 +2789,7 @@ IronStatue.prototype = new LivingStatue();
 IronStatue.prototype.Constructor = IronStatue;
 IronStatue.prototype.movement = 30;
 IronStatue.prototype.getMorale = function() { return 11; };
-IronStatue.prototype.getTreasureType = function() { []; };
+IronStatue.prototype.getTreasureType = function() { return []; };
 IronStatue.getNumberAppearing = function() 
 {
     //this is correct even in lair
@@ -2821,7 +2822,7 @@ RockStatue.prototype = new LivingStatue();
 RockStatue.prototype.Constructor = RockStatue;
 RockStatue.prototype.movement = 60;
 RockStatue.prototype.getMorale = function() { return 11; };
-RockStatue.prototype.getTreasureType = function() { []; };
+RockStatue.prototype.getTreasureType = function() { return []; };
 RockStatue.getNumberAppearing = function() 
 { 
     //this is correct even in lair
@@ -3695,7 +3696,7 @@ OchreJelly.prototype = new Monster();
 OchreJelly.prototype.Constructor = OchreJelly;
 OchreJelly.prototype.movement = 30;
 OchreJelly.prototype.getMorale = function() { return 12; };
-OchreJelly.prototype.getTreasureType = function() { []; };
+OchreJelly.prototype.getTreasureType = function() { return []; };
 OchreJelly.getNumberAppearing = function() { return 1; };
 OchreJelly.prototype.canOnlyBeDamagedBy = [immunityToDamageTypes.fireDamage,
                                            immunityToDamageTypes.coldDamage];
@@ -4252,7 +4253,7 @@ ShrewGiant.prototype = new Monster();
 ShrewGiant.prototype.Constructor = ShrewGiant;
 ShrewGiant.prototype.movement = 180;
 ShrewGiant.prototype.getMorale = function() { return 10; };
-ShrewGiant.prototype.getTreasureType = function() { []; }; 
+ShrewGiant.prototype.getTreasureType = function() { return []; }; 
 ShrewGiant.getNumberAppearing = function(inLair = false)
 { 
     if(inLair)
@@ -4376,7 +4377,7 @@ SpittingCobra.prototype = new Snake();
 SpittingCobra.prototype.Constructor = SpittingCobra;
 SpittingCobra.prototype.movement = 90;
 SpittingCobra.prototype.getMorale = function() { return 7; };
-SpittingCobra.prototype.getTreasureType = function() { []; }; 
+SpittingCobra.prototype.getTreasureType = function() { return []; }; 
 SpittingCobra.getNumberAppearing = function() { return dice.rollDice("1D6"); };
 SpittingCobra.prototype.specialDamage = function(opponent)
 {
@@ -4388,6 +4389,7 @@ SpittingCobra.prototype.specialDamage = function(opponent)
         //TODO: opponent will die in 1 to 10 turns
     }
 };
+
 
 //--------------------------------------------
 //---------------Pit Viper--------------------
@@ -4530,16 +4532,6 @@ RockPython.prototype.getMorale = function() { return 8; };
 RockPython.prototype.getTreasureType = function() { return ["U"]; };
 RockPython.getNumberAppearing = function() { return dice.rollDice("1D3"); };
 
-
-
-
-
-
-
-
-
-
-
 //------------------------------------------
 //---      Spider Giant Prototype      ---
 //------------------------------------------
@@ -4555,27 +4547,26 @@ SpiderGiant.prototype.Constructor = SpiderGiant;
 //---------------CrabSpider-------------------
 //--------------------------------------------
 
-//surpirse on 1 to 4 of 1D6
-
 function CrabSpider() 
 {
     this.name = "Crab Spider";
     this.race = "animal";
     this.armourClass = 7;
     this.hitDice = "2";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
     this.damage = [ { attackType: "Bite", damageAmount: specialDamage } ];
     this.saveAs = { class: characterType.Fighter, level: 1 };
-    this.morale = 7;
-    this.treasureType = "U"; 
     //  this.Alignment = Neutral;
 }
 
 CrabSpider.prototype = new SpiderGiant();
 CrabSpider.prototype.Constructor = CrabSpider;
+CrabSpider.prototype.movement = 120;
+CrabSpider.prototype.getMorale = function() { return 7; };
+CrabSpider.prototype.getTreasureType = function() { return ["U"]; }; 
 CrabSpider.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 CrabSpider.prototype.specialDamage = function(opponent)
 {
@@ -4583,8 +4574,21 @@ CrabSpider.prototype.specialDamage = function(opponent)
 
     if(!savingThrow.isSavingThrowMade(opponent.saveAs.DeathRayPoison), dice.rollDice("1D20")+2)
     {
+        //TODO: poison weakens and means all saving throws at +2
         opponent.isDead = true;
-        //dies in 1 to 4 turns
+        //TODO: death in 1 to 4 turns
+    }
+};
+CrabSpider.prototype.surpriseOpponent= function(diceResult)
+{
+    //surpirse on 1 to 4 of 1D6
+    if(diceResult <= 4)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
     }
 };
 
@@ -4592,7 +4596,7 @@ CrabSpider.prototype.specialDamage = function(opponent)
 //---------------BlackWidow-------------------
 //--------------------------------------------
 
-//they have webs - to escape a web see magic user web spell 
+//TODO: they have webs - to escape a web see magic user web spell 
 
 function BlackWidow() 
 {
@@ -4600,19 +4604,21 @@ function BlackWidow()
     this.race = "animal";
     this.armourClass = 6;
     this.hitDice = "3";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 60;
     this.damage = [ { attackType: "Bite", damageAmount: specialDamage } ];
     this.saveAs = { class: characterType.Fighter, level: 2 };
-    this.morale = 8;
-    this.treasureType = "U"; 
     //  this.Alignment = Neutral;
 }
 
 BlackWidow.prototype = new SpiderGiant();
 BlackWidow.prototype.Constructor = BlackWidow;
+BlackWidow.prototype.movement = 60;
+BlackWidow.prototype.webMovement = 120;
+BlackWidow.prototype.getMorale = function() { return 8; };
+BlackWidow.prototype.getTreasureType = function() { return ["U"]; }; 
 BlackWidow.getNumberAppearing = function() { return dice.rollDice("1D3"); };
 BlackWidow.prototype.specialDamage = function(opponent)
 {
@@ -4621,7 +4627,7 @@ BlackWidow.prototype.specialDamage = function(opponent)
     if(!savingThrow.isSavingThrowMade(opponent.saveAs.DeathRayPoison), dice.rollDice("1D20"))
     {
         opponent.isDead = true;
-        //dies in 1 turn
+        //TODO: death in 1 turn
     }
 };
 
@@ -4635,19 +4641,20 @@ function Tarantella()
     this.race = "animal";
     this.armourClass = 5;
     this.hitDice = "4";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
     this.damage = [ { attackType: "Bite", damageAmount: specialDamage } ];
     this.saveAs = { class: characterType.Fighter, level: 2 };
-    this.morale = 8;
-    this.treasureType = "U"; 
     //  this.Alignment = Neutral;
 }
 
 Tarantella.prototype = new SpiderGiant();
 Tarantella.prototype.Constructor = Tarantella;
+Tarantella.prototype.movement = 120;
+Tarantella.prototype.getMorale = function() { return 8; };
+Tarantella.prototype.getTreasureType = function() { return ["U"]; };
 Tarantella.getNumberAppearing = function() { return dice.rollDice("1D3"); };
 Tarantella.prototype.specialDamage = function(opponent)
 {
@@ -4655,10 +4662,11 @@ Tarantella.prototype.specialDamage = function(opponent)
 
     if(!savingThrow.isSavingThrowMade(opponent.saveAs.DeathRayPoison), dice.rollDice("1D20"))
     {
-        //opponent starts to dance 
-        //on lookers must save vs spells or dance too - for as long as the original dancer is dancing
-        //when dancing you have -4 toHit and attackers get +4 toHit
-        //lasts 2-12 turns but after 5 the opponent is exhausted and will be automatically hit and unable to attack
+        //TODO: opponent starts to dance 
+        //      on lookers must save vs spells or dance too - for as long as the original dancer is dancing
+        //      when dancing you have -4 toHit and attackers get +4 toHit
+        //      lasts 2-12 turns but after 5 the opponent is exhausted and will be automatically hit and unable to attack
+        //      dispel magic ends the dance
     }
 };
 
@@ -4672,32 +4680,46 @@ function Sprite()
     this.race = "humaniod";
     this.armourClass = 5;
     this.hitDice = "0.5";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 60;
+
     this.damage = [ { attackType: "Spell", damageAmount: specialDamage } ];
     this.saveAs = { class: characterType.Elf, level: 1 };
-    this.morale = 7;
-    this.treasureType = "S"; 
     //  this.Alignment = Neutral;
     this.firstLevelSpells = 1;
 }
 
 Sprite.prototype = new Monster();
 Sprite.prototype.Constructor = Sprite;
-Sprite.getNumberAppearing = function() { return dice.rollDice("3D6"); };
+Sprite.prototype.movement = 60;
+Sprite.prototype.flyMovement = 180;
+Sprite.prototype.getMorale = function() { return 7; };
+Sprite.prototype.getTreasureType = function() {return ["S"]; };
+Sprite.getNumberAppearing = function(inLair) 
+{ 
+    if(inLair)
+    {
+        return dice.rollDice("5D8");
+    }
+    else
+    {
+        return dice.rollDice("3D6"); 
+    }
+};
 Sprite.prototype.specialDamage = function(opponent)
 {
-    //if there are 5 sprites or more they will curse an opponent -- they dont try and cause death 
-    //they attempt to cause mischief like making your nose grow or nipping a character continously
+    //TOD): if there are 5 sprites or more they will curse an opponent -- they dont try and cause death 
+    //       they attempt to cause mischief like making your nose grow or nipping a character continously
+    //       use remove curse to get rid of this
 };
 
 //--------------------------------------------
 //---------------Stirge-----------------------
 //--------------------------------------------
 
-//a flying stirge gets +2 toHit on its first attack
+//TODO: a flying stirge gets +2 toHit on its first attack
 
 function Stirge() 
 {
@@ -4708,23 +4730,43 @@ function Stirge()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 30;
     this.damage = [ { attackType: "Bite", damageAmount: specialDamage } ];
     this.saveAs = { class: characterType.Fighter, level: 2 };
-    this.morale = 9;
-    this.treasureType = "L"; 
     //  this.Alignment = Neutral;
 }
 
 Stirge.prototype = new Monster();
 Stirge.prototype.Constructor = Stirge;
-Stirge.getNumberAppearing = function() { return dice.rollDice("3D6"); };
+Stirge.prototype.movement = 30;
+Stirge.prototype.flyMovement = 180;
+Stirge.prototype.getMorale = function() { return 9; };
+Stirge.prototype.getTreasureType = function() { return ["L"]; };
+Stirge.getNumberAppearing = function(inLair = false)
+{
+    if(inLair)
+    {
+        return dice.rollDice("3D12");
+    }
+    else
+    {
+        return dice.rollDice("1D10"); 
+    } 
+};
 Stirge.prototype.specialDamage = function(opponent)
 {
     opponent.takeDamage(dice.rollDice("1D3"));
-    //once hit they attach themselves to the opponent and will do 1D3 damage each round
-    //this will continue till it or the opponent is dead 
+    //TODO: once hit they attach themselves to the opponent and will do 1D3 damage each round
+    //      this will continue till it or the opponent is dead 
 };
+
+
+
+
+
+
+
+
+
 
 //--------------------------------------------
 //---------------Thoul-----------------------
