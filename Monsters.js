@@ -1318,7 +1318,7 @@ function BlackDragon() {
 
 BlackDragon.prototype = new Dragon();
 BlackDragon.prototype.Constructor = BlackDragon;
-BlackDragon.prototype.getMorale = function() { return  8; };
+BlackDragon.prototype.getMorale = function() { return 8; };
 BlackDragon.getNumberAppearing = function() {  return dice.rollDice("1D4"); };
 
 //--------------------------------------------
@@ -3872,7 +3872,7 @@ function OwlBear()
 OwlBear.prototype = new Monster();
 OwlBear.prototype.Constructor = OwlBear;
 OwlBear.prototype.movement = 120;
-OwlBear.prototype.getMorale = function() {return 9; };
+OwlBear.prototype.getMorale = function() { return 9; };
 OwlBear.prototype.getTreasureType = function() { return ["C"]; };  
 OwlBear.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 OwlBear.prototype.clawDamage = function(opponent)
@@ -3915,7 +3915,7 @@ Pixie.prototype.Constructor = Pixie;
 Pixie.prototype.movement = 90;
 Pixie.prototype.flyMovement = 180;
 Pixie.prototype.getMorale = function() { return 7; };
-Pixie.prototype.getTreasureType = function() { ["R", "S"]; };   
+Pixie.prototype.getTreasureType = function() { return ["R", "S"]; };   
 Pixie.getNumberAppearing = function(inLair = false)
 {
     if(inLair)
@@ -4688,7 +4688,7 @@ Sprite.prototype.Constructor = Sprite;
 Sprite.prototype.movement = 60;
 Sprite.prototype.flyMovement = 180;
 Sprite.prototype.getMorale = function() { return 7; };
-Sprite.prototype.getTreasureType = function() {return ["S"]; };
+Sprite.prototype.getTreasureType = function() { return ["S"]; };
 Sprite.getNumberAppearing = function(inLair) 
 { 
     if(inLair)
@@ -4979,18 +4979,6 @@ Wight.prototype.specialDamage = function(opponent)
     //      also lose 1 hit dice of hps
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
 //------------------------------------------
 //---             Wolf Prototype         ---
 //------------------------------------------
@@ -5006,8 +4994,6 @@ Wolf.prototype.Constructor = Wolf;
 //---------------NormalWolf-------------------
 //--------------------------------------------
 
-//if 3 or less wolves or 50% killed their moral drops to 6
-
 function NormalWolf() 
 {
     this.name = "Normal Wolf";
@@ -5017,17 +5003,31 @@ function NormalWolf()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 180;
     this.damage = [ { attackType: "Bite", damageAmount: "1D6" } ];
     this.saveAs = { class: characterType.Fighter, level: 1 };
-    this.morale = 8;
-    this.treasureType = "Nil"; 
     //  this.Alignment = Neutral;
 }
 
 NormalWolf.prototype = new Wolf();
 NormalWolf.prototype.Constructor = NormalWolf;
-NormalWolf.getNumberAppearing = function() { return dice.rollDice("2D6"); };
+NormalWolf.prototype.movement = 180;
+NormalWolf.prototype.getMorale = function() 
+{
+    //TODO: if 3 or less wolves or 50% killed their moral drops to 6
+    return 8; 
+};
+NormalWolf.prototype.getTreasureType = function() { return []; }; 
+NormalWolf.getNumberAppearing = function(inLair)
+{
+    if(inLair)
+    {
+        return dice.rollDice("3D6");
+    } 
+    else
+    {
+        return dice.rollDice("2D6"); 
+    }
+};
 
 //--------------------------------------------
 //-----------------DireWolf-------------------
@@ -5042,48 +5042,60 @@ function DireWolf()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 150;
     this.damage = [ { attackType: "Bite", damageAmount: "2D4" } ];
     this.saveAs = { class: characterType.Fighter, level: 2 };
-    this.morale = 8;
-    this.treasureType = "Nil"; 
     //  this.Alignment = Neutral;
 }
 
 DireWolf.prototype = new Wolf();
 DireWolf.prototype.Constructor = DireWolf;
-DireWolf.getNumberAppearing = function() { return dice.rollDice("1D4"); };
+DireWolf.prototype.movement = 150;
+DireWolf.prototype.getMorale = function() { return 8; };
+DireWolf.prototype.getTreasureType = function() { return []; }; 
+DireWolf.getNumberAppearing = function(inLair) 
+{
+    if(inLair)
+    {
+        return dice.rollDice("2D4");
+    }
+    else
+    {
+        return dice.rollDice("1D4"); 
+    }
+};
 
 //--------------------------------------------
 //---------------Yellow Mold------------------
 //--------------------------------------------
 
-//Can Only Be damaged by Fire - torch does 1D4 damage
-//if touch by anything there is a 50% chance it will squirt spores in a 10x10x10 area 
-//- anyone in caught in the spores must save vs Death ray or choke to death in 6 rounds 
+//TODO: if touched by anything there is a 50% chance it will squirt spores in a 10x10x10 area 
+//       - anyone in caught in the spores must save vs Death ray or choke to death in 6 rounds 
 
 function YellowMold()
  {
     this.name = "Yellow Mold";
     this.race = "slime";
-    this.armourClass = "????";  //they are always hit 
+    this.armourClass = 9;                   //set to 9 but they are always hit by any attack  
+    this.isHitAutomaticallyByOpponent = true;
     this.hitDice = "2";
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 0;
-    this.attacks = [{ attackType: "disolve", damageAmount: specialDamage }];
+    this.attacks = [{ attackType: "Spores", damageAmount: specialDamage }];
     this.saveAs = { class: characterType.Fighter, level: 2 };
-    this.morale = 12;
-    this.treasureType = "Nil"; 
     //  this.Alignment = Neutral;
 }
 
 YellowMold.prototype = new Monster();
 YellowMold.prototype.Constructor = YellowMold;
+YellowMold.prototype.movement = 0;
+YellowMold.prototype.getMorale = function() { return 12; };   //not applicable so set to 12
+YellowMold.prototype.getTreasureType = function() { return []; }; 
+YellowMold.prototype.canOnlyBeDamagedBy = [ immunityToDamageTypes.fireDamage ];
 YellowMold.getNumberAppearing = function() { return dice.rollDice("1D8"); };
 YellowMold.prototype.specialDamage = function(opponent)
 {
+    opponent.takeDamage("1D6");
     //they eat through wood and leather but not metal or stone 
 };
 
@@ -5091,8 +5103,9 @@ YellowMold.prototype.specialDamage = function(opponent)
 //-----------------Zombie---------------------
 //--------------------------------------------
 
-//Immune to Sleep, Charm
-//they always attack last in a combat round 
+//TODO: Immune to Sleep, Charm
+//TODO: they make no noise
+//TODO: they always attack last in a combat round 
 
 function Zombie() 
 {
@@ -5103,17 +5116,27 @@ function Zombie()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false;   
-    this.movement = 120;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1d8" }];
     this.saveAs = { class: characterType.Fighter, level: 1 };
-    this.morale = 12;
-    this.treasureType = "Nil"; 
     //  this.Alignment = Chaotic ;
 }
 
 Zombie.prototype = new Monster();
 Zombie.prototype.Constructor = Zombie;
-Zombie.getNumberAppearing = function() { return dice.rollDice("2D4"); };
+Zombie.prototype.movement = 120;
+Zombie.prototype.getMorale = function() { return 12; };
+Zombie.prototype.getTreasureType = function() { return []; }; 
+Zombie.getNumberAppearing = function(inLair = false) 
+{ 
+    if(inLair)
+    {
+        return dice.rollDice("4D6");
+    }
+    else
+    {
+        return dice.rollDice("2D4"); 
+    }
+};
 
 
 
