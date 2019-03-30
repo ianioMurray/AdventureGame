@@ -4361,21 +4361,23 @@ function SpittingCobra()
     this.race = "animal";
     this.armourClass = 7;
     this.hitDice = "1";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 90;
     this.damage = [ { attackType: "Bite", damageAmount: SpecialDamage }, 
-                    { attackType: "Spit", damageAmount: SpecialDamage } ]; //this needs work as snake can only spit or bite - current bite is implemented
-                                                                           //if hit be spit opponent is blinded - cure by cure blindness
+                    { attackType: "Spit", damageAmount: SpecialDamage } ]; //TODO: snake can only spit OR bite - current bite is implemented
+                                                                           //TODO: can spit up to 6
+                                                                           //TODO: if hit be spit opponent is blinded - cure by cure blindness
     this.saveAs = { class: characterType.Fighter, level: 1 };
-    this.morale = 7;
-    this.treasureType = "Nil"; 
     //  this.Alignment = Neutral;
 }
 
 SpittingCobra.prototype = new Snake();
 SpittingCobra.prototype.Constructor = SpittingCobra;
+SpittingCobra.prototype.movement = 90;
+SpittingCobra.prototype.getMorale = function() { return 7; };
+SpittingCobra.prototype.getTreasureType = function() { []; }; 
 SpittingCobra.getNumberAppearing = function() { return dice.rollDice("1D6"); };
 SpittingCobra.prototype.specialDamage = function(opponent)
 {
@@ -4384,7 +4386,7 @@ SpittingCobra.prototype.specialDamage = function(opponent)
     if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
     {
         opponent.isDead = true;
-        //dies in 1 to 10 turns
+        //TODO: opponent will die in 1 to 10 turns
     }
 };
 
@@ -4392,7 +4394,8 @@ SpittingCobra.prototype.specialDamage = function(opponent)
 //---------------Pit Viper--------------------
 //--------------------------------------------
 
-//they always get initative due to how quick they are 
+//TODO: they always get initative due to their quickness
+//TODO : can see heat up to 60 
 
 function PitViper() 
 {
@@ -4400,19 +4403,20 @@ function PitViper()
     this.race = "animal";
     this.armourClass = 6;
     this.hitDice = "2";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 90;
     this.damage = [ { attackType: "Bite", damageAmount: SpecialDamage } ]; 
     this.saveAs = { class: characterType.Fighter, level: 1 };
-    this.morale = 7;
-    this.treasureType = "Nil"; 
     //  this.Alignment = Neutral;
 }
 
 PitViper.prototype = new Snake();
 PitViper.prototype.Constructor = PitViper;
+PitViper.prototype.movement = 90;
+PitViper.prototype.getMorale = function() { return 7; };
+PitViper.prototype.getTreasureType = function() { return []; }; 
 PitViper.getNumberAppearing = function() { return dice.rollDice("1D8"); };
 PitViper.prototype.specialDamage = function(opponent)
 {
@@ -4434,30 +4438,31 @@ function SeaSnake()
     this.race = "animal";
     this.armourClass = 6;
     this.hitDice = "3";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 90;
     this.damage = [ { attackType: "Bite", damageAmount: SpecialDamage } ]; 
     this.saveAs = { class: characterType.Fighter, level: 2 };
-    this.morale = 7;
-    this.treasureType = "Nil"; 
     //  this.Alignment = Neutral;
 }
 
 SeaSnake.prototype = new Snake();
 SeaSnake.prototype.Constructor = SeaSnake;
+SeaSnake.prototype.swimMovement = 90;
+SeaSnake.prototype.getMorale = function() { return 7; };
+SeaSnake.prototype.getTreasureType = function() { return []; }; 
 SeaSnake.getNumberAppearing = function() { return dice.rollDice("1D8"); };
 SeaSnake.prototype.specialDamage = function(opponent)
 {
     opponent.takeDamage(1);
-    //bite can go unnoticed 50% of the time 
+    //TODO: bite can go unnoticed 50% of the time 
 
     if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
     {
         opponent.isDead = true;
-        //in 3-6 turns to be felt 
-        // only 25% chance that even if treated after felt the opponent will survive
+        //TODO: will be felt in 3-6 turns 
+        //TODO: only 25% chance that even if treated after felt the opponent will survive
     }
 };
 
@@ -4465,38 +4470,36 @@ SeaSnake.prototype.specialDamage = function(opponent)
 //---------------Giant Rattler-----------------
 //--------------------------------------------
 
-//very fast and get a 2nd attack at the end of the round
-
 function GiantRattler() 
 {
     this.name = "Giant Rattler";
     this.race = "animal";
     this.armourClass = 5;
     this.hitDice = "4";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
     this.damage = [ { attackType: "Bite", damageAmount: SpecialDamage },
-                    { attackType: "Bite", damageAmount: SpecialDamage } ]; 
+                    { attackType: "Bite", damageAmount: SpecialDamage } ]; //TODO: very fast and get a 2nd attack at the end of the round 
     this.saveAs = { class: characterType.Fighter, level: 2 };
-    this.morale = 8;
-    this.treasureType = "U"; 
     //  this.Alignment = Neutral;
 }
 
 GiantRattler.prototype = new Snake();
 GiantRattler.prototype.Constructor = GiantRattler;
+GiantRattler.prototype.movement = 120;
+GiantRattler.prototype.getMorale = function() { return 8; };
+GiantRattler.prototype.getTreasureType = function() { return ["U"]; }; 
 GiantRattler.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 GiantRattler.prototype.specialDamage = function(opponent)
 {
     opponent.takeDamage(dice.rollDice("1D4"));
-    //bite can go unnoticed 50% of the time 
 
     if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.typeOfSave.DeathRayPoison, dice.rollDice("1D20")))
     {
         opponent.isDead = true;
-        //in 1-6 turns to be felt 
+        //TODO: death in 1-6 turns 
     }
 };
 
@@ -4510,22 +4513,33 @@ function RockPython()
     this.race = "animal";
     this.armourClass = 6;
     this.hitDice = "5";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 90;
     this.damage = [ { attackType: "Bite", damageAmount: "1D4" },
-                    { attackType: "Squeeze", damageAmount: "2D4" } ]; // the second attack happens if the first was successful
-                                                                    //no roll to hit and is automatic every turn after that 
-    this.saveAs = { class: characterType.Fighter, level: 3 };
-    this.morale = 8;
-    this.treasureType = "U"; 
+                    { attackType: "Squeeze", damageAmount: "2D4" } ]; // TODO: the second attack happens if the first was successful
+                                                                      //        no roll to hit and is automatic every turn after that 
+    this.saveAs = { class: characterType.Fighter, level: 3 }; 
     //  this.Alignment = Neutral;
 }
 
 RockPython.prototype = new Snake();
 RockPython.prototype.Constructor = RockPython;
+RockPython.prototype.movement = 90;
+RockPython.prototype.getMorale = function() { return 8; };
+RockPython.prototype.getTreasureType = function() { return ["U"]; };
 RockPython.getNumberAppearing = function() { return dice.rollDice("1D3"); };
+
+
+
+
+
+
+
+
+
+
 
 //------------------------------------------
 //---      Spider Giant Prototype      ---
