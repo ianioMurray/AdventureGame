@@ -3548,7 +3548,7 @@ Neaderthal.prototype.Constructor = Neaderthal;
 Neaderthal.prototype.movement = 120;
 Neaderthal.prototype.getMorale = function() { return 7; };
 Neaderthal.prototype.getTreasureType = function() { return ["C"]; };
-Neaderthal.getNumberAppearing = function(inLiar = false) 
+Neaderthal.getNumberAppearing = function(inLair = false) 
 { 
     if(inLair)
     {
@@ -3886,20 +3886,14 @@ OwlBear.prototype.clawDamage = function(opponent)
     }
 };
 
-
-
-
-
-
-
 //--------------------------------------------
 //--------------------Pixie-------------------
 //--------------------------------------------
 
-// invisible unless they want to be seen
-//if they attack when invisible they stay invisible .  they will always surprise when attacking 
-//when they are invisible they cannot be attacked in round 1 but after that they can be at -2 toHit 
-//they can only fly for 3 turns
+// TODO: invisible unless they want to be seen
+// TODO: if they attack when invisible they stay invisible.  They will always surprise when attacking 
+//       when they are invisible they cannot be attacked in round 1 but after that they can be at -2 toHit 
+// TODO: they can only fly for 3 turns
 
 function Pixie()
 {
@@ -3907,24 +3901,38 @@ function Pixie()
     this.race = "humanoid";
     this.armourClass = 3;
     this.hitDice = "1";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 90;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D4" }];
     this.saveAs = { class: characterType.Elf, level: 1 };
-    this.morale = 8;
-    this.treasureType = "R"; //and S  
     //  this.Alignment = Neutral;
 }
 
 Pixie.prototype = new Monster();
 Pixie.prototype.Constructor = Pixie;
-Pixie.getNumberAppearing = function() { return dice.rollDice("2D4"); };
+Pixie.prototype.movement = 90;
+Pixie.prototype.flyMovement = 180;
+Pixie.prototype.getMorale = function() { return 7; };
+Pixie.prototype.getTreasureType = function() { ["R", "S"]; };   
+Pixie.getNumberAppearing = function(inLair = false)
+{
+    if(inLair)
+    {
+        return dice.rollDice("10D4");
+    } 
+    else
+    {
+        return dice.rollDice("2D4"); 
+    }
+};
 
 //------------------------------------------
 //---      Rat Prototype      ---
 //------------------------------------------
+
+// TODO: no penalties for fighting in water
 
 function Rat()
 {   
@@ -3958,33 +3966,48 @@ Rat.prototype.diseaseAttack = function()
 //----------------Normal Rat------------------
 //--------------------------------------------
 
-//more than 10 rats they will attack as packs of 10 or less --  the outlined attack
-//rats will climb all over a character so they must save vs Death or be knocked down - while down a character cannot fight
+// TODO: attack in packs of 5-10 rates.  If there are more than 10 rats they will attack more than 1 individual.  
 
 function RatNormal()
 {
     this.name = "Normal Rat";
     this.race = "animal";
     this.armourClass = 9;
-    this.hitDice = "1";                        //1 hitpoint
+    this.hitDice = "0.1";                        
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 60;
     this.attacks = [{ attackType: "PackBite", damageAmount: specialDamage }];  //is for the pack not individual
     this.saveAs = { class: characterType.NormalMan, level: 0 };
-    this.morale = 5;
-    this.treasureType = "L"; 
     //  this.Alignment = Neutral;
 }
 
 RatNormal.prototype = new Rat();
 RatNormal.prototype.Constructor = RatNormal;
-RatNormal.getNumberAppearing = function() { return dice.rollDice("5D10"); };
+RatNormal.prototype.movement = 60;
+RatNormal.prototype.swimMovement = 30;
+RatNormal.prototype.getMorale = function() { return 5; };
+RatNormal.prototype.getTreasureType = function() { return ["L"]; }; 
+RatNormal.getNumberAppearing = function(inLair = false)
+{
+    if(inLair)
+    {
+        return dice.rollDice("2D10");
+    }
+    else
+    {
+        return dice.rollDice("5D10"); 
+    }
+};
 RatNormal.prototype.specialDamage = function(opponent)
 {
     opponent.takeDamage(dice.rollDice("1D6"));
     this.diseaseAttack();
+    if(!savingThrow.isSavingThrowMade(opponent.saveAs, savingThrow.DeathRayPoison, dice.rollDice("1D20")))
+    {
+        // TODO rats will climb all over a character so they must save vs Death or be knocked down - while down a character cannot fight
+        opponent.isKnockedDown = true;
+    }
 };
 
 //--------------------------------------------
@@ -3996,21 +4019,32 @@ function RatGiant()
     this.name = "Giant Rat";
     this.race = "animal";
     this.armourClass = 7;
-    this.hitDice = "0.5";                          //half a hit dice
+    this.hitDice = "0.5";                          
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 60;
     this.attacks = [{ attackType: "Bite", damageAmount: specialDamage }];
     this.saveAs = { class: characterType.Fighter, level: 1 };
-    this.morale = 8;
-    this.treasureType = "C"; 
     //  this.Alignment = Neutral;
 }
 
 RatGiant.prototype = new Rat();
 RatGiant.prototype.Constructor = RatGiant;
-RatGiant.getNumberAppearing = function() { return dice.rollDice("3D6"); };
+RatGiant.prototype.movement = 120;
+RatGiant.prototype.swimMovement = 60;
+RatGiant.prototype.getMorale = function() { return 8; };
+RatGiant.prototype.getTreasureType = function() { return ["C"]; }; 
+RatGiant.getNumberAppearing = function(inLair = false) 
+{
+    if(inLair)
+    {
+        return dice.rollDice("3D10");
+    }
+    else
+    {
+        return dice.rollDice("3D6"); 
+    }
+};
 RatGiant.prototype.specialDamage = function(opponent)
 {
     opponent.takeDamage(dice.rollDice("1D3"));
@@ -4021,8 +4055,8 @@ RatGiant.prototype.specialDamage = function(opponent)
 //--------------------Robber Fly--------------
 //--------------------------------------------
 
-//unhurt by killer bees
-//surpirse on 1-4 of 1D6
+// TODO: unhurt by killer bee poison
+// TODO: leap into combat from 30 away
 
 function RobberFly()
 {
@@ -4033,17 +4067,40 @@ function RobberFly()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 90;
     this.attacks = [{ attackType: "Bite", damageAmount: "1D8" }];
     this.saveAs = { class: characterType.Fighter, level: 1 };
-    this.morale = 8;
-    this.treasureType = "U"; 
     //  this.Alignment = Neutral;
 }
 
 RobberFly.prototype = new Monster();
 RobberFly.prototype.Constructor = RobberFly;
-RobberFly.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+RobberFly.prototype.movement = 90;
+RobberFly.prototype.flyMovement = 180;
+RobberFly.prototype.getMorale = function() { return 8; };
+RobberFly.prototype.gteTreasureType = function() { retunr ["U"]; }; 
+RobberFly.getNumberAppearing = function(inLair) 
+{
+    if(inLair)
+    {
+        return dice.rollDice("2D6");
+    }
+    else
+    {
+        return dice.rollDice("1D6"); 
+    }
+};
+RobberFly.prototype.surpriseOpponent= function(diceResult)
+{
+    //robber flies surprise on a 1-4
+    if(diceResult <= 4)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+};
 
 //--------------------------------------------
 //--------------------Rock Baboon-------------
@@ -4058,18 +4115,28 @@ function RockBaboon()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 90;
     this.attacks = [{ attackType: "WeaponAttack", damageAmount: "1D6" },
                     { attackType: "Bite", damageAmount: "1D3" }];
     this.saveAs = { class: characterType.Fighter, level: 2 };
-    this.morale = 8;
-    this.treasureType = "U"; 
     //  this.Alignment = Neutral;
 }
 
 RockBaboon.prototype = new Monster();
 RockBaboon.prototype.Constructor = RockBaboon;
-RockBaboon.getNumberAppearing = function() { return dice.rollDice("2D6"); };
+RockBaboon.prototype.movement = 120;
+RockBaboon.prototype.getMorale = function() { return 8; };
+RockBaboon.prototype.getTreasureType = function() { return ["U"]; }; 
+RockBaboon.getNumberAppearing = function(inLair = false)
+{
+    if(inLair)
+    {
+        return dice.rollDice("5D6");
+    } 
+    else
+    {
+        return dice.rollDice("2D6"); 
+    }
+};
 
 //--------------------------------------------
 //--------------------Rust Monster------------
@@ -4084,29 +4151,27 @@ function RustMonster()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
     this.attacks = [{ attackType: UnspecifiedAttck, damageAmount: specialDamage }];
     this.saveAs = { class: characterType.Fighter, level: 3 };
-    this.morale = 7;
-    this.treasureType = "U"; 
     //  this.Alignment = Neutral;
 }
 
 RustMonster.prototype = new Monster();
 RustMonster.prototype.Constructor = RustMonster;
+RustMonster.prototype.movement = 120;
+RustMonster.prototype.getMorale = function() { return 7; };
+RustMonster.prototype.treasureType = function() { return []; }; 
 RustMonster.getNumberAppearing = function() { return dice.rollDice("1D4"); };
 RustMonster.prototype.specialDamage = function(opponent)
 {
-    //any time a rust monster is hit or hits -- the weapon or armour will rust and become useless
-    //if the weapon/armour is magical they have 10% for each +1 of not being affected - if hit the item loses +1
+    // TODO: any time a rust monster is hit or hits -- the weapon or armour will rust and become useless
+    // TODO: if the weapon/armour is magical they have 10% for each +1 of not being affected - if hit the item loses +1
 };
 
 //--------------------------------------------
 //--------------------Shadow------------------
 //--------------------------------------------
-
-//only harmed by magical weapons 
-//surprise on 1-5 of 1D6
+ 
 //immune to charm and sleep
 
 function Shadow()
@@ -4115,36 +4180,59 @@ function Shadow()
     this.race = "????";      //not sure 
     this.armourClass = 7;
     this.hitDice = "2+2";
+    this.hitDiceStars = 1;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 90;
     this.attacks = [{ attackType: "TouchAttack", damageAmount: specialDamage }];
     this.saveAs = { class: characterType.Fighter, level: 2 };
-    this.morale = 12;
-    this.treasureType = "F"; 
     //  this.Alignment = Chaotic;
 }
 
 Shadow.prototype = new Monster();
 Shadow.prototype.Constructor = Shadow;
-Shadow.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+Shadow.prototype.movement = 90;
+Shadow.prototype.getMorale = function() { return 12; };
+Shadow.prototype.getTreasureType = function() { return ["F"]; }; 
+Shadow.prototype.canOnlyBeDamagedBy = [ immunityToDamageTypes.magicalWeapon ];
+Shadow.getNumberAppearing = function(inLair = false)
+{ 
+    if(inLair)
+    {
+        return dice.rollDice("1D12");
+    }
+    else
+    {
+        return dice.rollDice("1D8"); 
+    }
+};
 Shadow.prototype.specialDamage = function(opponent)
 {
     opponent.takeDamage(dice.rollDice("1D4"));
-    //if hit an opponent loses 1 strenght for 8 turns
-    //if a characters strength reaches 0 they become a shadow
-    //opponent.strength = opponent.strength - 1;  
-    //opponent.strenthReductionNoTurns = 8;
+    //TODO: if hit an opponent loses 1 strenght for 8 turns
+    //TODO: if a characters strength reaches 0 they become a shadow
+};
+Shadow.prototype.surpriseOpponent= function(diceResult)
+{
+    //Shadows surprise on a 1-5
+    if(diceResult <= 5)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 };
 
 //--------------------------------------------
 //---------------Shrew Giant------------------
 //--------------------------------------------
 
-//see by echo location so a silence spell will blind them - if blind it will have AC8 and -4toHit
-//due to their speed they will always have initative in the first attack and get +1 for the second attack
-//any creaturing fight 1 that is level 3 or less needs to make a save vs death or run away
+// TODO: see in the dark up to 60 away
+// TODO: see by echo location so a silence spell will blind them - if blind it will have AC8 and -4toHit
+// TODO: due to their speed they will always have initative in the first attack and get +1 for the second attack
+// TODO: any creaturing fighting 1 that is level 3 or less needs to make a save vs death or run away
 
 function ShrewGiant()
 {
@@ -4155,25 +4243,36 @@ function ShrewGiant()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 180;
     this.attacks = [{ attackType: "Bite", damageAmount: "1D6" },
                     { attackType: "Bite", damageAmount: "1D6" } ];
     this.saveAs = { class: characterType.Fighter, level: 1 };
-    this.morale = 10;
-    this.treasureType = "Nil"; 
     //  this.Alignment = Neutral;
 }
 
 ShrewGiant.prototype = new Monster();
 ShrewGiant.prototype.Constructor = ShrewGiant;
-ShrewGiant.getNumberAppearing = function() { return dice.rollDice("1D4"); };
+ShrewGiant.prototype.movement = 180;
+ShrewGiant.prototype.getMorale = function() { return 10; };
+ShrewGiant.prototype.getTreasureType = function() { []; }; 
+ShrewGiant.getNumberAppearing = function(inLair = false)
+{ 
+    if(inLair)
+    {
+        return dice.rollDice("1D8");
+    }
+    else
+    {
+        return dice.rollDice("1D4"); 
+    }
+};
 
 //--------------------------------------------
 //---------------Shrieker---------------------
 //--------------------------------------------
 
-//look like giant mushrooms
-//if they detect light or movement they shreik for 1D3 rounds - -50% chance it will attack a wandering monster in 2-12 turns
+// look like giant mushrooms
+// not really such thing as an attack see next comment
+// TODO: if they detect light or movement they shreik for 1D3 rounds - -50% chance it will attack a wandering monster in 2-12 turns
 
 function Shrieker()
 {
@@ -4184,44 +4283,62 @@ function Shrieker()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 9;
-    this.attacks = [];
+    this.attacks = [ ];
     this.saveAs = { class: characterType.Fighter, level: 1 };
-    this.morale = 12;
-    this.treasureType = "Nil"; 
     //  this.Alignment = Neutral;
 }
 
 Shrieker.prototype = new Monster();
 Shrieker.prototype.Constructor = Shrieker;
+Shrieker.prototype.movement = 9;
+Shrieker.prototype.getMorale = function() { return 12; };
+Shrieker.prototype.getTreasureType = function() { return []; }; 
 Shrieker.getNumberAppearing = function() { return dice.rollDice("1D8"); };
 
 //--------------------------------------------
 //---------------Skeleton---------------------
 //--------------------------------------------
 
-//Immune to sleep, charm and mind reading
+// TODO: Immune to sleep, charm and mind reading
 
 function Skeleton() 
 {
     this.name = "Skeleton";
     this.race = "undead";
-    this.armourClass = 8;
+    this.armourClass = 7;
     this.hitDice = "1";
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 60;
     this.damage = [{ attackType: "WeaponAttack", damageAmount: "1d6" } ];
     this.saveAs = { class: characterType.Fighter, level: 1 };
-    this.morale = 12;
-    this.treasureType = "Nil"; 
     //  this.Alignment = Chaotic;
 }
 
 Skeleton.prototype = new Monster();
 Skeleton.prototype.Constructor = Skeleton;
-Skeleton.getNumberAppearing = function() { return dice.rollDice("3D4"); };
+Skeleton.prototype.movement = 60;
+Skeleton.prototype.getMorale = function() { return 12; };
+Skeleton.prototype.treasureType = function() { return []; }; 
+Skeleton.getNumberAppearing = function(inLair = false) 
+{
+    if(inLair)
+    {
+        return dice.rollDice("1D10");
+    }
+    else
+    {
+        return dice.rollDice("3D4"); 
+    }
+};
+
+
+
+
+
+
+
+
 
 //------------------------------------------
 //---      Snake Prototype      ---
