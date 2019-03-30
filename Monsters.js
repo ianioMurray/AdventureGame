@@ -4332,14 +4332,6 @@ Skeleton.getNumberAppearing = function(inLair = false)
     }
 };
 
-
-
-
-
-
-
-
-
 //------------------------------------------
 //---      Snake Prototype      ---
 //------------------------------------------
@@ -4759,20 +4751,12 @@ Stirge.prototype.specialDamage = function(opponent)
     //      this will continue till it or the opponent is dead 
 };
 
-
-
-
-
-
-
-
-
-
 //--------------------------------------------
 //---------------Thoul-----------------------
 //--------------------------------------------
 
-//they regenerate 1 hp per round
+//TODO: they regenerate 1 hp per round
+//TODO: they can use weapons
 
 function Thoul() 
 {
@@ -4780,21 +4764,32 @@ function Thoul()
     this.race = "?????";     /// to be decided 
     this.armourClass = 6;
     this.hitDice = "3";
+    this.hitDiceStars = 2;
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
     this.damage = [ { attackType: "Claw", damageAmount: specialDamage },
                     { attackType: "Claw", damageAmount: specialDamage } ];
     this.saveAs = { class: characterType.Fighter, level: 3 };
-    this.morale = 10;
-    this.treasureType = "C"; 
     //  this.Alignment = Chaotic;
 }
 
 Thoul.prototype = new Monster();
 Thoul.prototype.Constructor = Thoul;
-Thoul.getNumberAppearing = function() { return dice.rollDice("1D6"); };
+Thoul.prototype.movement = 120;
+Thoul.prototype.getMorale = function() { return 10; };
+Thoul.prototype.getTreasureType = function() { return ["C"]; }; 
+Thoul.getNumberAppearing = function(inLair = false)
+{
+    if(inLair)
+    {
+        return dice.rollDice("1D10");    
+    } 
+    else
+    {
+        return dice.rollDice("1D6"); 
+    }
+};
 Thoul.prototype.specialDamage = function(opponent)
 {
     opponent.takeDamage(dice.rollDice("1D3"));
@@ -4804,12 +4799,17 @@ Thoul.prototype.specialDamage = function(opponent)
         opponent.paralysisedDuration = dice.rollDice("2D4");
     }
 };
+Thoul.prototype.regenerateHp = function()
+{
+    this.currentHitPoints = this.currentHitPoints + 1;
+};
 
 //--------------------------------------------
 //---------------Trader-----------------------
 //--------------------------------------------
 
-//usually have 1-4 pack mules with goods 
+//TODO: in the wildeness they will usually have 1-4 pack mules with goods 
+
 
 function Trader() 
 {
@@ -4820,17 +4820,42 @@ function Trader()
     this.hitPoints = this.GetHPs();
     this.currentHitPoints = this.hitPoints;
     this.isDead = false; 
-    this.movement = 120;
     this.damage = [ { attackType: "WeaponAttack", damageAmount: "1D6" } ];
     this.saveAs = { class: characterType.Fighter, level: 1 };
-    this.morale = 7;
-    this.treasureType = "U";   // and V
     //  this.Alignment = Chaotic/Neutral/Lawful;
 }
 
 Trader.prototype = new Monster();
 Trader.prototype.Constructor = Trader;
-Trader.getNumberAppearing = function() { return dice.rollDice("1D8"); };
+Trader.prototype.movement = 120;
+Trader.prototype.getMorale = function() { return 7; };
+Trader.prototype.getTreasureType = function() { return ["U", "V"]; };
+Trader.getNumberAppearing = function(inLair = false) {
+    if(inLair)
+    {
+        return dice.rollDice("3D6");
+    }
+    else
+    {
+        return dice.rollDice("1D8"); 
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //--------------------------------------------
 //---------------Troglodyte-------------------
